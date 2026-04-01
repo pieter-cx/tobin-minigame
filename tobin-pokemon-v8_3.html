@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tobin's Pokémon Rekenavontuur!</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap');
+
+:root{
+  --y:#ffd60a;--r:#e63946;--g:#06d6a0;
+  --b:#4895ef;--p:#9b5de5;--o:#fb8500;
+  --dark:#0e0e1f;--txt:#1d1d2e;
+  --p1:#ff6b9d;--p2:#4895ef;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Nunito',sans-serif;background:var(--dark);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:8px 8px 24px;overflow-x:hidden;transition:background 1.2s;}
+#bg-cv{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.25;}
+#mb{position:fixed;top:8px;right:8px;z-index:300;background:rgba(255,255,255,.12);backdrop-filter:blur(6px);border:none;border-radius:50%;width:36px;height:36px;font-size:.95rem;cursor:pointer;transition:transform .2s;}
+#mb:hover{transform:scale(1.12);}
+
+.hdr{position:relative;z-index:10;text-align:center;width:100%;margin-bottom:5px;}
+.hdr h1{font-family:'Fredoka One',cursive;font-size:clamp(1.3rem,4.2vw,2rem);color:var(--y);text-shadow:3px 3px 0 #7a5a00,0 0 40px rgba(255,214,10,.5);}
+.hdr .sub{font-size:.62rem;font-weight:700;color:rgba(255,255,255,.35);letter-spacing:2px;text-transform:uppercase;}
+
+.card{position:relative;z-index:10;background:#fff;border-radius:22px;padding:14px 15px 18px;max-width:500px;width:100%;box-shadow:0 16px 60px rgba(0,0,0,.6),0 0 0 4px var(--y);transition:box-shadow .7s;}
+
+/* ═══════════════════════
+   SETUP SCREEN
+═══════════════════════ */
+#setup-screen{display:none;}
+
+.setup-hero{text-align:center;margin-bottom:14px;}
+.setup-hero .sh-em{font-size:3rem;display:block;animation:sh-bob 2s ease infinite;}
+@keyframes sh-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.setup-hero h2{font-family:'Fredoka One',cursive;font-size:1.4rem;color:var(--txt);margin-top:5px;}
+.setup-hero p{font-size:.8rem;color:#888;font-weight:700;margin-top:2px;}
+
+/* 2 player cards side by side */
+.two-players{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.pcard{
+  border-radius:16px;border:3px solid #e0e6ff;
+  padding:12px 10px;text-align:center;
+  background:#fafbff;transition:border-color .2s;
+  position:relative;
+}
+.pcard.p1c{border-color:var(--p1);}
+.pcard.p2c{border-color:var(--p2);}
+
+.pcard-avatar{font-size:2.5rem;display:block;margin-bottom:4px;cursor:pointer;transition:transform .15s;}
+.pcard-avatar:hover{transform:scale(1.15);}
+.pcard-name{font-family:'Fredoka One',cursive;font-size:.95rem;color:var(--txt);margin-bottom:2px;}
+.pcard-grade{font-size:.65rem;font-weight:800;border-radius:6px;padding:2px 7px;display:inline-block;margin-top:2px;}
+.pcard-score{font-size:.6rem;font-weight:700;color:#999;margin-top:2px;}
+
+.pcard-edit-btn{
+  position:absolute;bottom:6px;right:6px;
+  background:none;border:2px solid #dde;border-radius:8px;
+  padding:2px 7px;font-size:.62rem;font-weight:800;color:#aaa;cursor:pointer;
+}
+.pcard-edit-btn:hover{border-color:var(--b);color:var(--b);}
+
+/* Edit form */
+.edit-form{
+  background:#f5f8ff;border-radius:14px;
+  padding:12px;margin-bottom:10px;
+  border:3px solid var(--b);
+}
+.ef-title{font-family:'Fredoka One',cursive;font-size:.95rem;color:var(--b);margin-bottom:8px;}
+.ef-label{font-size:.7rem;font-weight:800;color:#888;margin-bottom:3px;display:block;}
+.ef-input{width:100%;border:2px solid #dde;border-radius:8px;padding:7px 10px;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:700;margin-bottom:8px;outline:none;}
+.ef-input:focus{border-color:var(--b);}
+
+/* Grade buttons */
+.grade-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px;}
+.gb{border:3px solid #e0e6ff;border-radius:11px;padding:8px 5px;text-align:center;cursor:pointer;background:#fff;transition:all .15s;}
+.gb:hover,.gb.sel{border-color:var(--b);background:#e8f0ff;}
+.gb.sel{box-shadow:0 0 0 2px rgba(72,149,239,.25);}
+.gb-em{font-size:1.3rem;display:block;margin-bottom:1px;}
+.gb-lbl{font-family:'Fredoka One',cursive;font-size:.72rem;color:var(--txt);}
+.gb-sub{font-size:.55rem;font-weight:700;color:#888;}
+
+/* Avatar row */
+.av-row{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-bottom:8px;}
+.av{font-size:1.4rem;border:3px solid transparent;border-radius:50%;width:40px;height:40px;cursor:pointer;background:#f0f2ff;transition:all .15s;display:flex;align-items:center;justify-content:center;}
+.av:hover,.av.sel{border-color:var(--b);background:#e0eaff;transform:scale(1.1);}
+
+/* Mode selector */
+.mode-title{font-family:'Fredoka One',cursive;font-size:.82rem;color:#888;margin-bottom:5px;text-align:center;}
+.mode-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.mode-btn{border:3px solid #e0e6ff;border-radius:12px;padding:9px;text-align:center;cursor:pointer;background:#fafbff;transition:all .15s;}
+.mode-btn.sel{border-color:var(--b);background:#e8f0ff;box-shadow:0 0 0 2px rgba(72,149,239,.2);}
+.mode-btn .mb-em{font-size:1.5rem;display:block;margin-bottom:2px;}
+.mode-btn .mb-lbl{font-family:'Fredoka One',cursive;font-size:.8rem;color:var(--txt);}
+.mode-btn .mb-sub{font-size:.6rem;font-weight:700;color:#888;margin-top:1px;}
+
+/* ═══════════════════════
+   MAP SCREEN
+═══════════════════════ */
+#map-screen{display:block;}
+
+.rocket-banner{background:linear-gradient(135deg,#a80018,#620008);border-radius:12px;padding:7px 11px;color:#fff;font-weight:800;font-size:.72rem;margin-bottom:7px;display:flex;gap:8px;align-items:center;box-shadow:0 4px 18px rgba(180,0,0,.5);animation:rb-p 3s ease infinite;}
+@keyframes rb-p{0%,100%{box-shadow:0 4px 18px rgba(180,0,0,.5)}50%{box-shadow:0 4px 32px rgba(220,0,0,.75)}}
+
+/* Two player score bar */
+.score-bar-2p{display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:center;margin-bottom:7px;}
+.sbp{border-radius:12px;padding:6px 9px;text-align:center;}
+.sbp.sbp1{background:var(--p1)+'22';border:2px solid var(--p1);background:#fff0f6;}
+.sbp.sbp2{background:#f0f6ff;border:2px solid var(--p2);}
+.sbp .sbp-av{font-size:1.3rem;}
+.sbp .sbp-nm{font-family:'Fredoka One',cursive;font-size:.8rem;color:var(--txt);}
+.sbp .sbp-sc{font-size:.65rem;font-weight:800;color:var(--o);}
+.sbp .sbp-gr{font-size:.55rem;font-weight:700;color:#aaa;}
+.sbp.active-p{box-shadow:0 0 0 3px var(--y);}
+.vs-badge{font-family:'Fredoka One',cursive;font-size:.9rem;color:#888;text-align:center;}
+
+.daily-glow{background:linear-gradient(135deg,var(--y),var(--o));border-radius:10px;padding:6px 11px;color:#1d1d2e;font-weight:800;font-size:.72rem;cursor:pointer;margin-bottom:7px;text-align:center;box-shadow:0 4px 18px rgba(255,160,0,.45);animation:dp 1.8s ease infinite;}
+@keyframes dp{0%,100%{transform:scale(1)}50%{transform:scale(1.018)}}
+
+.fort-bar-wrap{background:linear-gradient(135deg,#1a0030,#300060);border-radius:12px;padding:7px 11px;margin-bottom:7px;}
+.fort-title{font-family:'Fredoka One',cursive;font-size:.8rem;color:var(--y);margin-bottom:4px;display:flex;justify-content:space-between;}
+.fort-hp-bg{background:rgba(255,255,255,.18);border-radius:50px;height:12px;overflow:hidden;}
+.fort-hp-bar{height:100%;border-radius:50px;transition:width 1s ease,background .5s;}
+.fort-sub{font-size:.6rem;font-weight:700;color:rgba(255,255,255,.45);margin-top:2px;text-align:right;}
+
+.map-ttl{font-family:'Fredoka One',cursive;font-size:.76rem;color:#888;margin-bottom:4px;}
+.map-wrap{position:relative;width:100%;border-radius:14px;overflow:hidden;border:3px solid #c8d8f0;margin-bottom:7px;background:#7ec8e3;}
+#map-svg{width:100%;display:block;height:auto;}
+@keyframes gio-run{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)rotate(-8deg)}75%{transform:translateX(3px)rotate(5deg)}}
+.gio-running{animation:gio-run .4s ease 3;}
+
+.sec-ttl{font-family:'Fredoka One',cursive;font-size:.76rem;color:#888;margin-bottom:3px;}
+.ach-scroll{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:7px;}
+.ab-badge{border-radius:8px;padding:3px 7px;font-size:.62rem;font-weight:800;display:flex;align-items:center;gap:3px;}
+.ab-badge.locked{background:#f0f0f0;color:#bbb;}
+.ab-badge.earned{background:linear-gradient(135deg,var(--y),var(--o));color:#1d1d2e;box-shadow:0 2px 6px rgba(255,180,0,.4);}
+
+.coll-strip{display:flex;gap:4px;overflow-x:auto;padding:2px 0 5px;scrollbar-width:thin;}
+.ci{flex-shrink:0;text-align:center;width:48px;}
+.ci img{width:44px;height:44px;image-rendering:pixelated;}
+.ci .cn{font-size:.48rem;font-weight:800;color:#888;}
+.ci.shiny img{filter:drop-shadow(0 0 5px gold);}
+
+.scoreboard{background:#f0f4ff;border-radius:11px;padding:8px;margin-top:7px;}
+.sr{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid #e0e6ff;}
+.sr:last-child{border-bottom:none;}
+.sn{font-weight:800;color:var(--txt);font-size:.78rem;}
+.sp{font-family:'Fredoka One',cursive;color:var(--o);font-size:.78rem;}
+
+/* ═══════════════════════
+   GAME SCREEN
+═══════════════════════ */
+#game-screen{display:none;}
+
+/* Active player top banner */
+.active-banner{
+  border-radius:14px;padding:8px 12px;margin-bottom:7px;
+  display:flex;align-items:center;gap:10px;
+  border:3px solid transparent;
+  transition:background .4s,border-color .4s;
+}
+.ab-avatar{font-size:2rem;flex-shrink:0;}
+.ab-info{flex:1;}
+.ab-name{font-family:'Fredoka One',cursive;font-size:1.1rem;}
+.ab-grade{font-size:.62rem;font-weight:800;opacity:.75;}
+.ab-score{font-family:'Fredoka One',cursive;font-size:1rem;color:var(--y);margin-left:auto;white-space:nowrap;}
+
+/* Difficulty meter */
+.diff-bar-wrap{display:flex;align-items:center;gap:6px;margin-bottom:7px;background:#f5f6ff;border-radius:9px;padding:5px 9px;}
+.diff-label{font-family:'Fredoka One',cursive;font-size:.72rem;color:#888;flex-shrink:0;}
+.diff-dots{display:flex;gap:3px;}
+.dd{width:14px;height:14px;border-radius:50%;background:#e0e6ff;transition:background .4s,transform .3s;}
+.dd.lit{background:var(--y);transform:scale(1.15);}
+.dd.lit.high{background:var(--o);}
+.dd.lit.max{background:var(--r);}
+.diff-txt{font-family:'Fredoka One',cursive;font-size:.7rem;color:#888;margin-left:2px;}
+
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;gap:4px;flex-wrap:wrap;}
+.pill{border-radius:50px;padding:3px 9px;font-family:'Fredoka One',cursive;font-size:.78rem;display:flex;gap:4px;align-items:center;white-space:nowrap;}
+.p-sc{background:#1a1a2e;color:var(--y);}
+.p-lv{background:#ffe5e5;color:var(--r);}
+.p-st{background:#fff3cd;color:#d97700;}
+.p-tp{border-radius:50px;padding:3px 9px;font-family:'Fredoka One',cursive;font-size:.7rem;white-space:nowrap;}
+.bk-btn{background:none;border:2px solid #dde;border-radius:50px;padding:3px 8px;font-family:'Fredoka One',cursive;font-size:.7rem;color:#888;cursor:pointer;}
+.bk-btn:hover{border-color:var(--b);color:var(--b);}
+
+/* ── BACKPACK ── */
+.bp-panel{
+  border-radius:14px;padding:9px 11px;margin-bottom:8px;
+  border:3px solid var(--o);background:linear-gradient(135deg,#fff8ec,#fff3e0);
+}
+.bp-title{font-family:'Fredoka One',cursive;font-size:.85rem;color:var(--o);margin-bottom:6px;}
+.bp-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.bp-item{
+  background:#fff;border:2px solid #ffd0a0;border-radius:11px;
+  padding:7px 8px;cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;gap:7px;
+}
+.bp-item:hover{border-color:var(--o);transform:translateY(-2px);box-shadow:0 4px 12px rgba(255,150,0,.2);}
+.bp-item.used{opacity:.38;cursor:not-allowed;transform:none;}
+.bp-item .bpi-img{width:36px;height:36px;image-rendering:pixelated;flex-shrink:0;}
+.bp-item .bpi-right .bpi-nm{font-size:.65rem;font-weight:800;color:var(--txt);}
+.bp-item .bpi-right .bpi-power{font-size:.72rem;font-family:'Fredoka One',cursive;color:var(--o);}
+.bp-item .bpi-right .bpi-desc{font-size:.56rem;font-weight:700;color:#aaa;}
+.bp-empty{font-size:.75rem;color:#aaa;font-weight:700;text-align:center;padding:5px;}
+
+/* ── ARENA ── */
+.arena{border-radius:17px;padding:7px 7px 5px;margin-bottom:7px;position:relative;overflow:hidden;min-height:218px;border:3px solid rgba(255,255,255,.6);transition:background 1s;}
+.hp-row{display:flex;gap:5px;margin-bottom:5px;}
+.hp-box{flex:1;background:rgba(255,255,255,.82);border-radius:7px;padding:3px 6px;}
+.hp-nm{font-size:.52rem;font-weight:800;color:var(--txt);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.hp-bg{background:#ddd;border-radius:50px;height:6px;margin-top:2px;overflow:hidden;}
+.hp-b{height:100%;border-radius:50px;transition:width .5s,background .5s;}
+.poke-row{display:flex;justify-content:space-between;align-items:flex-end;padding:0 2px 2px;}
+.enemy-wrap,.player-wrap{text-align:center;}
+.enemy-tag,.player-tag{font-size:.5rem;font-weight:800;background:rgba(255,255,255,.82);border-radius:4px;padding:1px 4px;display:inline-block;}
+.enemy-tag{color:#cc2200;margin-bottom:1px;}
+.player-tag{color:#004499;margin-top:1px;}
+.enemy-img{width:120px;height:120px;image-rendering:pixelated;transform:scaleX(-1);display:block;margin:0 auto;}
+.player-img{width:132px;height:132px;image-rendering:pixelated;display:block;margin:0 auto;}
+.speech{position:absolute;top:7px;left:50%;transform:translateX(-50%);background:#fff;border:2px solid #dde;border-radius:9px;padding:3px 9px;font-size:.62rem;font-weight:800;color:var(--txt);white-space:nowrap;z-index:5;}
+.speech::after{content:'▼';position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);font-size:.56rem;color:#dde;}
+
+@keyframes plyr-atk{0%{transform:translateX(0)}35%{transform:translateX(68px)}65%{transform:translateX(28px)}100%{transform:translateX(0)}}
+@keyframes emy-hit{0%,100%{transform:scaleX(-1)translateX(0)}20%{transform:scaleX(-1)translateX(-11px)}50%{transform:scaleX(-1)translateX(8px)}80%{transform:scaleX(-1)translateX(-4px)}}
+@keyframes emy-atk{0%{transform:scaleX(-1)translateX(0)}35%{transform:scaleX(-1)translateX(-68px)}65%{transform:scaleX(-1)translateX(-28px)}100%{transform:scaleX(-1)translateX(0)}}
+@keyframes plyr-hit{0%,100%{transform:translateX(0)}25%{transform:translateX(11px)}75%{transform:translateX(-8px)}}
+@keyframes faint-emy{0%{opacity:1;transform:scaleX(-1)translateY(0)}100%{opacity:0;transform:scaleX(-1)translateY(38px)}}
+@keyframes reveal-p{0%{transform:scale(0)rotate(-15deg);opacity:0}60%{transform:scale(1.22)rotate(4deg)}100%{transform:scale(1)rotate(0);opacity:1}}
+@keyframes shiny-fx{0%,100%{filter:none}33%{filter:brightness(2.5)saturate(0)}66%{filter:brightness(1.5)hue-rotate(120deg)saturate(2)}}
+
+/* ── QUESTION ── */
+.qbox{background:var(--dark);border-radius:12px;padding:11px;text-align:center;margin-bottom:7px;transition:background .8s;}
+.qtext{font-family:'Fredoka One',cursive;font-size:clamp(1.5rem,6vw,2.5rem);color:#fff;line-height:1.25;}
+.qtext .op{color:var(--y);margin:0 4px;}
+.qtext .eq{color:#a8dadc;margin:0 4px;}
+.qtext .unk{color:var(--o);}
+.spell-pr{font-family:'Fredoka One',cursive;font-size:.9rem;color:rgba(255,255,255,.8);margin-bottom:4px;}
+.spell-wd{font-family:'Fredoka One',cursive;font-size:1.3rem;color:var(--y);}
+.spell-wd-big{font-family:'Fredoka One',cursive;font-size:clamp(1.3rem,5.5vw,1.8rem);color:var(--y);line-height:1.4;margin-top:4px;padding:0 4px;}
+.timer-wrap{background:rgba(255,255,255,.18);border-radius:50px;height:5px;margin-top:6px;overflow:hidden;}
+.tbar{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--g),var(--y));transition:width .1s linear,background .5s;}
+.tbar.urg{background:linear-gradient(90deg,var(--r),var(--o));}
+
+/* ── ANSWERS ── */
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:7px;}
+.ab{background:#fff;border:3px solid #e0e0f0;border-radius:12px;padding:10px 6px;font-family:'Fredoka One',cursive;font-size:1.22rem;color:var(--txt);cursor:pointer;transition:transform .12s,border-color .12s;box-shadow:0 4px 0 #ccc;line-height:1.2;}
+.ab.spell{font-size:.92rem;padding:9px 7px;}
+.ab:hover{transform:translateY(-3px);border-color:var(--b);box-shadow:0 7px 0 #aac;}
+.ab:active{transform:translateY(2px);box-shadow:0 1px 0 #ccc;}
+.ab.ok{background:var(--g);border-color:#03a47a;color:#fff;animation:bp .3s;box-shadow:0 4px 0 #028a66;}
+.ab.no{background:var(--r);border-color:#a01e25;color:#fff;animation:bsh .35s;box-shadow:0 4px 0 #6a0e14;}
+@keyframes bp{0%{transform:scale(1)}50%{transform:scale(1.1)}100%{transform:scale(1)}}
+@keyframes bsh{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+
+.feedback{text-align:center;font-family:'Fredoka One',cursive;font-size:.86rem;min-height:21px;color:var(--txt);}
+.feedback.g{color:var(--g);}
+.feedback.f{color:var(--r);}
+
+.prog-wrap{background:#eee;border-radius:50px;height:9px;overflow:hidden;margin-top:6px;}
+.prog-bar{height:100%;border-radius:50px;transition:width .4s;}
+.prog-bar.m{background:linear-gradient(90deg,var(--y),var(--r));}
+.prog-bar.s{background:linear-gradient(90deg,var(--p),var(--b));}
+.prog-lbl{text-align:center;font-size:.64rem;font-weight:700;color:#aaa;margin-top:2px;}
+
+/* ═══════════════════════
+   TURN SWITCH SCREEN (spectacular!)
+═══════════════════════ */
+#turn-screen{
+  display:none;
+  background:linear-gradient(135deg,#0a0a1a,#1a0030);
+  border-radius:18px;
+  padding:20px;
+  text-align:center;
+  min-height:200px;
+}
+.turn-vs-row{display:flex;justify-content:center;align-items:center;gap:14px;margin-bottom:14px;}
+.turn-player-box{
+  border-radius:16px;padding:12px 14px;min-width:100px;
+  border:3px solid rgba(255,255,255,.15);
+  transition:all .5s;
+}
+.turn-player-box.active-turn{
+  transform:scale(1.1);
+  box-shadow:0 0 30px rgba(255,214,10,.5);
+}
+.tpb-av{font-size:2.5rem;display:block;margin-bottom:4px;}
+.tpb-nm{font-family:'Fredoka One',cursive;font-size:1rem;color:#fff;}
+.tpb-sc{font-size:.7rem;font-weight:800;color:rgba(255,255,255,.6);}
+
+.turn-vs{font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--y);text-shadow:0 0 15px rgba(255,214,10,.6);}
+
+.turn-cta{
+  font-family:'Fredoka One',cursive;
+  font-size:1.2rem;color:var(--y);
+  margin:10px 0 6px;
+  text-shadow:0 0 20px rgba(255,214,10,.5);
+  animation:turn-pulse 1s ease infinite;
+}
+@keyframes turn-pulse{0%,100%{opacity:1}50%{opacity:.6}}
+.turn-subtitle{font-size:.78rem;font-weight:700;color:rgba(255,255,255,.5);margin-bottom:14px;}
+
+/* Countdown bar */
+.turn-count-bar{background:rgba(255,255,255,.15);border-radius:50px;height:8px;overflow:hidden;margin-bottom:12px;}
+.turn-count-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--g),var(--y));transition:width .1s linear;}
+
+/* ═══════════════════════
+   SUPER OVERLAY
+═══════════════════════ */
+#super-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:400;background:rgba(0,0,0,.9);align-items:center;justify-content:center;flex-direction:column;}
+#super-ov.show{display:flex;}
+.super-card{background:linear-gradient(135deg,#1a0030,#300060,#000070);border:4px solid var(--y);border-radius:20px;padding:15px 17px;max-width:330px;width:92%;text-align:center;box-shadow:0 0 60px rgba(255,214,10,.6),0 0 120px rgba(100,0,200,.4);animation:sc-in .6s cubic-bezier(.17,.67,.3,1.3);position:relative;overflow:hidden;}
+@keyframes sc-in{from{transform:scale(0)rotate(-10deg);opacity:0}to{transform:scale(1)rotate(0);opacity:1}}
+.lbg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;}
+.bolt{position:absolute;width:3px;background:linear-gradient(180deg,rgba(255,214,10,0),rgba(255,214,10,1),rgba(255,214,10,0));border-radius:2px;animation:bf .4s ease infinite;}
+@keyframes bf{0%,100%{opacity:0}50%{opacity:.8}}
+.super-badge{background:linear-gradient(135deg,var(--y),var(--o));color:#1d1d2e;font-family:'Fredoka One',cursive;font-size:.88rem;border-radius:50px;padding:4px 14px;display:inline-block;margin-bottom:6px;box-shadow:0 0 20px rgba(255,214,10,.8);animation:bb .5s ease infinite alternate;}
+@keyframes bb{from{transform:translateY(0)}to{transform:translateY(-4px)}}
+.super-poke{width:110px;height:110px;image-rendering:pixelated;display:block;margin:0 auto 4px;animation:sf 2s ease infinite;filter:drop-shadow(0 0 22px rgba(255,214,10,.8));}
+@keyframes sf{0%,100%{transform:translateY(0)scale(1)}50%{transform:translateY(-8px)scale(1.05)}}
+.super-nm{font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--y);text-shadow:0 0 12px rgba(255,214,10,.8);margin-bottom:2px;}
+.super-desc{font-size:.7rem;font-weight:700;color:rgba(255,255,255,.7);margin-bottom:3px;}
+.super-bonus{font-family:'Fredoka One',cursive;font-size:.8rem;color:var(--g);margin-bottom:8px;}
+.super-qa .super-q{font-family:'Fredoka One',cursive;font-size:clamp(1.3rem,5vw,2rem);color:#fff;margin:5px 0;}
+.super-qa .super-q .op{color:var(--y);}
+.super-qa .super-q .unk{color:#a0ffff;}
+.super-qa .sup-sp{font-family:'Fredoka One',cursive;font-size:.82rem;color:rgba(255,255,255,.85);margin-bottom:3px;}
+.super-qa .sup-sw{font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--y);}
+.super-anss{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:7px 0 0;}
+.sa{background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.28);border-radius:10px;padding:9px 5px;font-family:'Fredoka One',cursive;font-size:1.15rem;color:#fff;cursor:pointer;transition:all .15s;}
+.sa.ss{font-size:.88rem;padding:8px 6px;}
+.sa:hover{background:rgba(255,214,10,.25);border-color:var(--y);transform:translateY(-2px);}
+.sa.sc{background:rgba(6,214,160,.35);border-color:var(--g);}
+.sa.sw{background:rgba(230,57,70,.35);border-color:var(--r);}
+.super-tw{background:rgba(255,255,255,.15);border-radius:50px;height:4px;margin-top:8px;overflow:hidden;}
+.super-tb{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--g),var(--y));transition:width .1s linear;}
+.super-tb.urg{background:linear-gradient(90deg,var(--r),var(--o));}
+.super-fb{font-family:'Fredoka One',cursive;font-size:.85rem;min-height:20px;color:#fff;margin-top:6px;}
+.super-fb.g{color:var(--g);}
+.super-fb.f{color:#ff7070;}
+
+/* ═══════════════════════
+   COMPLETE SCREEN
+═══════════════════════ */
+#complete-screen{display:none;text-align:center;}
+.trophy-big{font-size:3.2rem;display:block;animation:tb-b 1.5s ease infinite;}
+@keyframes tb-b{0%,100%{transform:translateY(0)rotate(-4deg)}50%{transform:translateY(-9px)rotate(4deg)}}
+.comp-ttl{font-family:'Fredoka One',cursive;font-size:1.4rem;color:var(--txt);margin:5px 0 3px;}
+.stars-row{display:flex;gap:5px;justify-content:center;font-size:1.7rem;margin:4px 0 7px;}
+.gio-flee{background:linear-gradient(135deg,#1a0030,#300060);color:#fff;border-radius:11px;padding:8px 11px;margin:6px 0;font-family:'Fredoka One',cursive;font-size:.82rem;}
+.fort-dmg{background:linear-gradient(135deg,#300060,#000070);color:var(--y);border-radius:10px;padding:7px 10px;margin:5px 0;font-family:'Fredoka One',cursive;font-size:.78rem;}
+.diff-change{border-radius:10px;padding:7px 10px;margin:5px 0;font-family:'Fredoka One',cursive;font-size:.78rem;}
+.diff-up{background:linear-gradient(135deg,#e8fff4,#d0ffe8);border:2px solid var(--g);color:#028a66;}
+.diff-dn{background:linear-gradient(135deg,#fff8e8,#fff0d0);border:2px solid var(--o);color:#c07000;}
+.caught-card{background:linear-gradient(135deg,#f0fff8,#e0f8ff);border:3px solid var(--g);border-radius:12px;padding:9px;margin:6px 0;display:flex;align-items:center;gap:9px;animation:ci-in .5s ease;}
+@keyframes ci-in{from{transform:translateX(-15px);opacity:0}to{transform:translateX(0);opacity:1}}
+.caught-card img{width:64px;height:64px;image-rendering:pixelated;}
+.caught-nm{font-family:'Fredoka One',cursive;font-size:.92rem;}
+.caught-sub{font-size:.64rem;color:#888;font-weight:700;}
+.shiny-tag{color:gold;text-shadow:0 0 7px gold;}
+.egg-box{background:linear-gradient(135deg,#fff9e6,#fff0d0);border-radius:11px;padding:9px;margin:5px 0;border:2px solid var(--y);}
+.egg-em{font-size:2.4rem;cursor:pointer;display:block;animation:ew 1.5s ease infinite;}
+@keyframes ew{0%,100%{transform:rotate(-10deg)}50%{transform:rotate(10deg)}}
+.new-ach{background:linear-gradient(135deg,var(--y),var(--o));color:#1d1d2e;border-radius:8px;padding:4px 8px;margin-top:4px;font-family:'Fredoka One',cursive;font-size:.74rem;}
+
+/* ═══════════════════════
+   GIOVANNI + REPORT
+═══════════════════════ */
+#gio-final{display:none;text-align:center;}
+.gio-final-bg{background:linear-gradient(135deg,#0d0018,#300040);border-radius:14px;padding:13px;margin-bottom:8px;border:3px solid var(--r);}
+.gio-title{font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--r);text-shadow:0 0 20px rgba(255,50,50,.7);margin-bottom:3px;}
+.gio-pokes-row{display:flex;justify-content:center;align-items:flex-end;gap:12px;margin:8px 0;}
+.gio-poke{width:120px;height:120px;image-rendering:pixelated;animation:sf 2s ease infinite;filter:drop-shadow(0 0 20px rgba(255,0,50,.8));display:block;}
+.gio-hp-bg{background:rgba(255,255,255,.15);border-radius:50px;height:12px;overflow:hidden;margin:5px 0;}
+.gio-hp-bar{height:100%;background:linear-gradient(90deg,var(--r),#ff4400);border-radius:50px;transition:width .8s;}
+
+/* ═══════════════════════
+   BUTTONS
+═══════════════════════ */
+.btn{display:block;width:100%;background:var(--r);color:#fff;font-family:'Fredoka One',cursive;font-size:.92rem;border:none;border-radius:11px;padding:10px;cursor:pointer;box-shadow:0 5px 0 #9e1e25;transition:transform .12s,box-shadow .12s;margin-top:6px;}
+.btn:hover{transform:translateY(-2px);box-shadow:0 7px 0 #9e1e25;}
+.btn:active{transform:translateY(2px);box-shadow:0 2px 0 #9e1e25;}
+.btn.bl{background:var(--b);box-shadow:0 5px 0 #0d3d6b;}
+.btn.bl:hover{box-shadow:0 7px 0 #0d3d6b;}
+.btn.gn{background:var(--g);box-shadow:0 5px 0 #028a66;}
+.btn.gn:hover{box-shadow:0 7px 0 #028a66;}
+.btn.pu{background:var(--p);box-shadow:0 5px 0 #5a0090;}
+.btn.pu:hover{box-shadow:0 7px 0 #5a0090;}
+.btn.or{background:var(--o);box-shadow:0 5px 0 #a05200;}
+.btn.or:hover{box-shadow:0 7px 0 #a05200;}
+.btn.gh{background:none;border:2px solid #dde;color:#888;box-shadow:none;}
+.btn.gh:hover{border-color:var(--b);color:var(--b);box-shadow:none;}
+.btn.sm{font-size:.8rem;padding:7px;margin-top:5px;}
+
+.modal-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);z-index:500;backdrop-filter:blur(4px);align-items:center;justify-content:center;}
+.modal-ov.open{display:flex;}
+.modal-box{background:#fff;border-radius:19px;padding:18px 16px;max-width:330px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.4);animation:mp .3s ease;max-height:88vh;overflow-y:auto;}
+@keyframes mp{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-ttl{font-family:'Fredoka One',cursive;font-size:1.2rem;color:var(--txt);margin-bottom:6px;}
+
+.float-pts{position:fixed;font-family:'Fredoka One',cursive;font-size:1.2rem;color:var(--y);text-shadow:2px 2px 0 #7a5a00;pointer-events:none;z-index:1000;animation:fu 1.1s ease forwards;}
+@keyframes fu{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-65px)}}
+.conf-c{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:999;overflow:hidden;}
+.cp{position:absolute;top:-20px;animation:cffall linear forwards;}
+@keyframes cffall{to{top:110vh;transform:rotate(720deg) translateX(var(--d));opacity:0}}
+.toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--y),var(--o));color:#1d1d2e;font-family:'Fredoka One',cursive;font-size:.82rem;border-radius:50px;padding:7px 18px;z-index:600;box-shadow:0 4px 20px rgba(255,180,0,.5);white-space:nowrap;animation:toast-in .3s ease;}
+@keyframes toast-in{from{transform:translateX(-50%) translateY(18px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
+
+.report-box{background:#f0f6ff;border-radius:10px;padding:8px 10px;margin-top:6px;}
+.rr{display:flex;justify-content:space-between;font-size:.72rem;font-weight:700;color:var(--txt);padding:3px 0;border-bottom:1px solid #dde;}
+.rr:last-child{border-bottom:none;}
+
+@media(max-width:380px){
+  .card{padding:9px 10px 13px;}
+  .qtext{font-size:1.35rem;}
+  .ab{font-size:1rem;padding:8px 5px;}
+  .enemy-img,.player-img{width:88px;height:88px;}
+  .turn-player-box{min-width:80px;}
+}
+
+/* ═══════════════════════
+   LOGIN SCREEN
+═══════════════════════ */
+#login-screen{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  z-index:9999;
+  background:linear-gradient(160deg,#0e0e1f 0%,#1a0030 50%,#0e0e1f 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:20px;
+}
+.login-card{
+  background:#fff;border-radius:24px;
+  padding:28px 24px 24px;
+  max-width:320px;width:100%;
+  text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 0 4px #ffd60a;
+  animation:login-drop .5s cubic-bezier(.17,.67,.3,1.3);
+}
+@keyframes login-drop{from{transform:translateY(-30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.login-logo{font-size:3.5rem;display:block;margin-bottom:6px;animation:sh-bob 2s ease infinite;}
+.login-title{font-family:'Fredoka One',cursive;font-size:1.5rem;color:#1d1d2e;margin-bottom:3px;}
+.login-sub{font-size:.75rem;font-weight:700;color:#aaa;margin-bottom:18px;}
+.pin-dots{display:flex;gap:10px;justify-content:center;margin-bottom:18px;}
+.pin-dot{
+  width:18px;height:18px;border-radius:50%;
+  background:#e0e6ff;border:2px solid #c0c8f0;
+  transition:all .2s;
+}
+.pin-dot.filled{background:#ffd60a;border-color:#c9900a;transform:scale(1.1);}
+.pin-dot.wrong{background:#e63946;border-color:#a01e25;animation:bsh .35s ease;}
+.numpad{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;max-width:220px;margin:0 auto;}
+.np-btn{
+  background:#f5f6ff;border:2px solid #e0e6ff;border-radius:12px;
+  padding:14px 0;font-family:'Fredoka One',cursive;font-size:1.4rem;
+  color:#1d1d2e;cursor:pointer;transition:all .12s;
+  box-shadow:0 3px 0 #c0c8f0;
+}
+.np-btn:hover{background:#e8f0ff;border-color:#4895ef;transform:translateY(-2px);box-shadow:0 5px 0 #a0b8f0;}
+.np-btn:active{transform:translateY(1px);box-shadow:0 1px 0 #c0c8f0;}
+.np-btn.np-del{background:#ffe5e5;border-color:#f0c0c0;color:#e63946;box-shadow:0 3px 0 #e0a0a0;}
+.np-btn.np-del:hover{background:#ffd0d0;border-color:#e63946;}
+.login-error{font-family:'Fredoka One',cursive;font-size:.85rem;color:#e63946;min-height:20px;margin-top:8px;}
+
+/* ═══════════════════════
+   MOBILE IMPROVEMENTS
+═══════════════════════ */
+@media(max-width:420px){
+  body{padding:6px 6px 20px;}
+  .card{padding:10px 10px 14px;border-radius:18px;}
+  .hdr h1{font-size:1.25rem;}
+  .hdr .sub{font-size:.56rem;}
+  .enemy-img,.player-img{width:84px;height:84px;}
+  .qtext{font-size:1.35rem;}
+  .ab{font-size:1rem;padding:9px 5px;}
+  .ab.spell{font-size:.88rem;padding:8px 6px;}
+  .spell-wd-big{font-size:1.2rem;}
+  .active-banner{padding:6px 9px;}
+  .ab-name{font-size:.95rem;}
+  .grade-row{gap:5px;}
+  .gb{padding:7px 3px;}
+  .gb-lbl{font-size:.66rem;}
+  .gb-sub{font-size:.5rem;}
+  .two-players{gap:7px;}
+  .diff-bar-wrap{padding:4px 7px;}
+  .np-btn{padding:12px 0;font-size:1.2rem;}
+}
+@media(max-width:360px){
+  .enemy-img,.player-img{width:72px;height:72px;}
+  .arena{min-height:190px;}
+  .qtext{font-size:1.2rem;}
+  .ab{font-size:.9rem;}
+}
+</style>
+</head>
+<body>
+<canvas id="bg-cv"></canvas>
+<button id="mb" onclick="toggleMusic()">🎵</button>
+
+
+<!-- ══════ LOGIN ══════ -->
+<div id="login-screen">
+  <div class="login-card">
+    <span class="login-logo">⚡</span>
+    <div class="login-title">Tobin's Rekenavontuur</div>
+    <div class="login-sub">Voer de geheime code in</div>
+    <div class="pin-dots" id="pin-dots">
+      <div class="pin-dot" id="pd-0"></div>
+      <div class="pin-dot" id="pd-1"></div>
+      <div class="pin-dot" id="pd-2"></div>
+      <div class="pin-dot" id="pd-3"></div>
+    </div>
+    <div class="numpad">
+      <button class="np-btn" onclick="pinInput('1')">1</button>
+      <button class="np-btn" onclick="pinInput('2')">2</button>
+      <button class="np-btn" onclick="pinInput('3')">3</button>
+      <button class="np-btn" onclick="pinInput('4')">4</button>
+      <button class="np-btn" onclick="pinInput('5')">5</button>
+      <button class="np-btn" onclick="pinInput('6')">6</button>
+      <button class="np-btn" onclick="pinInput('7')">7</button>
+      <button class="np-btn" onclick="pinInput('8')">8</button>
+      <button class="np-btn" onclick="pinInput('9')">9</button>
+      <button class="np-btn np-del" onclick="pinDelete()">⌫</button>
+      <button class="np-btn" onclick="pinInput('0')">0</button>
+      <button class="np-btn" style="background:#f0fff8;border-color:#06d6a0;color:#028a66;box-shadow:0 3px 0 #a0e0c0;" onclick="pinSubmit()">✓</button>
+    </div>
+    <div class="login-error" id="login-error">&nbsp;</div>
+  </div>
+</div>
+
+<div class="hdr">
+  <h1>⚡ Tobin's Rekenavontuur!</h1>
+  <div class="sub">Pokémon Editie · 2 Spelers · Red de Wereld!</div>
+</div>
+
+<div class="card" id="main-card">
+
+  <!-- ══════ SETUP ══════ -->
+  <div id="setup-screen">
+    <div class="setup-hero">
+      <span class="sh-em">⚡</span>
+      <h2>Wie gaan er spelen?</h2>
+      <p>Vul namen in en kies je groep</p>
+    </div>
+
+    <!-- PLAYER 1 — always visible inline -->
+    <div style="background:#fff0f6;border:3px solid var(--p1);border-radius:16px;padding:12px 13px;margin-bottom:10px;">
+      <div style="font-family:'Fredoka One',cursive;font-size:.95rem;color:var(--p1);margin-bottom:8px;">🧒 Speler 1</div>
+
+      <!-- Avatar row -->
+      <div style="font-size:.68rem;font-weight:800;color:#888;margin-bottom:4px;">Kies je avatar:</div>
+      <div class="av-row" id="av-row-0"></div>
+
+      <!-- Name input -->
+      <div style="font-size:.68rem;font-weight:800;color:#888;margin:6px 0 3px;">Jouw naam:</div>
+      <input class="ef-input" id="name-0" placeholder="Naam speler 1" maxlength="14" style="margin-bottom:8px;">
+
+      <!-- Grade buttons — ALWAYS VISIBLE -->
+      <div style="font-size:.68rem;font-weight:800;color:#888;margin-bottom:4px;">Jouw groep (bepaalt hoe moeilijk de sommen zijn):</div>
+      <div class="grade-row" id="grade-row-0">
+        <div class="gb" id="g0-g12" onclick="selGradeInline(0,'g12')">
+          <span class="gb-em">🌱</span>
+          <div class="gb-lbl">Groep 1/2</div>
+          <div class="gb-sub">tellen t/m 10</div>
+        </div>
+        <div class="gb sel" id="g0-g34" onclick="selGradeInline(0,'g34')">
+          <span class="gb-em">📚</span>
+          <div class="gb-lbl">Groep 3/4</div>
+          <div class="gb-sub">+/− t/m 20</div>
+        </div>
+        <div class="gb" id="g0-g56" onclick="selGradeInline(0,'g56')">
+          <span class="gb-em">🚀</span>
+          <div class="gb-lbl">Groep 5/6</div>
+          <div class="gb-sub">+−×÷ t/m 99</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PLAYER 2 — always visible inline -->
+    <div style="background:#f0f6ff;border:3px solid var(--p2);border-radius:16px;padding:12px 13px;margin-bottom:12px;">
+      <div style="font-family:'Fredoka One',cursive;font-size:.95rem;color:var(--p2);margin-bottom:8px;">👧 Speler 2 <span style="font-size:.62rem;font-weight:700;color:#aaa;">(optioneel)</span></div>
+
+      <div style="font-size:.68rem;font-weight:800;color:#888;margin-bottom:4px;">Kies je avatar:</div>
+      <div class="av-row" id="av-row-1"></div>
+
+      <div style="font-size:.68rem;font-weight:800;color:#888;margin:6px 0 3px;">Jouw naam:</div>
+      <input class="ef-input" id="name-1" placeholder="Naam speler 2 (leeg = solo)" maxlength="14" style="margin-bottom:8px;">
+
+      <div style="font-size:.68rem;font-weight:800;color:#888;margin-bottom:4px;">Jouw groep:</div>
+      <div class="grade-row" id="grade-row-1">
+        <div class="gb" id="g1-g12" onclick="selGradeInline(1,'g12')">
+          <span class="gb-em">🌱</span>
+          <div class="gb-lbl">Groep 1/2</div>
+          <div class="gb-sub">tellen t/m 10</div>
+        </div>
+        <div class="gb sel" id="g1-g34" onclick="selGradeInline(1,'g34')">
+          <span class="gb-em">📚</span>
+          <div class="gb-lbl">Groep 3/4</div>
+          <div class="gb-sub">+/− t/m 20</div>
+        </div>
+        <div class="gb" id="g1-g56" onclick="selGradeInline(1,'g56')">
+          <span class="gb-em">🚀</span>
+          <div class="gb-lbl">Groep 5/6</div>
+          <div class="gb-sub">+−×÷ t/m 99</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mode selection -->
+    <div class="mode-title">Hoe willen jullie spelen?</div>
+    <div class="mode-row">
+      <div class="mode-btn sel" id="mode-q" onclick="selMode('question')">
+        <span class="mb-em">⚡</span>
+        <div class="mb-lbl">Per vraag wisselen</div>
+        <div class="mb-sub">Supersnel & spannend!</div>
+      </div>
+      <div class="mode-btn" id="mode-l" onclick="selMode('level')">
+        <span class="mb-em">🎮</span>
+        <div class="mb-lbl">Per level wisselen</div>
+        <div class="mb-sub">Rustig om de beurt</div>
+      </div>
+    </div>
+
+    <button class="btn bl" onclick="startGame()" style="font-size:1.1rem;padding:13px;">▶ Beginnen!</button>
+  </div>
+
+  <!-- ══════ MAP ══════ -->
+  <div id="map-screen">
+    <div class="rocket-banner">
+      <span style="font-size:1.4rem;flex-shrink:0">😈</span>
+      <div><div style="font-size:.8rem;">Giovanni vlucht van level naar level!</div>
+      <div style="opacity:.6;font-size:.68rem;font-weight:400">Versla alle 10 levels → fort op 0% → EINDGEVECHT!</div></div>
+    </div>
+
+    <div id="daily-bar"></div>
+
+    <!-- 2-player score bar -->
+    <div class="score-bar-2p" id="score-bar-2p"></div>
+
+    <div class="fort-bar-wrap">
+      <div class="fort-title"><span>🏰 Giovanni's Fort</span><span id="fort-hp-txt" style="color:var(--r)">100%</span></div>
+      <div class="fort-hp-bg"><div class="fort-hp-bar" id="fort-hp-bar" style="width:100%"></div></div>
+      <div class="fort-sub" id="fort-sub">Versla levels om het fort te beschadigen!</div>
+    </div>
+
+    <div class="map-ttl">🗺️ Kies een regio (tik op een vlag):</div>
+    <div class="map-wrap">
+      <svg id="map-svg" viewBox="0 0 500 220" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4a90d9"/><stop offset="100%" stop-color="#a8d8f0"/></linearGradient>
+          <linearGradient id="gnd" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#5cb85c"/><stop offset="100%" stop-color="#3d7a3d"/></linearGradient>
+          <radialGradient id="fg"><stop offset="0%" stop-color="#e74c3c" stop-opacity=".6"/><stop offset="100%" stop-color="#e74c3c" stop-opacity="0"/></radialGradient>
+        </defs>
+        <rect width="500" height="220" fill="url(#sky)"/>
+        <ellipse cx="55" cy="30" rx="28" ry="11" fill="white" opacity=".85"/>
+        <ellipse cx="72" cy="28" rx="20" ry="9" fill="white" opacity=".9"/>
+        <ellipse cx="200" cy="22" rx="24" ry="10" fill="white" opacity=".75"/>
+        <ellipse cx="350" cy="28" rx="22" ry="9" fill="white" opacity=".7"/>
+        <rect x="0" y="168" width="500" height="52" fill="url(#gnd)"/>
+        <polygon points="20,168 58,90 96,168" fill="#95836A"/><polygon points="50,168 82,105 114,168" fill="#b09070"/>
+        <polygon points="58,90 50,108 66,108" fill="white" opacity=".85"/><polygon points="82,105 75,120 89,120" fill="white" opacity=".8"/>
+        <rect x="118" y="138" width="28" height="30" fill="#d4a843" rx="2"/><polygon points="118,138 132,118 146,138" fill="#c89a30"/>
+        <rect x="121" y="142" width="5" height="26" fill="#e8c060" rx="1"/><rect x="140" y="142" width="5" height="26" fill="#e8c060" rx="1"/>
+        <text x="108" y="135" font-size="10">📚</text>
+        <polygon points="165,168 200,72 235,168" fill="#a04020"/><ellipse cx="200" cy="60" rx="10" ry="6" fill="#ff2200" opacity=".9"/>
+        <path d="M192 80 Q190 95 193 105" stroke="#ff6600" stroke-width="2.5" fill="none" opacity=".8"/>
+        <text x="193" y="60" font-size="11">🔥</text>
+        <rect x="248" y="142" width="36" height="26" fill="#7a7a9a" rx="2"/><rect x="244" y="134" width="10" height="14" fill="#8a8aaa" rx="1"/><rect x="270" y="134" width="10" height="14" fill="#8a8aaa" rx="1"/>
+        <rect x="254" y="150" width="12" height="14" fill="#555"/><line x1="260" y1="134" x2="260" y2="120" stroke="#555" stroke-width="1.5"/>
+        <polygon points="260,120 272,125 260,130" fill="#e63946"/><text x="249" y="148" font-size="9">✏️</text>
+        <circle cx="313" cy="150" r="20" fill="#2a8a25"/><circle cx="330" cy="145" r="18" fill="#38aa30"/><circle cx="320" cy="138" r="16" fill="#4ac040"/>
+        <rect x="316" y="162" width="7" height="8" fill="#6b3a2a"/>
+        <ellipse cx="375" cy="95" rx="30" ry="15" fill="#4a4a6a"/><ellipse cx="382" cy="88" rx="18" ry="11" fill="#5a5a7a"/>
+        <text x="374" y="103" font-size="16">⚡</text><line x1="381" y1="108" x2="376" y2="122" stroke="#ffd60a" stroke-width="2"/>
+        <path d="M0 180 Q50 175 100 180 Q150 185 200 180 Q250 175 300 180 Q350 185 400 180 Q450 175 500 180 L500 220 L0 220Z" fill="#2471a3" opacity=".6"/>
+        <path d="M0 190 Q60 186 120 190 Q180 194 240 190 Q300 186 360 190 Q420 194 500 188 L500 220 L0 220Z" fill="#1a5276" opacity=".7"/>
+        <circle cx="430" cy="155" r="15" fill="#1a6e18"/><circle cx="443" cy="150" r="13" fill="#238a20"/><circle cx="436" cy="143" r="11" fill="#2da82a"/>
+        <rect x="432" y="165" width="6" height="7" fill="#6b3a2a"/>
+        <rect x="462" y="138" width="16" height="30" fill="#444" rx="2"/><line x1="462" y1="138" x2="470" y2="120" stroke="#555" stroke-width="2"/><line x1="478" y1="138" x2="470" y2="120" stroke="#555" stroke-width="2"/>
+        <text x="462" y="136" font-size="12">⚡</text>
+        <ellipse cx="470" cy="72" rx="32" ry="10" fill="#8e44ad" opacity=".6"/>
+        <rect x="452" y="48" width="36" height="28" fill="#6c3483" rx="3"/>
+        <rect x="448" y="42" width="10" height="14" fill="#7d3c98" rx="1"/><rect x="462" y="42" width="10" height="14" fill="#7d3c98" rx="1"/><rect x="476" y="42" width="10" height="14" fill="#7d3c98" rx="1"/>
+        <rect x="460" y="60" width="14" height="14" fill="#2c1654"/><circle cx="470" cy="62" r="38" fill="url(#fg)" opacity=".5"/>
+        <text x="458" y="60" font-size="12">🔮</text>
+        <path d="M70 158 Q118 155 132 152 Q160 148 200 155 Q232 160 266 152 Q295 145 320 155 Q348 162 375 148 Q405 135 435 155 Q452 162 465 140 Q468 118 470 85" stroke="#FFD700" stroke-width="3" fill="none" stroke-dasharray="7,4" opacity=".9"/>
+        <g id="map-flags"></g>
+        <g id="gio-sprite">
+          <rect x="-18" y="-26" width="18" height="26" fill="#1a1a1a" rx="2"/>
+          <ellipse cx="-9" cy="-30" rx="9" ry="8" fill="#d4a574"/>
+          <rect x="-16" y="-24" width="14" height="3" fill="#880000" rx="1"/>
+          <ellipse cx="-9" cy="-11" rx="7" ry="5" fill="#c0c0c0"/>
+          <ellipse cx="-9" cy="-15" rx="5" ry="4" fill="#d0d0d0"/>
+          <circle cx="-9" cy="-16" r="2" fill="#e84393"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Achievements active player -->
+    <div class="sec-ttl">🏅 Badges <span id="ab-owner"></span> (<span id="ach-cnt">0</span>/<span id="ach-ttl">0</span>):</div>
+    <div class="ach-scroll" id="ach-grid"></div>
+
+    <div class="sec-ttl">📦 Pokédex van <span id="coll-owner">jou</span> (<span id="coll-cnt">0</span>):</div>
+    <div class="coll-strip" id="coll-strip"></div>
+
+    <div style="display:flex;gap:6px;margin-top:7px;">
+      <button class="btn or" style="flex:1;margin-top:0;font-size:.8rem;" onclick="showReport()">📊 Rapport</button>
+      <button class="btn gh sm" style="flex:1;margin-top:0;" onclick="goSetup()">⚙️ Spelers</button>
+    </div>
+  </div>
+
+  <!-- ══════ GAME ══════ -->
+  <div id="game-screen">
+    <!-- Active player banner -->
+    <div class="active-banner" id="active-banner">
+      <span class="ab-avatar" id="ab-av">🧒</span>
+      <div class="ab-info">
+        <div class="ab-name" id="ab-nm">Trainer</div>
+        <div class="ab-grade" id="ab-gr">Groep 3/4</div>
+      </div>
+      <span class="ab-score" id="ab-sc">⭐ 0</span>
+    </div>
+
+    <!-- Difficulty bar -->
+    <div class="diff-bar-wrap" id="diff-bar">
+      <span class="diff-label">Niveau:</span>
+      <div class="diff-dots" id="diff-dots"></div>
+      <span class="diff-txt" id="diff-txt">Standaard</span>
+    </div>
+
+    <div class="topbar">
+      <button class="bk-btn" onclick="goMap()">← Kaart</button>
+      <div class="pill p-sc">⭐ <span id="sc-d">0</span></div>
+      <div class="pill p-lv" id="lives-pill">❤️❤️❤️</div>
+      <div class="pill p-st">🔥 <span id="str-d">0</span></div>
+      <div class="p-tp" id="type-pill">🔢 Rekenen</div>
+    </div>
+
+    <!-- Backpack toggle -->
+    <div style="text-align:right;margin-bottom:5px;">
+      <button class="btn gh sm" style="display:inline-block;width:auto;padding:4px 12px;margin-top:0;" onclick="toggleBP()" id="bp-toggle">🎒 Rugzak openen</button>
+    </div>
+    <div class="bp-panel" id="bp-panel" style="display:none;">
+      <div class="bp-title">🎒 Inzetten als helper (1× per level):</div>
+      <div class="bp-grid" id="bp-grid"></div>
+    </div>
+
+    <div class="arena" id="arena">
+      <div class="speech" id="speech">Klaar?</div>
+      <div class="hp-row">
+        <div class="hp-box"><div class="hp-nm" id="ply-hp-nm">Jouw Pokémon</div><div class="hp-bg"><div class="hp-b" id="ply-hp" style="width:100%;background:var(--g)"></div></div></div>
+        <div class="hp-box"><div class="hp-nm" id="emy-hp-nm">Team Rocket</div><div class="hp-bg"><div class="hp-b" id="emy-hp" style="width:100%;background:var(--r)"></div></div></div>
+      </div>
+      <div class="poke-row">
+        <div class="player-wrap"><img class="player-img" id="ply-img" src="" alt=""><div class="player-tag" id="ply-tag">?????</div></div>
+        <div class="enemy-wrap"><div class="enemy-tag" id="emy-tag">Team Rocket 😈</div><img class="enemy-img" id="emy-img" src="" alt=""></div>
+      </div>
+    </div>
+
+    <div class="qbox"><div class="qtext" id="qtext"></div><div class="timer-wrap"><div class="tbar" id="tbar" style="width:100%"></div></div></div>
+    <div class="answers" id="answers"></div>
+    <div class="feedback" id="feedback">&nbsp;</div>
+    <div class="prog-wrap"><div class="prog-bar m" id="prog-bar" style="width:0%"></div></div>
+    <div class="prog-lbl" id="prog-lbl">Vraag 1 van 5</div>
+  </div>
+
+  <!-- ══════ TURN SWITCH ══════ -->
+  <div id="turn-screen">
+    <div class="turn-vs-row">
+      <div class="turn-player-box" id="tp-box-0" style="background:rgba(255,107,157,.1);border-color:rgba(255,107,157,.3);">
+        <span class="tpb-av" id="tp-av-0">🧒</span>
+        <div class="tpb-nm" id="tp-nm-0">Speler 1</div>
+        <div class="tpb-sc" id="tp-sc-0">⭐ 0</div>
+      </div>
+      <div class="turn-vs">VS</div>
+      <div class="turn-player-box" id="tp-box-1" style="background:rgba(72,149,239,.1);border-color:rgba(72,149,239,.3);">
+        <span class="tpb-av" id="tp-av-1">👧</span>
+        <div class="tpb-nm" id="tp-nm-1">Speler 2</div>
+        <div class="tpb-sc" id="tp-sc-1">⭐ 0</div>
+      </div>
+    </div>
+    <div class="turn-cta" id="turn-cta">🧒 Speler 1 is aan de beurt!</div>
+    <div class="turn-subtitle" id="turn-sub">Geef de telefoon door! 📱</div>
+    <div class="turn-count-bar"><div class="turn-count-fill" id="turn-count-fill" style="width:100%"></div></div>
+    <button class="btn gn" onclick="resumeAfterTurn()" style="max-width:260px;margin:0 auto;">▶ Ik ben klaar — beginnen!</button>
+  </div>
+
+  <!-- ══════ COMPLETE ══════ -->
+  <div id="complete-screen">
+    <span class="trophy-big" id="comp-trophy">🏆</span>
+    <div class="comp-ttl" id="comp-ttl">Geweldig!</div>
+    <div class="stars-row" id="stars-row"></div>
+    <div id="gio-flee-area"></div>
+    <div style="font-family:'Fredoka One',cursive;color:#888;font-size:.76rem;margin-bottom:5px;" id="comp-sc"></div>
+    <div id="diff-change-area"></div>
+    <div id="fort-dmg-area"></div>
+    <div id="egg-area"></div>
+    <div id="caught-area"></div>
+    <div id="ach-earned"></div>
+    <button class="btn gn" id="next-btn" onclick="handleNextLevel()">▶ Volgende!</button>
+    <button class="btn" onclick="replayW()">🔄 Nog een keer!</button>
+    <button class="btn gh sm" onclick="goMap()">← Kaart</button>
+  </div>
+
+  <!-- ══════ GIOVANNI ══════ -->
+  <div id="gio-final">
+    <div class="gio-final-bg">
+      <div style="font-size:1.8rem;margin-bottom:2px;">🏰💥🏰</div>
+      <div class="gio-title">GIOVANNI'S EINDGEVECHT!</div>
+      <div style="font-size:.74rem;font-weight:700;color:rgba(255,255,255,.6);margin-bottom:8px;">Je hebt Giovanni opgejaagd! Nu is het moment van de waarheid!</div>
+      <div class="gio-pokes-row">
+        <img class="gio-poke" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/150.png" alt="Mewtwo">
+        <div style="text-align:center;"><div style="font-size:2rem;animation:sf 1.5s ease infinite">😈</div><div style="font-family:'Fredoka One',cursive;font-size:.75rem;color:#fff;margin-top:2px;">Giovanni</div></div>
+        <img class="gio-poke" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/248.png" alt="Tyranitar">
+      </div>
+      <div class="gio-hp-bg"><div class="gio-hp-bar" id="gio-hp-bar" style="width:100%"></div></div>
+      <div style="font-family:'Fredoka One',cursive;font-size:.62rem;color:rgba(255,255,255,.4);margin-bottom:6px;">Giovanni's kracht</div>
+    </div>
+    <button class="btn pu" onclick="startGioFight()">⚔️ Versla Giovanni!</button>
+    <button class="btn gh sm" onclick="goMap()">← Kaart</button>
+  </div>
+</div>
+
+<!-- SUPER OVERLAY -->
+<div id="super-ov">
+  <div class="super-card">
+    <div class="lbg" id="lbg"></div>
+    <div class="super-badge" id="super-badge">⚡ SUPERVRAAG! ⚡</div>
+    <img class="super-poke" id="super-poke-img" src="" alt="">
+    <div class="super-nm" id="super-nm"></div>
+    <div class="super-desc" id="super-desc"></div>
+    <div class="super-bonus">🏆 <span id="super-bonus-txt">+10</span> bonuspunten!</div>
+    <div class="super-qa" id="super-qa"></div>
+    <div class="super-anss" id="super-anss"></div>
+    <div class="super-tw"><div class="super-tb" id="super-tb" style="width:100%"></div></div>
+    <div class="super-fb" id="super-fb">&nbsp;</div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="modal-ov" id="report-modal">
+  <div class="modal-box" style="max-width:360px;">
+    <div class="modal-ttl">📊 Voortgangsrapport</div>
+    <div id="report-content"></div>
+    <button class="btn gh sm" style="margin-top:8px;" onclick="closeModal('report-modal')">Sluiten</button>
+  </div>
+</div>
+
+<div class="conf-c" id="confetti"></div>
+
+<script>
+/* ─── STARS BG ─── */
+(()=>{const cv=document.getElementById('bg-cv'),ctx=cv.getContext('2d');let W,H,stars=[];const rs=()=>{W=cv.width=innerWidth;H=cv.height=innerHeight;stars=[];for(let i=0;i<100;i++)stars.push({x:Math.random()*W,y:Math.random()*H,r:.4+Math.random()*1.3,o:Math.random()});};window.addEventListener('resize',rs);rs();const draw=()=>{ctx.clearRect(0,0,W,H);stars.forEach(s=>{s.o+=.007;ctx.globalAlpha=Math.sin(s.o*Math.PI)*.7;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();s.y+=.1;if(s.y>H)s.y=0;});ctx.globalAlpha=1;requestAnimationFrame(draw);};draw();})();
+
+/* ─── AUDIO ─── */
+let aC=null,mOn=false,mIdx=0,mTO=null;
+const MEL=[[392,.18],[0,.04],[440,.14],[523,.2],[0,.04],[659,.28],[0,.08],[587,.14],[523,.14],[440,.18],[392,.38],[0,.18],[330,.18],[0,.04],[349,.14],[392,.2],[0,.04],[523,.28],[0,.08],[494,.14],[440,.14],[392,.18],[349,.38],[0,.28],[659,.18],[587,.18],[523,.14],[494,.18],[523,.38],[0,.12],[784,.18],[740,.14],[698,.14],[659,.28],[0,.18]];
+function initAC(){if(aC)return;aC=new(window.AudioContext||window.webkitAudioContext)();}
+function note(f,d,v=.09){if(!aC||!mOn)return;const o=aC.createOscillator(),g=aC.createGain();o.type='square';o.frequency.value=f;g.gain.setValueAtTime(v,aC.currentTime);g.gain.exponentialRampToValueAtTime(.001,aC.currentTime+d);o.connect(g);g.connect(aC.destination);o.start();o.stop(aC.currentTime+d);}
+function sched(){if(!mOn)return;const[f,d]=MEL[mIdx];if(f>0)note(f,d*.9);mIdx=(mIdx+1)%MEL.length;mTO=setTimeout(sched,d*1000);}
+function startMusic(){initAC();mOn=true;mIdx=0;sched();document.getElementById('mb').textContent='🔊';}
+function stopMusic(){mOn=false;clearTimeout(mTO);document.getElementById('mb').textContent='🎵';}
+function toggleMusic(){mOn?stopMusic():startMusic();}
+function sfx(t){if(!aC)return;if(t==='ok')[523,659,784,1047].forEach((f,i)=>setTimeout(()=>note(f,.12,.14),i*80));else if(t==='no'){note(220,.3,.14);setTimeout(()=>note(196,.28,.1),160);}else if(t==='super')[392,494,659,784,1047,1319].forEach((f,i)=>setTimeout(()=>note(f,.17,.18),i*90));else if(t==='catch')[523,587,659,784,1047].forEach((f,i)=>setTimeout(()=>note(f,.14,.17),i*100));else if(t==='lvl')[523,659,784,1047,1318].forEach((f,i)=>setTimeout(()=>note(f,.2,.2),i*130));else if(t==='sp')[659,523,659,784].forEach((f,i)=>setTimeout(()=>note(f,.12,.14),i*90));else if(t==='flee')[784,659,523,392,330].forEach((f,i)=>setTimeout(()=>note(f,.1,.1),i*70));else if(t==='turn')[523,659,523].forEach((f,i)=>setTimeout(()=>note(f,.1,.12),i*120));}
+
+/* ─── GRADE CONFIGS ─── */
+const GRADES={
+  g12:{lbl:'Groep 1/2',sub:'Tellen t/m 10',em:'🌱',color:'#56cfb2',ops:['+'],max:10,timeBonus:1.5,minDl:1,spellTypes:['klanken']},
+  g34:{lbl:'Groep 3/4',sub:'+ en − t/m 20',em:'📚',color:'#4895ef',ops:['+','-'],max:20,timeBonus:1.0,minDl:1,spellTypes:['klanken','woordspelling']},
+  g56:{lbl:'Groep 5/6',sub:'+ − × ÷ t/m 99',em:'🚀',color:'#e63946',ops:['+','-','*','/'],max:99,timeBonus:0.75,minDl:3,spellTypes:['klanken','woordspelling','zinsfout','meervoud','verkleinwoord']},
+};
+
+const AVATARS=['🧒','👦','👧','🧑','🦸','🧙','🐉','⚡','🔥','💧','🌿','🔮','🦊','🐼','🌟','🎯'];
+const PLAYER_COLORS=['#ff6b9d','#4895ef'];
+
+/* ─── LEVELS ─── */
+const LEVELS=[
+  {id:'aarde',n:'Aarde Regio',em:'⛰️',type:'math',bg:'#2d1a0e',arenaG:'linear-gradient(180deg,#d4b896 0%,#e8d5b0 45%,#b8d4a0 100%)',acc:'#c7a17a',ops:['+','-'],max:20,mapX:70,mapY:162,pokes:[{id:51,n:'Dugtrio'},{id:76,n:'Golem'},{id:112,n:'Rhydon'},{id:105,n:'Marowak'},{id:232,n:'Donphan'},{id:208,n:'Steelix'},{id:464,n:'Rhyperior'},{id:472,n:'Gliscor'},{id:530,n:'Excadrill'},{id:248,n:'Tyranitar'}],rPoke:{id:34,n:'Nidoking'},sp:['Rots en steen!','Graaf je vrij!','Knal!'],sPokes:[{id:248,n:'Tyranitar'},{id:464,n:'Rhyperior'}]},
+  {id:'spell1',n:'Taal Tempel',em:'📚',type:'spell',bg:'#0d0060',arenaG:'linear-gradient(180deg,#9060cc 0%,#c090ff 45%,#e8d0ff 100%)',acc:'#c77dff',mapX:132,mapY:152,pokes:[{id:196,n:'Espeon'},{id:282,n:'Gardevoir'},{id:475,n:'Gallade'},{id:380,n:'Latias'},{id:350,n:'Milotic'},{id:488,n:'Cresselia'},{id:151,n:'Mew'},{id:199,n:'Slowking'},{id:65,n:'Alakazam'},{id:97,n:'Hypno'}],rPoke:{id:97,n:'Hypno'},sp:['Schrijf het goed!','Letters zijn kracht!','Lees de zin!'],sPokes:[{id:196,n:'Espeon'},{id:282,n:'Gardevoir'}]},
+  {id:'vuur',n:'Vuur Regio',em:'🌋',type:'math',bg:'#2d0a0a',arenaG:'linear-gradient(180deg,#ff9966 0%,#ffccaa 45%,#ffe8a0 100%)',acc:'#ff6b35',ops:['+','-','*'],max:50,mapX:200,mapY:162,pokes:[{id:6,n:'Charizard'},{id:59,n:'Arcanine'},{id:78,n:'Rapidash'},{id:136,n:'Flareon'},{id:157,n:'Typhlosion'},{id:257,n:'Blaziken'},{id:392,n:'Infernape'},{id:445,n:'Garchomp'},{id:373,n:'Salamence'},{id:448,n:'Lucario'}],rPoke:{id:229,n:'Houndoom'},sp:['VUUR!','Char char!','Braaaand!'],sPokes:[{id:6,n:'Charizard'},{id:229,n:'Houndoom'}]},
+  {id:'spell2',n:'Schrijf Slot',em:'✏️',type:'spell',bg:'#003060',arenaG:'linear-gradient(180deg,#6090cc 0%,#90c0ff 45%,#d0e8ff 100%)',acc:'#4895ef',mapX:266,mapY:152,pokes:[{id:9,n:'Blastoise'},{id:55,n:'Golduck'},{id:134,n:'Vaporeon'},{id:160,n:'Feraligatr'},{id:186,n:'Politoed'},{id:350,n:'Milotic'},{id:395,n:'Empoleon'},{id:230,n:'Kingdra'},{id:131,n:'Lapras'},{id:62,n:'Poliwrath'}],rPoke:{id:130,n:'Gyarados'},sp:['Welk woord klopt?','Schrijf het goed!','Denk na!'],sPokes:[{id:395,n:'Empoleon'},{id:131,n:'Lapras'}]},
+  {id:'gras',n:'Gras Regio',em:'🌿',type:'math',bg:'#0a1e0d',arenaG:'linear-gradient(180deg,#78d880 0%,#c0f0a0 45%,#e0f8d0 100%)',acc:'#56cfb2',ops:['+','-','*'],max:60,mapX:320,mapY:158,pokes:[{id:3,n:'Venusaur'},{id:45,n:'Vileplume'},{id:71,n:'Victreebel'},{id:103,n:'Exeggutor'},{id:154,n:'Meganium'},{id:182,n:'Bellossom'},{id:254,n:'Sceptile'},{id:357,n:'Tropius'},{id:470,n:'Leafeon'},{id:497,n:'Serperior'}],rPoke:{id:3,n:'Venusaur'},sp:['Bulba!','Natuur power!','Bladerstorm!'],sPokes:[{id:254,n:'Sceptile'},{id:497,n:'Serperior'}]},
+  {id:'spell3',n:'Zinnen Toren',em:'⚡',type:'spell',bg:'#1a1000',arenaG:'linear-gradient(180deg,#ffe060 0%,#fff8a0 45%,#f0ffe0 100%)',acc:'#ffd60a',mapX:375,mapY:145,pokes:[{id:26,n:'Raichu'},{id:82,n:'Magneton'},{id:101,n:'Electrode'},{id:135,n:'Jolteon'},{id:181,n:'Ampharos'},{id:243,n:'Raikou'},{id:405,n:'Luxray'},{id:466,n:'Electivire'},{id:587,n:'Emolga'},{id:523,n:'Zebstrika'}],rPoke:{id:243,n:'Raikou'},sp:['ZAAP!','Bliksem!','Schrijf juist!'],sPokes:[{id:243,n:'Raikou'},{id:466,n:'Electivire'}]},
+  {id:'water',n:'Water Regio',em:'🌊',type:'math',bg:'#0a0d2e',arenaG:'linear-gradient(180deg,#4488cc 0%,#88bbee 45%,#c0e8ff 100%)',acc:'#4895ef',ops:['+','-','*','/'],max:80,mapX:435,mapY:155,pokes:[{id:9,n:'Blastoise'},{id:55,n:'Golduck'},{id:91,n:'Cloyster'},{id:134,n:'Vaporeon'},{id:160,n:'Feraligatr'},{id:186,n:'Politoed'},{id:230,n:'Kingdra'},{id:350,n:'Milotic'},{id:395,n:'Empoleon'},{id:130,n:'Gyarados'}],rPoke:{id:130,n:'Gyarados'},sp:['Splash!','Waterkanon!','Golven!'],sPokes:[{id:130,n:'Gyarados'},{id:350,n:'Milotic'}]},
+  {id:'spell4',n:'Woord Woud',em:'🌲',type:'spell',bg:'#0a1e0d',arenaG:'linear-gradient(180deg,#78d880 0%,#c0f0a0 45%,#e0f8d0 100%)',acc:'#2dc653',mapX:455,mapY:140,pokes:[{id:3,n:'Venusaur'},{id:154,n:'Meganium'},{id:254,n:'Sceptile'},{id:470,n:'Leafeon'},{id:497,n:'Serperior'},{id:357,n:'Tropius'},{id:45,n:'Vileplume'},{id:182,n:'Bellossom'},{id:407,n:'Roserade'},{id:549,n:'Lilligant'}],rPoke:{id:407,n:'Roserade'},sp:['Schrijf het!','Goed nadenken!','Woordenkracht!'],sPokes:[{id:497,n:'Serperior'},{id:407,n:'Roserade'}]},
+  {id:'electric',n:'Bliksem Regio',em:'⚡',type:'math',bg:'#1a1500',arenaG:'linear-gradient(180deg,#ffe060 0%,#fff8a0 45%,#e8ffe0 100%)',acc:'#ffd60a',ops:['+','-','*','/'],max:99,mapX:467,mapY:122,pokes:[{id:26,n:'Raichu'},{id:82,n:'Magneton'},{id:101,n:'Electrode'},{id:135,n:'Jolteon'},{id:181,n:'Ampharos'},{id:243,n:'Raikou'},{id:405,n:'Luxray'},{id:466,n:'Electivire'},{id:587,n:'Emolga'},{id:603,n:'Eelektrik'}],rPoke:{id:243,n:'Raikou'},sp:['VOLT!','Bliksem!','PIKA!'],sPokes:[{id:243,n:'Raikou'},{id:466,n:'Electivire'}]},
+  {id:'psychic',n:'Psycho Vesting',em:'🔮',type:'math',bg:'#0d0018',arenaG:'linear-gradient(180deg,#aa66cc 0%,#cc99ee 45%,#eeddff 100%)',acc:'#c77dff',ops:['+','-','*','/'],max:99,mapX:470,mapY:78,pokes:[{id:65,n:'Alakazam'},{id:80,n:'Slowbro'},{id:150,n:'Mewtwo'},{id:151,n:'Mew'},{id:196,n:'Espeon'},{id:199,n:'Slowking'},{id:282,n:'Gardevoir'},{id:475,n:'Gallade'},{id:380,n:'Latias'},{id:488,n:'Cresselia'}],rPoke:{id:150,n:'Mewtwo'},sp:['Psychisch!','POWER!','Mindkracht!'],sPokes:[{id:150,n:'Mewtwo'},{id:151,n:'Mew'}]},
+];
+
+/* ─── SPELLING DATA ─── */
+const SPELL={
+  klanken:[
+    {pr:'Welk woord klopt?',q:'De _aan schijnt.',ans:'maan',ch:['maan','man','maen','mahn']},
+    {pr:'Welk woord past hier?',q:'Ik klim in de b_om.',ans:'boom',ch:['boom','bom','boam','boem']},
+    {pr:'Welk woord klopt?',q:'Hij rijdt op zijn f_ets.',ans:'fiets',ch:['fiets','feets','fets','fieets']},
+    {pr:'Kies het goede woord:',q:'De k_t slaapt op de bank.',ans:'kat',ch:['kat','kaat','katt','ket']},
+    {pr:'Welk woord klopt?',q:'Zij eet een br_od.',ans:'brood',ch:['brood','brod','brode','broode']},
+    {pr:'Vul in:',q:'De h_nd blaft hard.',ans:'hond',ch:['hond','hont','hoond','hund']},
+  ],
+  woordspelling:[
+    {pr:'Welk woord is goed gespeld?',q:'',ans:'schrijven',ch:['schrijven','srijven','schijven','schijrven']},
+    {pr:'Welk woord is goed gespeld?',q:'',ans:'vliegtuig',ch:['vliegtuig','vlietuig','vliechtuig','vliegtuik']},
+    {pr:'Welk woord is goed gespeld?',q:'',ans:'school',ch:['school','scool','skool','schol']},
+    {pr:'Welk woord is goed gespeld?',q:'',ans:'meisje',ch:['meisje','meisj','meijse','meisje']},
+    {pr:'Welk woord is goed gespeld?',q:'',ans:'konijn',ch:['konijn','conijn','konin','konijhn']},
+  ],
+  zinsfout:[
+    {pr:'Welke zin is FOUT gespeld?',q:'',ans:'De appel is lekkir.',ch:['De kat slaapt.','De appel is lekkir.','Hij rent snel.','Zij eet brood.']},
+    {pr:'Welke zin is CORRECT?',q:'',ans:'Hij fietst naar huis.',ch:['Hij fiets naar huis.','Hij fietst naar huiss.','Hij fietst naar huis.','Hiej fietst.']},
+    {pr:'Welke zin is CORRECT?',q:'',ans:'De hond rent snel.',ch:['De hont rent snel.','De hond rennt snel.','De hond rent snehl.','De hond rent snel.']},
+    {pr:'Welke zin is CORRECT?',q:'',ans:'Ik ga naar school.',ch:['Ik ga naa school.','Ik ga naar scool.','Ik ga naar school.','Ik gaet naar school.']},
+  ],
+  meervoud:[
+    {pr:'Meervoud van "boom"?',q:'boom → ?',ans:'bomen',ch:['bomen','boomen','booms','boome']},
+    {pr:'Meervoud van "huis"?',q:'huis → ?',ans:'huizen',ch:['huizen','huises','huiss','huizen']},
+    {pr:'Meervoud van "bal"?',q:'bal → ?',ans:'ballen',ch:['ballen','bals','ballen','balen']},
+    {pr:'Meervoud van "kat"?',q:'kat → ?',ans:'katten',ch:['katten','katen','kats','katsen']},
+    {pr:'Meervoud van "bloem"?',q:'bloem → ?',ans:'bloemen',ch:['bloemen','bloemmen','bloems','bloeme']},
+  ],
+  verkleinwoord:[
+    {pr:'Verkleinwoord van "boom"?',q:'boom → ?',ans:'boompje',ch:['boompje','boomtje','boomje','boome']},
+    {pr:'Verkleinwoord van "huis"?',q:'huis → ?',ans:'huisje',ch:['huisje','huistje','huisjie','huisj']},
+    {pr:'Verkleinwoord van "bal"?',q:'bal → ?',ans:'balletje',ch:['balletje','baltje','balje','balle']},
+    {pr:'Verkleinwoord van "kat"?',q:'kat → ?',ans:'katje',ch:['katje','katteje','katje','katsje']},
+  ],
+};
+
+/* ─── ACHIEVEMENTS ─── */
+const ACHS=[
+  {id:'first_win',icon:'🏅',lbl:'Eerste overwinning!'},
+  {id:'streak5',icon:'🔥',lbl:'5 op rij!'},
+  {id:'perfect',icon:'💎',lbl:'Perfecte ronde!'},
+  {id:'shiny',icon:'✨',lbl:'Shiny gevangen!'},
+  {id:'spell_ace',icon:'📝',lbl:'Spellingkampioen!'},
+  {id:'math_ace',icon:'🔢',lbl:'Rekenwonder!'},
+  {id:'collector5',icon:'📦',lbl:'5 Pokémon gevangen!'},
+  {id:'collector10',icon:'🎯',lbl:'10 Pokémon gevangen!'},
+  {id:'fort50',icon:'🏰',lbl:'Fort half beschadigd!'},
+  {id:'champion',icon:'🏆',lbl:'Pokémon Kampioen!'},
+  {id:'super_hero',icon:'⚡',lbl:'Supervraag verslagen!'},
+  {id:'daily',icon:'🎁',lbl:'Dagelijkse bonus!'},
+  {id:'level_up',icon:'📈',lbl:'Niveau omhoog!'},
+];
+
+/* ─── STATE ─── */
+const DEFAULT_PLAYER=(i)=>({
+  name:i===0?'Speler 1':'Speler 2',
+  grade:'g34',avatar:i===0?'🧒':'👧',color:PLAYER_COLORS[i],
+  score:0,collection:[],achievements:[],
+  stats:{mC:0,mW:0,sC:0,sW:0,sessions:0},
+  diffLevel:1,bagUsed:[],
+});
+
+let G={
+  players:[DEFAULT_PLAYER(0),DEFAULT_PLAYER(1)],
+  activeP:0,
+  mode:'question', // 'question' | 'level'
+  // Setup temp
+  editIdx:-1,editGrade:'g34',editAv:'🧒',
+  // Game
+  world:null,qs:[],qIdx:0,score:0,streak:0,lives:3,answered:false,
+  timerInt:null,timeLeft:0,
+  plyHp:100,emyHp:100,usedIds:[],
+  eggPoke:null,eggHatched:false,eggShiny:false,
+  fortHp:100,worldStars:{},dailyClaimed:'',
+  superActive:false,superTI:null,superTL:0,superBonus:10,
+  doubleNext:false,
+  // Turn countdown
+  turnCountInt:null,turnCountLeft:0,
+};
+
+/* ─── PERSIST ─── */
+function spr(id){return`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;}
+function rnd(a,b){return~~(Math.random()*(b-a+1))+a;}
+function sym(o){return o==='*'?'×':o==='/'?'÷':o;}
+
+function load(){
+  try{
+    const d=JSON.parse(localStorage.getItem('tobin_v8')||'{}');
+    if(d.players&&d.players.length)G.players=d.players;
+    if(d.fortHp!==undefined)G.fortHp=d.fortHp;
+    if(d.worldStars)G.worldStars=d.worldStars;
+    if(d.dailyClaimed)G.dailyClaimed=d.dailyClaimed;
+    if(d.mode)G.mode=d.mode;
+    if(d.activeP!==undefined)G.activeP=d.activeP;
+  }catch(e){}
+}
+function save(){
+  try{localStorage.setItem('tobin_v8',JSON.stringify({players:G.players,fortHp:G.fortHp,worldStars:G.worldStars,dailyClaimed:G.dailyClaimed,mode:G.mode,activeP:G.activeP}));}catch(e){}
+}
+function P(i){return G.players[i!==undefined?i:G.activeP]||G.players[0];}
+function tryAch(id,pi){const p=P(pi);if(!p.achievements)p.achievements=[];if(!p.achievements.includes(id)){p.achievements.push(id);save();return true;}return false;}
+
+/* ═══════════════════════
+   SETUP
+═══════════════════════ */
+function goSetup(){show('setup-screen');renderSetup();}
+
+/* ─── SETUP: inline grade/avatar per speler ─── */
+// Temporary grade/avatar state per speler (0 and 1)
+const setupState=[
+  {grade:'g34', avatar:'🧒'},
+  {grade:'g34', avatar:'👧'},
+];
+
+function renderSetup(){
+  // Mode buttons
+  document.getElementById('mode-q').className='mode-btn'+(G.mode==='question'?' sel':'');
+  document.getElementById('mode-l').className='mode-btn'+(G.mode==='level'?' sel':'');
+  // Pre-fill names and highlight grades/avatars from saved players
+  [0,1].forEach(i=>{
+    const p=G.players[i];
+    if(p){
+      const ni=document.getElementById(`name-${i}`);
+      if(ni&&!ni.value)ni.value=(p.name!==`Speler ${i+1}`?p.name:'');
+      setupState[i].grade=p.grade||'g34';
+      setupState[i].avatar=p.avatar||(i===0?'🧒':'👧');
+    }
+    // Highlight correct grade button
+    ['g12','g34','g56'].forEach(g=>{
+      const el=document.getElementById(`g${i}-${g}`);
+      if(el)el.className='gb'+(setupState[i].grade===g?' sel':'');
+    });
+    // Build avatar row
+    buildAvatarRow(i);
+  });
+}
+
+function buildAvatarRow(i){
+  const cont=document.getElementById(`av-row-${i}`);if(!cont)return;
+  cont.innerHTML='';
+  AVATARS.forEach(av=>{
+    const b=document.createElement('div');
+    b.className='av'+(av===setupState[i].avatar?' sel':'');
+    b.textContent=av;
+    b.onclick=()=>{
+      setupState[i].avatar=av;
+      cont.querySelectorAll('.av').forEach(x=>x.classList.remove('sel'));
+      b.classList.add('sel');
+    };
+    cont.appendChild(b);
+  });
+}
+
+function selGradeInline(playerIdx, grade){
+  setupState[playerIdx].grade=grade;
+  ['g12','g34','g56'].forEach(g=>{
+    const el=document.getElementById(`g${playerIdx}-${g}`);
+    if(el)el.className='gb'+(g===grade?' sel':'');
+  });
+}
+
+function selMode(m){G.mode=m;renderSetup();}
+
+function startGame(){
+  // Read speler 1
+  const n0=(document.getElementById('name-0').value.trim())||'Speler 1';
+  G.players[0]={...G.players[0], name:n0, grade:setupState[0].grade, avatar:setupState[0].avatar, color:PLAYER_COLORS[0]};
+
+  // Speler 2 only if name filled in
+  const n1=(document.getElementById('name-1').value.trim());
+  if(n1){
+    G.players[1]={...G.players[1], name:n1, grade:setupState[1].grade, avatar:setupState[1].avatar, color:PLAYER_COLORS[1]};
+    // Solo mode if no player 2 name — keep 2nd player but mark as cpu
+    G.players[1].solo=false;
+  } else {
+    // Solo — keep player 2 but hide from multiplayer UI
+    G.players[1]={...DEFAULT_PLAYER(1), name:'Solo', solo:true};
+    G.mode='solo';
+  }
+
+  save();goMap();
+}
+
+/* ═══════════════════════
+   MAP
+═══════════════════════ */
+function buildMap(){
+  const p=P();
+
+  // Daily
+  const today=new Date().toDateString();
+  const db=document.getElementById('daily-bar');
+  if(G.dailyClaimed!==today)db.innerHTML=`<div class="daily-glow" onclick="claimDaily()">🎁 Dagelijkse bonus voor ${p.name}! Tik voor een gratis Pokémon!</div>`;
+  else db.innerHTML='';
+
+  // 2-player score bar
+  const sb=document.getElementById('score-bar-2p');sb.innerHTML='';
+  G.players.forEach((pl,i)=>{
+    const gr=GRADES[pl.grade]||GRADES.g34;
+    const el=document.createElement('div');
+    el.className='sbp sbp'+(i+1)+(i===G.activeP?' active-p':'');
+    el.style.borderColor=pl.color;
+    el.style.background=pl.color+'18';
+    el.innerHTML=`<div class="sbp-av">${pl.avatar}</div><div class="sbp-nm">${pl.name}</div><div class="sbp-gr">${gr.lbl} Niv.${pl.diffLevel||1}</div><div class="sbp-sc">⭐ ${pl.score||0}</div>`;
+    el.onclick=()=>{G.activeP=i;buildMap();};
+    sb.appendChild(el);
+    if(i===0){const vs=document.createElement('div');vs.className='vs-badge';vs.textContent='VS';sb.appendChild(vs);}
+  });
+
+  // Fort
+  const fhp=Math.max(0,G.fortHp);
+  document.getElementById('fort-hp-bar').style.width=fhp+'%';
+  document.getElementById('fort-hp-bar').style.background=fhp>60?'linear-gradient(90deg,var(--r),var(--o))':fhp>30?'linear-gradient(90deg,#ff4400,#ff8800)':'linear-gradient(90deg,#880000,#cc0000)';
+  setText('fort-hp-txt',fhp+'%');
+  const won=LEVELS.filter(l=>(G.worldStars[l.id]||0)>=1).length;
+  setText('fort-sub',fhp<=0?'🏰 FORT VERNIETIGD! Klaar voor het eindgevecht!':won+'/10 regio\'s bevrijd · fort op '+fhp+'%');
+
+  // Map flags
+  const fg=document.getElementById('map-flags');fg.innerHTML='';
+  LEVELS.forEach((lv,i)=>{
+    const wonThis=(G.worldStars[lv.id]||0)>=1;
+    const unlocked=i===0||(G.worldStars[LEVELS[i-1].id]||0)>=1;
+    const x=lv.mapX,y=lv.mapY-18;const isSpell=lv.type==='spell';
+    if(unlocked&&!wonThis){const g=document.createElementNS('http://www.w3.org/2000/svg','circle');g.setAttribute('cx',x);g.setAttribute('cy',y);g.setAttribute('r',15);g.setAttribute('fill','none');g.setAttribute('stroke',isSpell?'#c77dff':'#ffd60a');g.setAttribute('stroke-width','2');g.setAttribute('opacity','.5');fg.appendChild(g);}
+    const c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('cx',x);c.setAttribute('cy',y);c.setAttribute('r',11);c.setAttribute('fill',wonThis?'#2dc653':unlocked?(isSpell?'#9b5de5':'#4895ef'):'#555');c.setAttribute('stroke','white');c.setAttribute('stroke-width','2');if(unlocked){c.style.cursor='pointer';c.onclick=()=>startLevel(lv);}fg.appendChild(c);
+    const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x',x);t.setAttribute('y',y+4.5);t.setAttribute('text-anchor','middle');t.setAttribute('font-size','9');t.textContent=wonThis?'✓':unlocked?lv.em:'🔒';if(unlocked){t.style.cursor='pointer';t.onclick=()=>startLevel(lv);}fg.appendChild(t);
+    const num=document.createElementNS('http://www.w3.org/2000/svg','text');num.setAttribute('x',x);num.setAttribute('y',y+20);num.setAttribute('text-anchor','middle');num.setAttribute('font-size','7');num.setAttribute('fill',wonThis?'#2dc653':unlocked?'#fff':'#888');num.setAttribute('font-weight','800');num.textContent=''+(i+1);fg.appendChild(num);
+  });
+
+  // Giovanni
+  const gpos=getGioPos();const gs=document.getElementById('gio-sprite');gs.setAttribute('transform',`translate(${gpos.x},${gpos.y})`);
+  if(won>0&&won<10){gs.classList.add('gio-running');setTimeout(()=>gs.classList.remove('gio-running'),1200);}
+
+  // Achievements for active player
+  const ag=document.getElementById('ach-grid');ag.innerHTML='';
+  const pAchs=p.achievements||[];
+  setText('ab-owner',p.avatar+' '+p.name);setText('ach-cnt',pAchs.length);setText('ach-ttl',ACHS.length);
+  ACHS.forEach(a=>{const el=document.createElement('div');el.className='ab-badge '+(pAchs.includes(a.id)?'earned':'locked');el.innerHTML=`${a.icon} ${a.lbl}`;ag.appendChild(el);});
+
+  // Collection active player
+  setText('coll-owner',p.name);setText('coll-cnt',(p.collection||[]).length);
+  const strip=document.getElementById('coll-strip');
+  if(!(p.collection||[]).length)strip.innerHTML='<div style="font-size:.72rem;color:#aaa;font-weight:700;padding:4px 0;">Nog leeg — vang ze allemaal!</div>';
+  else{strip.innerHTML='';p.collection.forEach(c=>{const el=document.createElement('div');el.className='ci'+(c.shiny?' shiny':'');el.innerHTML=`<img src="${spr(c.id)}" alt=""><div class="cn">${c.name}${c.shiny?'✨':''}</div>`;strip.appendChild(el);});}
+}
+
+function getGioPos(){
+  const won=LEVELS.filter(l=>(G.worldStars[l.id]||0)>=1).length;
+  if(won===0)return{x:70,y:150};if(won>=10)return{x:470,y:55};
+  const f=LEVELS[Math.min(won-1,8)];const t=LEVELS[Math.min(won,9)];
+  return{x:f.mapX+(t.mapX-f.mapX)*.5,y:f.mapY+(t.mapY-f.mapY)*.5-15};
+}
+
+function claimDaily(){
+  G.dailyClaimed=new Date().toDateString();
+  const p=P();const lv=LEVELS[0];
+  const unc=lv.pokes.filter(pk=>!(p.collection||[]).find(c=>c.id===pk.id));
+  const poke=unc.length?unc[0]:lv.pokes[0];
+  if(!(p.collection||[]).find(c=>c.id===poke.id)){if(!p.collection)p.collection=[];p.collection.push({id:poke.id,name:poke.n,shiny:false});}
+  tryAch('daily');save();
+  document.getElementById('daily-bar').innerHTML=`<div style="background:linear-gradient(135deg,var(--g),#039966);color:#fff;border-radius:10px;padding:5px 11px;text-align:center;font-weight:800;font-size:.72rem;margin-bottom:6px;">✅ ${p.name}: ${poke.n} toegevoegd aan je Pokédex!</div>`;
+  sfx('catch');launchConfetti();buildMap();
+}
+
+/* ═══════════════════════
+   START LEVEL
+═══════════════════════ */
+function startLevel(lv){
+  const p=P();
+  const won=LEVELS.filter(l=>(G.worldStars[l.id]||0)>=1).length;
+  if(lv.id==='psychic'&&won>=9&&G.fortHp<=10){show('gio-final');document.body.style.background='#0d0018';return;}
+
+  G.world=lv;G.qIdx=0;G.score=0;G.streak=0;G.lives=3;G.answered=false;
+  G.plyHp=100;G.emyHp=100;G.usedIds=[];G.superActive=false;G.doubleNext=false;
+  if(!p.stats)p.stats={mC:0,mW:0,sC:0,sW:0,sessions:0};
+  p.stats.sessions++;
+
+  // Grade-adapted questions
+  const grade=GRADES[p.grade]||GRADES.g34;
+  const isSpell=lv.type==='spell';
+  G.qs=isSpell?getSpellQs(5,grade.spellTypes):makeMathQs({...lv,ops:grade.ops,max:Math.min(lv.max,grade.max),minDl:grade.minDl||1},5,p.diffLevel||1);
+
+  save();
+  document.body.style.background=lv.bg;
+  document.getElementById('main-card').style.boxShadow=`0 16px 60px rgba(0,0,0,.6),0 0 0 4px ${lv.acc}`;
+  document.getElementById('arena').style.background=lv.arenaG;
+  document.getElementById('emy-img').src=spr(lv.rPoke.id);
+  setText('emy-hp-nm',lv.rPoke.n);
+  setHp('emy',100);setHp('ply',100);
+
+  const tp=document.getElementById('type-pill');
+  tp.textContent=isSpell?'📝 Spelling':'🔢 Rekenen';
+  tp.style.background=isSpell?'linear-gradient(135deg,#f0e0ff,#e0d0ff)':'linear-gradient(135deg,#e0f0ff,#d0e0ff)';
+  tp.style.color=isSpell?'#6a00b0':'#003080';
+  document.getElementById('prog-bar').className='prog-bar '+(isSpell?'s':'m');
+
+  buildBP();updateActiveBanner();updateDiffBar();
+  show('game-screen');showQ();
+}
+
+/* ─── ACTIVE PLAYER BANNER ─── */
+function updateActiveBanner(){
+  const p=P();const gr=GRADES[p.grade]||GRADES.g34;
+  const banner=document.getElementById('active-banner');
+  banner.style.background=p.color+'18';banner.style.borderColor=p.color;
+  banner.style.borderWidth='3px';banner.style.borderStyle='solid';
+  setText('ab-av',p.avatar);setText('ab-nm',p.name);
+  setText('ab-gr',gr.lbl+' · '+gr.sub);setText('ab-sc','⭐ '+G.score);
+}
+
+/* ─── DIFFICULTY BAR ─── */
+function updateDiffBar(){
+  const p=P();const dl=p.diffLevel||1;
+  const dots=document.getElementById('diff-dots');dots.innerHTML='';
+  const labels=['Opstarten','Standaard','Goed!','Gevorderd','Expert'];
+  for(let i=1;i<=5;i++){const d=document.createElement('div');d.className='dd'+(i<=dl?' lit'+(dl>=5?' max':dl>=4?' high':''):'');dots.appendChild(d);}
+  setText('diff-txt',labels[Math.min(dl-1,4)]);
+}
+
+/* ─── BACKPACK ─── */
+function buildBP(){
+  const p=P();const coll=p.collection||[];
+  const grid=document.getElementById('bp-grid');grid.innerHTML='';
+  const POWERS=[
+    {key:'hint',icon:'💡',nm:'Hint',desc:'Verwijder 1 fout antwoord'},
+    {key:'time',icon:'⏸',nm:'+Tijd',desc:'Geeft 8 extra seconden'},
+    {key:'double',icon:'🔥',nm:'×2 Punten',desc:'Volgende goed = dubbel'},
+    {key:'life',icon:'❤️',nm:'+Hartje',desc:'Verdien een extra leven'},
+  ];
+  if(!coll.length){grid.innerHTML='<div class="bp-empty">Vang eerst Pokémon om helpers te krijgen!</div>';return;}
+  POWERS.forEach((pw,i)=>{
+    const poke=coll[i%coll.length];if(!poke)return;
+    const used=(p.bagUsed||[]).includes(pw.key+'_'+G.world?.id);
+    const el=document.createElement('div');el.className='bp-item'+(used?' used':'');
+    el.innerHTML=`<img class="bpi-img" src="${spr(poke.id)}" alt=""><div class="bpi-right"><div class="bpi-nm">${poke.name}</div><div class="bpi-power">${pw.icon} ${pw.nm}</div><div class="bpi-desc">${pw.desc}</div></div>`;
+    if(!used)el.onclick=()=>useBP(pw.key,poke,pw);
+    grid.appendChild(el);
+  });
+}
+
+function toggleBP(){
+  const panel=document.getElementById('bp-panel');const open=panel.style.display==='none';
+  panel.style.display=open?'block':'none';
+  document.getElementById('bp-toggle').textContent=open?'🎒 Rugzak sluiten':'🎒 Rugzak openen';
+}
+
+function useBP(key,poke,pw){
+  const p=P();if(!p.bagUsed)p.bagUsed=[];
+  const k=key+'_'+G.world?.id;if((p.bagUsed||[]).includes(k))return;
+  p.bagUsed.push(k);
+  if(key==='hint'){
+    const q=G.qs[G.qIdx];const btns=[...document.querySelectorAll('.ab')];
+    const wrongs=btns.filter(b=>b.textContent!==String(q.ans)&&b.textContent!==q.ans);
+    if(wrongs.length>0){wrongs[~~(Math.random()*wrongs.length)].style.opacity='.18';wrongs[0].onclick=null;}
+    setText('feedback',`💡 ${poke.name} helpt! Eén fout antwoord weg!`);
+  } else if(key==='time'){G.timeLeft+=80;updT();setText('feedback',`⏸ ${poke.name} geeft je extra tijd!`);}
+  else if(key==='double'){G.doubleNext=true;setText('feedback',`🔥 ${poke.name}: volgende goed = dubbele punten!`);}
+  else if(key==='life'){G.lives=Math.min(3,G.lives+1);updateHUD();setText('feedback',`❤️ ${poke.name} geeft je een extra leven!`);}
+  save();buildBP();
+}
+
+/* ─── MATH QUESTIONS ─── */
+function makeMathQs(lv,n,dl=1){
+  const qs=[];
+  // Effective difficulty: never go below the grade's minimum level
+  const eff=Math.max(dl,lv.minDl||1);
+  const g56=(lv.minDl||1)>=3;
+  // scaledMax: groep 5/6 always uses big numbers (min 70%)
+  const scaledMax=g56?lv.max:Math.min(lv.max,Math.round(lv.max*(0.3+eff*0.14)));
+  // scaledOps: groep 5/6 always all operators, lower grades scale up
+  const scaledOps=(!g56&&eff<=2)?lv.ops.slice(0,Math.min(2,lv.ops.length)):lv.ops;
+  for(let i=0;i<n;i++){
+    let a,b,op,ans;
+    op=scaledOps[~~(Math.random()*scaledOps.length)];
+    if(op==='+'){
+      const lo=g56?25:1;
+      a=rnd(lo,Math.max(lo+5,scaledMax-10));
+      b=rnd(g56?10:1,Math.min(g56?40:10+eff*3,scaledMax-a));
+      ans=a+b;
+    } else if(op==='-'){
+      const lo=g56?15:1;
+      b=rnd(lo,Math.max(lo+5,~~(scaledMax/2)));
+      a=rnd(b+5,Math.min(b+10+eff*5,scaledMax));
+      ans=a-b;
+    } else if(op==='*'){
+      const mx=g56?12:Math.min(5+eff,10);
+      a=rnd(2,mx);b=rnd(2,Math.min(mx,~~(99/a)));ans=a*b;
+    } else {
+      const mx=g56?12:Math.min(5+eff,10);
+      b=rnd(2,mx);ans=rnd(g56?3:2,~~(99/b));a=b*ans;
+    }
+    qs.push({a,b,op:sym(op),raw:op,ans,type:'math'});
+  }
+  return qs;
+}
+
+function getSpellQs(n=5,allowedTypes){
+  const types=allowedTypes||Object.keys(SPELL);const qs=[];let used=[];
+  for(let i=0;i<n;i++){
+    const type=types[i%types.length];const pool=SPELL[type];if(!pool)continue;
+    const avail=pool.filter((_,j)=>!used.includes(type+j));
+    const item=avail.length?avail[~~(Math.random()*avail.length)]:pool[~~(Math.random()*pool.length)];
+    const idx=pool.indexOf(item);used.push(type+idx);
+    qs.push({...item,ch:[...item.ch].sort(()=>Math.random()-.5),type:'spell'});
+  }
+  return qs;
+}
+
+function makeMathChoices(ans,raw){
+  const s=new Set([ans]);let t=0;
+  while(s.size<4&&t<200){t++;const d=(raw==='*'||raw==='/')?rnd(1,6):rnd(1,14);const w=ans+(Math.random()<.5?d:-d);if(w>0&&w<200)s.add(w);}
+  return[...s].sort(()=>Math.random()-.5);
+}
+
+/* ─── SHOW QUESTION ─── */
+function showQ(){
+  if(G.qIdx>=5){endLevel();return;}
+  if(G.qIdx>=1&&G.qIdx<=3&&Math.random()<0.28&&!G.superActive){doSuper();return;}
+
+  G.answered=false;G.doubleNext=false;
+  if(document.getElementById('bp-panel').style.display!=='none'){toggleBP();}
+  const q=G.qs[G.qIdx];const lv=G.world;
+
+  const avail=lv.pokes.filter(pk=>!G.usedIds.includes(pk.id));
+  const pool=avail.length?avail:lv.pokes;
+  const poke=pool[~~(Math.random()*pool.length)];
+  G.curPoke=poke;G.curShiny=Math.random()<0.05;G.usedIds.push(poke.id);
+
+  const pi=document.getElementById('ply-img');pi.src=spr(poke.id);pi.style.filter='brightness(0)';pi.style.animation='none';
+  setText('ply-tag','?????');setText('ply-hp-nm','Jouw Pokémon');
+  setText('speech',lv.sp[~~(Math.random()*lv.sp.length)]);
+
+  const cont=document.getElementById('answers');cont.innerHTML='';
+  // Always reset timer bar visibility at start of question
+  document.getElementById('tbar').parentElement.style.display='block';
+  if(q.type==='math'){
+    setText('qtext',`${q.a} <span class="op">${q.op}</span> ${q.b} <span class="eq">=</span> <span class="unk">?</span>`);
+    makeMathChoices(q.ans,q.raw).forEach(c=>{const b=document.createElement('button');b.className='ab';b.textContent=c;b.onclick=()=>{if(!G.answered)checkQ(c,q.ans,b,q);};cont.appendChild(b);});
+  } else {
+    // Spelling: grote tekst, geen timer
+    let html='';
+    if(q.pr) html+=`<div class="spell-pr">${q.pr}</div>`;
+    if(q.q)  html+=`<div class="spell-wd-big">${q.q}</div>`;
+    document.getElementById('qtext').innerHTML=html;
+    // Hide timer bar for spell questions
+    document.getElementById('tbar').parentElement.style.display='none';
+    q.ch.forEach(c=>{const b=document.createElement('button');b.className='ab spell';b.textContent=c;b.onclick=()=>{if(!G.answered)checkQ(c,q.ans,b,q);};cont.appendChild(b);});
+  }
+  setText('feedback','&nbsp;');setClass('feedback','feedback');
+  updateHUD();updateActiveBanner();updateDiffBar();
+  clearT();
+  if(lv.type==='spell'){
+    // Spelling: geen tijdslimiet — gewoon wachten op antwoord
+    G.timeLeft=9999;
+    document.getElementById('tbar').parentElement.style.display='none';
+  } else {
+    document.getElementById('tbar').parentElement.style.display='block';
+    G.timeLeft=150;updT();
+    G.timerInt=setInterval(()=>{G.timeLeft--;updT();if(G.timeLeft<=0){clearT();if(!G.answered)timeOut();}},100);
+  }
+}
+
+/* ─── CHECK ANSWER ─── */
+function checkQ(chosen,correct,btn,q){
+  clearT();G.answered=true;document.querySelectorAll('.ab').forEach(b=>b.onclick=null);
+  const p=P();const isSpell=q.type==='spell';
+  const hit=chosen===correct||(typeof correct==='number'&&parseInt(chosen)===correct);
+
+  if(hit){
+    btn.classList.add('ok');sfx(isSpell?'sp':'ok');
+    const pi=document.getElementById('ply-img');pi.style.filter='none';pi.style.animation=G.curShiny?'shiny-fx .6s ease':'reveal-p .5s ease';
+    setText('ply-tag',G.curPoke.n+(G.curShiny?' ✨':''));setText('ply-hp-nm',G.curPoke.n);
+    setTimeout(()=>{pi.style.animation='plyr-atk .5s ease';setTimeout(()=>{const ei=document.getElementById('emy-img');ei.style.animation='none';setTimeout(()=>ei.style.animation='emy-hit .4s ease',10);},250);},200);
+    const grade=GRADES[p.grade]||GRADES.g34;
+    const tb=G.timeLeft>120?3:G.timeLeft>70?2:1;const sb=G.streak>=4?2:G.streak>=2?1:0;
+    let pts=Math.round((tb+sb)*grade.timeBonus);
+    if(G.doubleNext){pts*=2;G.doubleNext=false;}
+    G.score+=pts;G.streak++;
+    G.emyHp=Math.max(0,G.emyHp-20);setHp('emy',G.emyHp);
+    if(isSpell)p.stats.sC++;else p.stats.mC++;
+    const msg=G.streak>=5?`🔥🔥 ${G.streak} op rij! +${pts}⭐`:G.streak>=3?`🔥 ${G.streak} op rij! +${pts}⭐`:tb===3?`⚡ Razendsnel! +${pts}⭐`:`✅ Goed zo! +${pts}⭐`;
+    setText('feedback',msg);setClass('feedback','feedback g');spawnFloat(`+${pts}⭐`,btn);
+    if(G.streak>=5&&tryAch('streak5'))showToast('🔥 Badge: 5 op rij!');
+    G.qIdx++;
+    if(G.mode==='question')setTimeout(()=>doTurnSwitch(true),1500);
+    else setTimeout(showQ,1600);
+  } else {
+    btn.classList.add('no');sfx('no');
+    document.querySelectorAll('.ab').forEach(b=>{if(b.textContent===correct||parseInt(b.textContent)===correct)b.classList.add('ok');});
+    if(isSpell)p.stats.sW++;else p.stats.mW++;
+    hitPlayer();
+    setText('feedback',`❌ Het antwoord was: "${correct}"`);setClass('feedback','feedback f');
+    G.qIdx++;
+    if(G.mode==='question')setTimeout(()=>doTurnSwitch(false),1700);
+    else{if(G.lives>0)setTimeout(showQ,1700);}
+  }
+  updateHUD();setText('ab-sc','⭐ '+G.score);
+}
+
+function hitPlayer(){
+  G.streak=0;G.lives=Math.max(0,G.lives-1);G.plyHp=Math.max(0,G.plyHp-25);setHp('ply',G.plyHp);
+  const ei=document.getElementById('emy-img');ei.style.animation='none';setTimeout(()=>ei.style.animation='emy-atk .5s ease',10);
+  const pi=document.getElementById('ply-img');pi.style.animation='none';setTimeout(()=>pi.style.animation='plyr-hit .4s ease',250);
+  updateHUD();if(G.lives<=0)setTimeout(gameOver,1200);
+}
+function timeOut(){G.answered=true;sfx('no');setText('feedback','⏰ Te laat!');setClass('feedback','feedback f');hitPlayer();showCA();G.qIdx++;
+  if(G.mode==='question')setTimeout(()=>doTurnSwitch(false),1700);
+  else{if(G.lives>0)setTimeout(showQ,1700);}
+}
+function showCA(){const q=G.qs[G.qIdx];if(!q)return;document.querySelectorAll('.ab').forEach(b=>{if(b.textContent===q.ans||parseInt(b.textContent)===q.ans)b.classList.add('ok');b.onclick=null;});}
+function gameOver(){clearT();show('complete-screen');buildComplete(false,0);}
+function setHp(who,pct){const b=document.getElementById(who==='ply'?'ply-hp':'emy-hp');b.style.width=pct+'%';b.style.background=pct>50?'var(--g)':pct>25?'var(--y)':'var(--r)';}
+function updT(){const p=(G.timeLeft/(G.world&&G.world.type==='spell'?200:150))*100;const b=document.getElementById('tbar');b.style.width=p+'%';b.className='tbar'+(p<25?' urg':'');}
+function clearT(){if(G.timerInt){clearInterval(G.timerInt);G.timerInt=null;}}
+function updateHUD(){setText('sc-d',G.score);setText('str-d',G.streak);document.getElementById('lives-pill').textContent='❤️'.repeat(G.lives)+'🖤'.repeat(3-G.lives);document.getElementById('prog-bar').style.width=(G.qIdx/5*100)+'%';setText('prog-lbl',`Vraag ${Math.min(G.qIdx+1,5)} van 5`);}
+
+/* ═══════════════════════
+   TURN SWITCH (spectacular!)
+═══════════════════════ */
+function doTurnSwitch(wasGood){
+  if(G.qIdx>=5){endLevel();return;}
+  // Switch active player
+  G.activeP=(G.activeP+1)%2;
+  const p=P();
+  // Update turn screen
+  G.players.forEach((pl,i)=>{
+    setText(`tp-av-${i}`,pl.avatar);setText(`tp-nm-${i}`,pl.name);setText(`tp-sc-${i}`,'⭐ '+G.score);
+    const box=document.getElementById(`tp-box-${i}`);
+    box.style.background=pl.color+'18';box.style.borderColor=pl.color+'60';
+    box.className='turn-player-box'+(i===G.activeP?' active-turn':'');
+    box.style.boxShadow=i===G.activeP?`0 0 30px ${pl.color}60`:'none';
+  });
+  setText('turn-cta',`${p.avatar} ${p.name} is aan de beurt!`);
+  setText('turn-sub',G.players.length>1?'Geef de telefoon door! 📱':'');
+  // Start countdown bar (3 seconds)
+  G.turnCountLeft=30;document.getElementById('turn-count-fill').style.width='100%';
+  clearTurnCount();
+  G.turnCountInt=setInterval(()=>{
+    G.turnCountLeft--;
+    document.getElementById('turn-count-fill').style.width=(G.turnCountLeft/30*100)+'%';
+    if(G.turnCountLeft<=0){clearTurnCount();resumeAfterTurn();}
+  },100);
+  sfx('turn');show('turn-screen');
+}
+
+function clearTurnCount(){if(G.turnCountInt){clearInterval(G.turnCountInt);G.turnCountInt=null;}}
+
+function resumeAfterTurn(){
+  clearTurnCount();
+  // Re-generate questions adapted to new active player's grade
+  const lv=G.world;const p=P();const grade=GRADES[p.grade]||GRADES.g34;
+  const isSpell=lv.type==='spell';
+  // Keep remaining questions but adapt new ones to this player
+  const remaining=G.qs.slice(G.qIdx);
+  if(remaining.length===0){show('game-screen');endLevel();return;}
+  // Regenerate remaining questions for this player's level
+  const newRemaining=isSpell?getSpellQs(remaining.length,grade.spellTypes):makeMathQs({...lv,ops:grade.ops,max:Math.min(lv.max,grade.max),minDl:grade.minDl||1},remaining.length,p.diffLevel||1);
+  G.qs=G.qs.slice(0,G.qIdx).concat(newRemaining);
+  updateActiveBanner();updateDiffBar();buildBP();
+  document.getElementById('arena').style.background=lv.arenaG;
+  show('game-screen');showQ();
+}
+
+/* ═══════════════════════
+   SUPER QUESTION
+═══════════════════════ */
+function doSuper(){
+  clearT();G.superActive=true;const lv=G.world;const p=P();
+  const sp=lv.sPokes[~~(Math.random()*lv.sPokes.length)];
+  const isSpell=lv.type==='spell';G.superBonus=rnd(8,14);
+
+  const badge=document.getElementById('super-badge');
+  badge.textContent=isSpell?'📝 SUPERSPELLING! 📝':'⚡ SUPERVRAAG! ⚡';
+  badge.style.background=isSpell?'linear-gradient(135deg,var(--p),#6a00cc)':'linear-gradient(135deg,var(--y),var(--o))';
+  badge.style.color=isSpell?'#fff':'#1d1d2e';
+  document.getElementById('super-poke-img').src=spr(sp.id);
+  setText('super-nm',sp.n);setText('super-desc',isSpell?`${sp.n} test jouw spelling!`:`${sp.n} blokkeert jouw pad!`);
+  setText('super-bonus-txt','+'+G.superBonus);
+
+  const sa=document.getElementById('super-anss');sa.innerHTML='';let correctAns;
+  if(isSpell){
+    const grade=GRADES[p.grade]||GRADES.g34;const types=grade.spellTypes||Object.keys(SPELL);
+    const type=types[~~(Math.random()*types.length)];const pool=SPELL[type];
+    const q={...pool[~~(Math.random()*pool.length)]};q.ch=[...q.ch].sort(()=>Math.random()-.5);
+    document.getElementById('super-qa').innerHTML=`<div class="sup-sp">${q.pr}</div>${q.q?`<div class="sup-sw">${q.q}</div>`:''}`;
+    correctAns=q.ans;
+    q.ch.forEach(c=>{const b=document.createElement('button');b.className='sa ss';b.textContent=c;b.onclick=()=>{if(!G.answered)checkSuperAns(c,correctAns,b,true);};sa.appendChild(b);});
+  } else {
+    const grade=GRADES[p.grade]||GRADES.g34;
+    const q=makeMathQs({...lv,ops:grade.ops,max:Math.min(lv.max,grade.max),minDl:grade.minDl||1},1,p.diffLevel||1)[0];
+    document.getElementById('super-qa').innerHTML=`<div class="super-q">${q.a} <span class="op">${q.op}</span> ${q.b} <span class="eq">=</span> <span class="unk">?</span></div>`;
+    correctAns=q.ans;
+    makeMathChoices(q.ans,q.raw).forEach(c=>{const b=document.createElement('button');b.className='sa';b.textContent=c;b.onclick=()=>{if(!G.answered)checkSuperAns(c,correctAns,b,false);};sa.appendChild(b);});
+  }
+
+  buildLightning();sfx('super');document.getElementById('super-ov').style.display='flex';
+  G.answered=false;G.superTL=120;updSuperT();
+  G.superTI=setInterval(()=>{G.superTL--;updSuperT();if(G.superTL<=0){clearSuperT();if(!G.answered)superTO();}},100);
+}
+
+function buildLightning(){const c=document.getElementById('lbg');c.innerHTML='';for(let i=0;i<6;i++){const b=document.createElement('div');b.className='bolt';b.style.cssText=`left:${rnd(5,90)}%;top:0;height:${rnd(30,90)}%;animation-delay:${Math.random()*.4}s;animation-duration:${.3+Math.random()*.4}s;`;c.appendChild(b);}}
+function updSuperT(){const p=(G.superTL/120)*100;const b=document.getElementById('super-tb');b.style.width=p+'%';b.className='super-tb'+(p<25?' urg':'');}
+function clearSuperT(){if(G.superTI){clearInterval(G.superTI);G.superTI=null;}}
+
+function checkSuperAns(chosen,correct,btn,isSpell){
+  clearSuperT();G.answered=true;document.querySelectorAll('.sa').forEach(b=>b.onclick=null);const p=P();
+  const hit=chosen===correct||(typeof correct==='number'&&parseInt(chosen)===correct);
+  if(hit){btn.classList.add('sc');sfx(isSpell?'sp':'ok');G.score+=G.superBonus;G.streak++;if(isSpell)p.stats.sC++;else p.stats.mC++;setText('super-fb',`🏆 GEWELDIG! +${G.superBonus} punten!`);setClass('super-fb','super-fb g');spawnFloat(`+${G.superBonus}⭐`,btn);G.emyHp=Math.max(0,G.emyHp-35);setHp('emy',G.emyHp);updateHUD();tryAch('super_hero');launchConfetti();setTimeout(closeSuperOv,2000);}
+  else{btn.classList.add('sw');sfx('no');document.querySelectorAll('.sa').forEach(b=>{if(b.textContent===correct||parseInt(b.textContent)===correct)b.classList.add('sc');});if(isSpell)p.stats.sW++;else p.stats.mW++;setText('super-fb',`❌ Het was "${correct}"`);setClass('super-fb','super-fb f');hitPlayer();setTimeout(closeSuperOv,1800);}
+}
+function superTO(){G.answered=true;sfx('no');setText('super-fb','⏰ Te laat!');setClass('super-fb','super-fb f');document.querySelectorAll('.sa').forEach(b=>b.onclick=null);hitPlayer();setTimeout(closeSuperOv,1800);}
+function closeSuperOv(){document.getElementById('super-ov').style.display='none';G.superActive=false;G.answered=false;if(G.lives>0)showQ();}
+
+/* ═══════════════════════
+   END LEVEL
+═══════════════════════ */
+function endLevel(){
+  clearT();sfx('lvl');const p=P();
+  const maxPts=5*5+15;const pct=G.score/maxPts;
+  const stars=pct>=.7?3:pct>=.4?2:pct>=.15?1:0;
+  G.worldStars[G.world.id]=Math.max(G.worldStars[G.world.id]||0,stars);
+  p.score=(p.score||0)+G.score;
+
+  // Difficulty auto-scaling
+  let diffChange=0;
+  if(stars===3&&(p.diffLevel||1)<5){p.diffLevel=(p.diffLevel||1)+1;diffChange=1;tryAch('level_up');}
+  else if(stars===0&&(p.diffLevel||1)>1){p.diffLevel=(p.diffLevel||1)-1;diffChange=-1;}
+
+  // Fort damage
+  if(stars>=1){const dmg=stars===3?15:stars===2?10:5;G.fortHp=Math.max(0,G.fortHp-dmg);}
+
+  // Achievements
+  const newAchs=[];
+  if(stars>=1&&tryAch('first_win'))newAchs.push('first_win');
+  if(G.score>=25&&tryAch('perfect'))newAchs.push('perfect');
+  if(G.world.type==='spell'&&stars>=1&&tryAch('spell_ace'))newAchs.push('spell_ace');
+  if(G.world.type==='math'&&stars>=1&&tryAch('math_ace'))newAchs.push('math_ace');
+  if((p.collection||[]).length>=5&&tryAch('collector5'))newAchs.push('collector5');
+  if((p.collection||[]).length>=10&&tryAch('collector10'))newAchs.push('collector10');
+  if(G.fortHp<=50&&tryAch('fort50'))newAchs.push('fort50');
+  if(LEVELS.filter(l=>(G.worldStars[l.id]||0)>=1).length>=10&&tryAch('champion'))newAchs.push('champion');
+
+  if(G.emyHp===0){const ei=document.getElementById('emy-img');ei.style.animation='none';setTimeout(()=>ei.style.animation='faint-emy .6s ease forwards',10);}
+  save();show('complete-screen');buildComplete(true,stars,newAchs,diffChange);
+  if(stars>=2)launchConfetti();
+  if(stars>=1)sfx('flee');
+
+  const wonNow=LEVELS.filter(l=>(G.worldStars[l.id]||0)>=1).length;
+  if(wonNow>=10&&G.fortHp<=0)setTimeout(()=>{show('gio-final');document.body.style.background='#0d0018';},3500);
+}
+
+function buildComplete(success,stars,newAchs=[],diffChange=0){
+  G.eggHatched=false;const p=P();
+  const tr=['😰','🥉','🥈','🥇'];setText('comp-trophy',success?tr[stars]:'💔');
+  const ti={0:'Nog even oefenen!',1:'Goed gedaan! 👍',2:'🔥 Super goed!',3:'🏆 KAMPIOEN!'};
+  setText('comp-ttl',success?ti[stars]:'Helaas — probeer het opnieuw!');
+  setText('comp-sc',`${p.avatar} ${p.name}: ${G.score} punten! Totaal: ${p.score}⭐`);
+
+  const row=document.getElementById('stars-row');row.innerHTML='';for(let i=1;i<=3;i++){const s=document.createElement('span');s.textContent=(success&&i<=stars)?'⭐':'☆';row.appendChild(s);}
+
+  // Giovanni flee
+  const gfa=document.getElementById('gio-flee-area');
+  if(success&&stars>=1){const msgs=['"Grr... dit is nog niet voorbij!" — Giovanni vlucht 💨','Giovanni springt op zijn Perzische kat en RENT! 🐱💨','Ha! Team Rocket trekt zich terug!','Giovanni rent weg naar zijn fort! 🏃💨'];gfa.innerHTML=`<div class="gio-flee"><span style="font-size:1.6rem;display:block;margin-bottom:2px;animation:gio-run .3s ease 4;">😈💨</span>${msgs[~~(Math.random()*msgs.length)]}</div>`;}else gfa.innerHTML='';
+
+  // Difficulty change message
+  const dca=document.getElementById('diff-change-area');
+  if(diffChange===1)dca.innerHTML=`<div class="diff-change diff-up">📈 ${p.name}: niveau omhoog naar Niv.${p.diffLevel}! De sommen worden moeilijker!</div>`;
+  else if(diffChange===-1)dca.innerHTML=`<div class="diff-change diff-dn">📉 ${p.name}: niveau omlaag naar Niv.${p.diffLevel}. Blijf oefenen!</div>`;
+  else dca.innerHTML='';
+
+  // Fort damage
+  const fda=document.getElementById('fort-dmg-area');
+  if(success&&stars>=1){const dmg=stars===3?15:stars===2?10:5;fda.innerHTML=`<div class="fort-dmg">💥 Fort verloor ${dmg}% HP! Nu op ${G.fortHp}%!</div>`;}else fda.innerHTML='';
+
+  // Achievements
+  const ae=document.getElementById('ach-earned');ae.innerHTML='';newAchs.forEach(id=>{const a=ACHS.find(x=>x.id===id);if(a){const el=document.createElement('div');el.className='new-ach';el.textContent=`${a.icon} Nieuw badge! ${a.lbl}`;ae.appendChild(el);}});
+
+  // Egg
+  const ea=document.getElementById('egg-area');const ca=document.getElementById('caught-area');ca.innerHTML='';
+  if(success&&stars>=1){
+    const unc=G.world.pokes.filter(pk=>!(p.collection||[]).find(c=>c.id===pk.id));
+    G.eggPoke=unc.length?unc[~~(Math.random()*unc.length)]:G.world.pokes[~~(Math.random()*G.world.pokes.length)];G.eggShiny=Math.random()<0.08;
+    ea.innerHTML=`<div class="egg-box"><div style="font-family:'Fredoka One',cursive;font-size:.76rem;color:#d97700;margin-bottom:3px;">🥚 ${p.name} heeft een Pokémon-ei verdiend!</div><span class="egg-em" id="egg-em" onclick="hatchEgg()">🥚</span><div style="font-size:.64rem;font-weight:700;color:#aaa;margin-top:2px;" id="egg-hint">Tik op het ei!</div></div>`;
+  } else ea.innerHTML='';
+  document.getElementById('next-btn').style.display=success&&stars>=1?'block':'none';
+}
+
+function hatchEgg(){
+  if(G.eggHatched)return;G.eggHatched=true;document.getElementById('egg-em').textContent='💥';
+  setTimeout(()=>{
+    const p=P();const pk=G.eggPoke;const sh=G.eggShiny;
+    if(pk){if(!p.collection)p.collection=[];if(!p.collection.find(c=>c.id===pk.id))p.collection.push({id:pk.id,name:pk.n,shiny:sh});}
+    if(sh&&tryAch('shiny'))showToast('✨ Badge: Shiny gevangen!');save();
+    document.getElementById('egg-em').textContent=sh?'✨':'🎊';setText('egg-hint','');
+    document.getElementById('caught-area').innerHTML=`<div class="caught-card"><img src="${spr(pk.id)}" alt="" ${sh?'style="filter:drop-shadow(0 0 8px gold)"':''}/>
+    <div><div class="caught-nm">${sh?'<span class="shiny-tag">✨ SHINY!</span> ':''} ${pk.n} gevangen door ${p.name}!</div><div class="caught-sub">Toegevoegd aan Pokédex ✓</div>${sh?'<div class="caught-sub" style="color:gold;font-weight:800;">Super zeldzaam!</div>':''}</div></div>`;
+    sfx('catch');if(sh)launchConfetti();buildMap();
+  },500);
+}
+
+/* ─── NEXT LEVEL ─── */
+function handleNextLevel(){
+  if(G.mode==='level'){
+    // Switch player after full level
+    G.activeP=(G.activeP+1)%2;const p=P();
+    // Show turn transition
+    G.players.forEach((pl,i)=>{setText(`tp-av-${i}`,pl.avatar);setText(`tp-nm-${i}`,pl.name);setText(`tp-sc-${i}`,'⭐ '+G.score);const box=document.getElementById(`tp-box-${i}`);box.style.background=pl.color+'18';box.style.borderColor=pl.color+'60';box.className='turn-player-box'+(i===G.activeP?' active-turn':'');});
+    setText('turn-cta',`${p.avatar} ${p.name} is aan de beurt!`);setText('turn-sub','Kies een nieuw level op de kaart! 🗺️');
+    G.turnCountLeft=30;document.getElementById('turn-count-fill').style.width='100%';
+    clearTurnCount();G.turnCountInt=setInterval(()=>{G.turnCountLeft--;document.getElementById('turn-count-fill').style.width=(G.turnCountLeft/30*100)+'%';if(G.turnCountLeft<=0){clearTurnCount();goMap();}},100);
+    sfx('turn');show('turn-screen');
+  } else goMap();
+}
+function replayW(){if(G.world)startLevel(G.world);}
+
+/* ─── GIOVANNI ─── */
+function startGioFight(){startLevel(LEVELS[9]);}
+
+/* ─── REPORT ─── */
+function showReport(){
+  const html=G.players.map((p,i)=>{
+    const s=p.stats||{mC:0,mW:0,sC:0,sW:0,sessions:0};const mT=s.mC+s.mW;const sT=s.sC+s.sW;
+    const mPct=mT>0?Math.round(s.mC/mT*100):0;const sPct=sT>0?Math.round(s.sC/sT*100):0;
+    const gr=GRADES[p.grade]||GRADES.g34;const won=LEVELS.filter(l=>(G.worldStars[l.id]||0)>=1).length;
+    return `<div style="font-family:'Fredoka One',cursive;font-size:.9rem;color:${p.color};margin:${i>0?'12px 0 ':''}0 6px;">${p.avatar} ${p.name}</div>
+    <div class="report-box">
+      <div class="rr"><span>🎓 Groep</span><span>${gr.lbl} · Niv.${p.diffLevel||1}/5</span></div>
+      <div class="rr"><span>📅 Sessies</span><span>${s.sessions||0}</span></div>
+      <div class="rr"><span>🔢 Rekenen</span><span>${s.mC}/${mT} (${mPct}%)</span></div>
+      <div class="rr"><span>📝 Spelling</span><span>${s.sC}/${sT} (${sPct}%)</span></div>
+      <div class="rr"><span>⭐ Totaal punten</span><span>${p.score||0}</span></div>
+      <div class="rr"><span>📦 Pokémon</span><span>${(p.collection||[]).length}</span></div>
+      <div class="rr"><span>🏅 Badges</span><span>${(p.achievements||[]).length}/${ACHS.length}</span></div>
+      ${i===0?`<div class="rr"><span>🗺️ Levels gewonnen</span><span>${won}/10</span></div>`:''}
+      ${i===0?`<div class="rr"><span>🏰 Fort HP</span><span>${G.fortHp}%</span></div>`:''}
+    </div>`;
+  }).join('');
+  document.getElementById('report-content').innerHTML=html;
+  openModal('report-modal');
+}
+
+/* ─── NAV ─── */
+function goMap(){clearT();clearSuperT();clearTurnCount();document.getElementById('super-ov').style.display='none';document.body.style.background='#0e0e1f';document.getElementById('main-card').style.boxShadow='0 16px 60px rgba(0,0,0,.6),0 0 0 4px var(--y)';buildMap();show('map-screen');}
+function show(id){['setup-screen','map-screen','game-screen','turn-screen','complete-screen','gio-final'].forEach(s=>{const el=document.getElementById(s);if(el)el.style.display=s===id?'block':'none';});if(id==='turn-screen'){document.getElementById('turn-screen').style.background='linear-gradient(135deg,#0a0a1a,#1a0030)';}}
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+
+/* ─── FX ─── */
+function spawnFloat(txt,el){const d=document.createElement('div');d.className='float-pts';d.textContent=txt;const r=el.getBoundingClientRect();d.style.left=(r.left+r.width/2-28)+'px';d.style.top=(r.top+window.scrollY-16)+'px';document.body.appendChild(d);setTimeout(()=>d.remove(),1100);}
+function launchConfetti(){const cols=['#e63946','#ffd60a','#4895ef','#06d6a0','#ff6b9d','#c77dff','#fb8500'];const c=document.getElementById('confetti');c.innerHTML='';for(let i=0;i<100;i++){const el=document.createElement('div');el.className='cp';const sz=6+Math.random()*10;el.style.cssText=`left:${Math.random()*100}vw;background:${cols[~~(Math.random()*cols.length)]};width:${sz}px;height:${sz}px;border-radius:${Math.random()<.5?'50%':'2px'};--d:${(Math.random()-.5)*220}px;animation-duration:${2+Math.random()*2.5}s;animation-delay:${Math.random()*.7}s;`;c.appendChild(el);}setTimeout(()=>c.innerHTML='',5000);}
+function showToast(msg){const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),3000);}
+function setText(id,t){const el=document.getElementById(id);if(el)el.innerHTML=t;}
+function setClass(id,c){const el=document.getElementById(id);if(el)el.className=c;}
+
+
+/* ═══════════════════════
+   PIN LOGIN
+═══════════════════════ */
+const PIN_CODE = '2018';
+let pinEntry = '';
+
+function pinInput(digit){
+  if(pinEntry.length >= 4) return;
+  pinEntry += digit;
+  updatePinDots();
+  if(pinEntry.length === 4) setTimeout(pinSubmit, 150);
+}
+
+function pinDelete(){
+  pinEntry = pinEntry.slice(0,-1);
+  updatePinDots();
+  setText('login-error','&nbsp;');
+}
+
+function updatePinDots(){
+  for(let i=0;i<4;i++){
+    const dot = document.getElementById('pd-'+i);
+    dot.className = 'pin-dot' + (i < pinEntry.length ? ' filled' : '');
+  }
+}
+
+function pinSubmit(){
+  if(pinEntry === PIN_CODE){
+    const ls = document.getElementById('login-screen');
+    ls.style.transition = 'opacity .5s ease';
+    ls.style.opacity = '0';
+    setTimeout(()=>ls.style.display='none', 500);
+  } else {
+    // Wrong code — shake and clear
+    for(let i=0;i<4;i++){
+      const dot = document.getElementById('pd-'+i);
+      dot.className = 'pin-dot wrong';
+    }
+    setText('login-error','❌ Verkeerde code, probeer opnieuw!');
+    setTimeout(()=>{
+      pinEntry = '';
+      updatePinDots();
+    }, 700);
+  }
+}
+
+/* ─── INIT ─── */
+load();
+show('setup-screen');renderSetup();
+document.addEventListener('click',()=>{if(!aC&&!mOn){initAC();startMusic();}},{once:true});
+</script>
+</body>
+</html>
