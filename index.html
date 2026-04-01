@@ -575,50 +575,12 @@ body{font-family:'Nunito',sans-serif;background:var(--dark);min-height:100vh;dis
       </div>
     </div>
 
-    <!-- PLAYER 2 — always visible inline -->
-    <div style="background:#f0f6ff;border:3px solid var(--p2);border-radius:16px;padding:12px 13px;margin-bottom:12px;">
-      <div style="font-family:'Fredoka One',cursive;font-size:.95rem;color:var(--p2);margin-bottom:8px;">👧 Speler 2 <span style="font-size:.62rem;font-weight:700;color:#aaa;">(optioneel)</span></div>
+    <!-- Player 2 hidden — solo only -->
+    <div id="av-row-1" style="display:none"></div>
+    <input id="name-1" style="display:none">
+    <div id="grade-row-1" style="display:none"></div>
 
-      <div style="font-size:.68rem;font-weight:800;color:#888;margin-bottom:4px;">Kies je avatar:</div>
-      <div class="av-row" id="av-row-1"></div>
-
-      <div style="font-size:.68rem;font-weight:800;color:#888;margin:6px 0 3px;">Jouw naam:</div>
-      <input class="ef-input" id="name-1" placeholder="Naam speler 2 (leeg = solo)" maxlength="14" style="margin-bottom:8px;">
-
-      <div style="font-size:.68rem;font-weight:800;color:#888;margin-bottom:4px;">Jouw groep:</div>
-      <div class="grade-row" id="grade-row-1">
-        <div class="gb" id="g1-g12" onclick="selGradeInline(1,'g12')">
-          <span class="gb-em">🌱</span>
-          <div class="gb-lbl">Groep 1/2</div>
-          <div class="gb-sub">tellen t/m 10</div>
-        </div>
-        <div class="gb sel" id="g1-g34" onclick="selGradeInline(1,'g34')">
-          <span class="gb-em">📚</span>
-          <div class="gb-lbl">Groep 3/4</div>
-          <div class="gb-sub">+/− t/m 20</div>
-        </div>
-        <div class="gb" id="g1-g56" onclick="selGradeInline(1,'g56')">
-          <span class="gb-em">🚀</span>
-          <div class="gb-lbl">Groep 5/6</div>
-          <div class="gb-sub">+−×÷ t/m 99</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Mode selection -->
-    <div class="mode-title">Hoe willen jullie spelen?</div>
-    <div class="mode-row">
-      <div class="mode-btn sel" id="mode-q" onclick="selMode('question')">
-        <span class="mb-em">⚡</span>
-        <div class="mb-lbl">Per vraag wisselen</div>
-        <div class="mb-sub">Supersnel & spannend!</div>
-      </div>
-      <div class="mode-btn" id="mode-l" onclick="selMode('level')">
-        <span class="mb-em">🎮</span>
-        <div class="mb-lbl">Per level wisselen</div>
-        <div class="mb-sub">Rustig om de beurt</div>
-      </div>
-    </div>
+    <!-- Solo only — mode selection hidden -->
 
     <button class="btn bl" onclick="startGame()" style="font-size:1.1rem;padding:13px;">▶ Beginnen!</button>
   </div>
@@ -1052,22 +1014,10 @@ function selGradeInline(playerIdx, grade){
 function selMode(m){G.mode=m;renderSetup();}
 
 function startGame(){
-  // Read speler 1
-  const n0=(document.getElementById('name-0').value.trim())||'Speler 1';
+  const n0=(document.getElementById('name-0').value.trim())||'Trainer';
   G.players[0]={...G.players[0], name:n0, grade:setupState[0].grade, avatar:setupState[0].avatar, color:PLAYER_COLORS[0]};
-
-  // Speler 2 only if name filled in
-  const n1=(document.getElementById('name-1').value.trim());
-  if(n1){
-    G.players[1]={...G.players[1], name:n1, grade:setupState[1].grade, avatar:setupState[1].avatar, color:PLAYER_COLORS[1]};
-    // Solo mode if no player 2 name — keep 2nd player but mark as cpu
-    G.players[1].solo=false;
-  } else {
-    // Solo — keep player 2 but hide from multiplayer UI
-    G.players[1]={...DEFAULT_PLAYER(1), name:'Solo', solo:true};
-    G.mode='solo';
-  }
-
+  G.players[1]={...DEFAULT_PLAYER(1), name:'Solo', solo:true};
+  G.mode='solo';
   save();goMap();
 }
 
@@ -1083,19 +1033,16 @@ function buildMap(){
   if(G.dailyClaimed!==today)db.innerHTML=`<div class="daily-glow" onclick="claimDaily()">🎁 Dagelijkse bonus voor ${p.name}! Tik voor een gratis Pokémon!</div>`;
   else db.innerHTML='';
 
-  // 2-player score bar
-  const sb=document.getElementById('score-bar-2p');sb.innerHTML='';
-  G.players.forEach((pl,i)=>{
-    const gr=GRADES[pl.grade]||GRADES.g34;
-    const el=document.createElement('div');
-    el.className='sbp sbp'+(i+1)+(i===G.activeP?' active-p':'');
-    el.style.borderColor=pl.color;
-    el.style.background=pl.color+'18';
-    el.innerHTML=`<div class="sbp-av">${pl.avatar}</div><div class="sbp-nm">${pl.name}</div><div class="sbp-gr">${gr.lbl} Niv.${pl.diffLevel||1}</div><div class="sbp-sc">⭐ ${pl.score||0}</div>`;
-    el.onclick=()=>{G.activeP=i;buildMap();};
-    sb.appendChild(el);
-    if(i===0){const vs=document.createElement('div');vs.className='vs-badge';vs.textContent='VS';sb.appendChild(vs);}
-  });
+  // Solo: toon alleen speler 1 in een simpele balk
+  const p0=G.players[0];const gr0=GRADES[p0.grade]||GRADES.g34;
+  const sb=document.getElementById('score-bar-2p');
+  sb.style.gridTemplateColumns='1fr';
+  sb.innerHTML=`<div class="sbp sbp1 active-p" style="border-color:${p0.color};background:${p0.color}18;">
+    <div class="sbp-av">${p0.avatar}</div>
+    <div class="sbp-nm">${p0.name}</div>
+    <div class="sbp-gr">${gr0.lbl} · Niv.${p0.diffLevel||1}</div>
+    <div class="sbp-sc">⭐ ${p0.score||0}</div>
+  </div>`;
 
   // Fort
   const fhp=Math.max(0,G.fortHp);
@@ -1692,7 +1639,7 @@ function pinSubmit(){
 /* ─── INIT ─── */
 load();
 show('setup-screen');renderSetup();
-document.addEventListener('click',()=>{if(!aC&&!mOn){initAC();startMusic();}},{once:true});
+// Muziek staat standaard UIT — klik 🎵 rechtsboven om aan te zetten
 </script>
 </body>
 </html>
