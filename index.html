@@ -1,1248 +1,475 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tobin's Pokémon Rekenavontuur!</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap');
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Relax met Klank — Nieuw ontwerp (preview)</title>
+  <meta name="description" content="Klankschaalmassage, ontspanningsmassage en klankbehandelingen in Dubbeldam, Dordrecht." />
 
-:root{
-  --y:#ffd60a;--r:#e63946;--g:#06d6a0;--b:#4895ef;
-  --p:#9b5de5;--o:#fb8500;--dark:#12112e;--txt:#1d1d2e;
-}
-*{box-sizing:border-box;margin:0;padding:0;}
+  <script>
+    const SITE = {
+      naam:           "Relax met Klank",
+      eigenaar:       "Peter Kemper",
+      locatie:        "Dubbeldam, Dordrecht",
+      email:          "info@relaxmetklank.nl",
+      telefoon:       "",
+      openingstijden: "Ma – Za: 9:00 – 20:00 · Op afspraak",
+      afspraakLink:   "mailto:info@relaxmetklank.nl?subject=Afspraak%20Relax%20met%20Klank",
+      formspreeEndpoint: "https://formspree.io/f/JOUW_FORM_ID",
 
-body{
-  font-family:'Nunito',sans-serif;
-  background:var(--dark);
-  min-height:100vh;
-  display:flex;flex-direction:column;
-  align-items:center;
-  padding:8px 8px 24px;
-  overflow-x:hidden;
-  transition:background 1.2s;
-}
+      // Afbeeldingen — tijdelijk nog van de WordPress-server
+      images: {
+        hero:        "https://relaxmetklank.nl/wp-content/uploads/2024/12/foto-homepage-1536x692.jpg",
+        gallery1:    "https://relaxmetklank.nl/wp-content/uploads/2024/07/Foto-1-klankschaal-768x346.jpg",
+        gallery2:    "https://relaxmetklank.nl/wp-content/uploads/2024/12/foto-homepage-1536x692.jpg",
+        gallery3:    "https://relaxmetklank.nl/wp-content/uploads/2024/07/Foto-3-klankschaal-768x346.jpg",
+        ctaBg:       "https://relaxmetklank.nl/wp-content/uploads/2024/07/Foto-2-klankschaal-768x346.jpg",
+        peter:       "https://relaxmetklank.nl/wp-content/uploads/2024/07/20240305_163725-1536x692.jpg",
+      },
 
-/* ── STARS BG ── */
-#bg-cv{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.3;}
+      diensten: [
+        { icon:"🎶", naam:"Klankschaalmassage",    tekst:"Met je kleren aan op de massagetafel. Ocean drum, feng gong en klankschalen brengen je in diepe ontspanning via harmonische trillingen en zachte tonen.", prijs:"€ 65", duur:"60 min" },
+        { icon:"✦",  naam:"Klankschaalbehandeling", tekst:"Gericht op jouw specifieke klacht — hoofdpijn, schouderpijn, slaapproblemen of energiestroom. De klankschalen worden afgestemd op wat jij nodig hebt.", prijs:"€ 65", duur:"60 min" },
+        { icon:"🤲", naam:"Ontspanningsmassage",    tekst:"Met heerlijke massageolie worden de spanningen uit je lichaam losgemaakt. Een klassieke massage die je van hoofd tot teen in balans brengt.", prijs:"€ 60", duur:"60 min" },
+        { icon:"⚖",  naam:"Polariteitsmassage",     tekst:"6 klankschalen en een feng gong brengen je energie op fysiek, emotioneel, mentaal én spiritueel niveau in balans. Een krachtige totaalervaring.", prijs:"€ 75", duur:"75 min" },
+        { icon:"💫", naam:"Klankreis voor Twee",    tekst:"Een bijzondere gedeelde ervaring. Samen volledig tot rust komen terwijl de klankschalen jullie meevoeren op een innerlijke reis. Ideaal als cadeau.", prijs:"€ 110", duur:"90 min", featured:true },
+        { icon:"🌿", naam:"Combi: ontspanning + klank", tekst:"Het beste van twee werelden: ontspanningsmassage en klankschaalbehandeling gecombineerd in één sessie.", prijs:"€ 70", duur:"60 min" }
+      ]
+    };
+  </script>
 
-/* ── HEADER ── */
-.hdr{position:relative;z-index:10;text-align:center;width:100%;margin-bottom:6px;}
-.hdr h1{font-family:'Fredoka One',cursive;font-size:clamp(1.4rem,4.5vw,2.2rem);color:var(--y);text-shadow:3px 3px 0 #7a5a00,0 0 40px rgba(255,214,10,.5);}
-.hdr .sub{font-size:.68rem;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:2px;text-transform:uppercase;}
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
 
-/* ── MUSIC ── */
-#muse-btn{position:fixed;top:8px;right:8px;z-index:300;background:rgba(255,255,255,.12);backdrop-filter:blur(6px);border:none;border-radius:50%;width:38px;height:38px;font-size:1rem;cursor:pointer;transition:transform .2s;}
-#muse-btn:hover{transform:scale(1.12);}
+  <style>
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    :root {
+      --dark:#16140f; --dark2:#2a2519; --gold:#c9a55a; --gold2:#e8cc8a;
+      --cream:#f5f0e6; --cream2:#ede5d4; --text:#3a3326; --light:#faf7f2;
+    }
+    html { scroll-behavior:smooth; }
+    body { font-family:'Jost',sans-serif; font-weight:300; color:var(--text); background:var(--light); overflow-x:hidden; }
 
-/* ── CARD ── */
-.card{position:relative;z-index:10;background:#fff;border-radius:22px;padding:14px 16px 18px;max-width:520px;width:100%;box-shadow:0 16px 60px rgba(0,0,0,.6),0 0 0 4px var(--y);transition:box-shadow .7s;}
+    /* PREVIEW BANNER */
+    .preview-banner {
+      position:fixed; bottom:0; left:0; right:0; z-index:999;
+      background:var(--dark2); border-top:1px solid var(--gold);
+      padding:.8rem 2rem;
+      display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:.5rem;
+    }
+    .preview-banner p { font-size:.75rem; color:rgba(245,240,230,.7); letter-spacing:.04em; }
+    .preview-banner strong { color:var(--gold); }
+    .preview-banner button {
+      background:none; border:1px solid rgba(201,165,90,.4); color:rgba(245,240,230,.6);
+      padding:.35rem 1rem; font-family:'Jost',sans-serif; font-size:.7rem;
+      letter-spacing:.1em; text-transform:uppercase; cursor:pointer; transition:all .2s;
+    }
+    .preview-banner button:hover { border-color:var(--gold); color:var(--gold); }
 
-/* ══════════════════════════════
-   WORLD MAP SCREEN
-══════════════════════════════ */
-#map-screen{display:block;}
+    /* NAV */
+    nav { position:fixed; top:0; left:0; right:0; z-index:100; padding:1.5rem 4rem; display:flex; align-items:center; justify-content:space-between; transition:background .4s, padding .4s; }
+    nav.scrolled { background:rgba(22,20,15,.96); backdrop-filter:blur(12px); padding:1rem 4rem; }
+    .nav-logo { font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:500; color:#fff; text-decoration:none; letter-spacing:.04em; }
+    .nav-logo span { color:var(--gold); }
+    .nav-links { display:flex; gap:2.5rem; list-style:none; }
+    .nav-links a { color:rgba(255,255,255,.8); text-decoration:none; font-size:.8rem; font-weight:400; letter-spacing:.12em; text-transform:uppercase; transition:color .2s; }
+    .nav-links a:hover { color:var(--gold); }
+    .nav-cta { border:1px solid var(--gold)!important; color:var(--gold)!important; padding:.5rem 1.4rem; transition:background .2s,color .2s!important; }
+    .nav-cta:hover { background:var(--gold)!important; color:var(--dark)!important; }
 
-.rocket-banner{background:linear-gradient(135deg,#b00020,#700010);border-radius:13px;padding:8px 12px;color:#fff;font-weight:800;font-size:.78rem;margin-bottom:9px;display:flex;gap:9px;align-items:center;box-shadow:0 4px 18px rgba(180,0,0,.5);animation:rb-pulse 3s ease infinite;}
-@keyframes rb-pulse{0%,100%{box-shadow:0 4px 18px rgba(180,0,0,.5)}50%{box-shadow:0 4px 30px rgba(220,0,0,.75)}}
+    /* HERO */
+    .hero { position:relative; height:100vh; min-height:600px; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    #heroBg { position:absolute; inset:0; background-size:cover; background-position:center 30%; transform:scale(1.05); transition:transform 8s ease-out; }
+    #heroBg.loaded { transform:scale(1); }
+    .hero-overlay { position:absolute; inset:0; background:linear-gradient(160deg,rgba(16,13,8,.72) 0%,rgba(16,13,8,.55) 50%,rgba(42,37,25,.70) 100%); }
+    .hero-content { position:relative; text-align:center; color:#fff; max-width:800px; padding:0 2rem; }
+    .hero-eyebrow { font-size:.72rem; font-weight:400; letter-spacing:.28em; text-transform:uppercase; color:var(--gold); margin-bottom:1.6rem; opacity:0; animation:fadeUp 1s .3s forwards; }
+    .hero-title { font-family:'Cormorant Garamond',serif; font-size:clamp(3rem,7vw,5.5rem); font-weight:300; line-height:1.1; margin-bottom:1.8rem; opacity:0; animation:fadeUp 1s .55s forwards; }
+    .hero-title em { font-style:italic; color:var(--gold2); }
+    .hero-sub { font-size:1.05rem; line-height:1.7; color:rgba(255,255,255,.78); margin-bottom:2.8rem; max-width:560px; margin-left:auto; margin-right:auto; opacity:0; animation:fadeUp 1s .8s forwards; }
+    .hero-btns { display:flex; gap:1.2rem; justify-content:center; flex-wrap:wrap; opacity:0; animation:fadeUp 1s 1s forwards; }
+    .btn-primary { display:inline-block; background:var(--gold); color:var(--dark); text-decoration:none; padding:.9rem 2.4rem; font-size:.78rem; font-weight:500; letter-spacing:.14em; text-transform:uppercase; transition:background .25s,transform .2s; }
+    .btn-primary:hover { background:var(--gold2); transform:translateY(-2px); }
+    .btn-outline { display:inline-block; border:1px solid rgba(255,255,255,.5); color:#fff; text-decoration:none; padding:.9rem 2.4rem; font-size:.78rem; font-weight:400; letter-spacing:.14em; text-transform:uppercase; transition:border-color .25s,color .25s; }
+    .btn-outline:hover { border-color:var(--gold); color:var(--gold); }
+    .hero-scroll { position:absolute; bottom:2.5rem; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:.5rem; opacity:0; animation:fadeUp 1s 1.4s forwards; }
+    .hero-scroll span { font-size:.65rem; letter-spacing:.2em; text-transform:uppercase; color:rgba(255,255,255,.45); }
+    .scroll-line { width:1px; height:48px; background:linear-gradient(to bottom,var(--gold),transparent); animation:scrollPulse 2s infinite; }
 
-.player-row{display:flex;justify-content:space-between;align-items:center;background:#f5f6ff;border-radius:10px;padding:6px 12px;margin-bottom:9px;font-weight:800;font-size:.84rem;}
-.pr-score{color:var(--o);font-family:'Fredoka One',cursive;font-size:1rem;}
+    /* INTRO */
+    .intro-band { background:var(--dark); padding:5rem 4rem; text-align:center; }
+    .intro-inner { max-width:700px; margin:0 auto; }
+    .label { font-size:.68rem; letter-spacing:.28em; text-transform:uppercase; color:var(--gold); margin-bottom:1rem; }
+    .intro-band h2 { font-family:'Cormorant Garamond',serif; font-size:clamp(1.8rem,3.5vw,2.8rem); font-weight:300; color:var(--cream); line-height:1.4; margin-bottom:1.8rem; }
+    .intro-band h2 em { font-style:italic; color:var(--gold2); }
+    .intro-band p { font-size:.95rem; line-height:1.85; color:rgba(245,240,230,.65); }
+    .gold-divider { width:50px; height:1px; background:var(--gold); margin:1.8rem auto; }
 
-.daily-glow{background:linear-gradient(135deg,var(--y),var(--o));border-radius:11px;padding:7px 12px;color:#1d1d2e;font-weight:800;font-size:.78rem;cursor:pointer;margin-bottom:8px;text-align:center;box-shadow:0 4px 18px rgba(255,160,0,.5);animation:daily-pulse 1.8s ease infinite;}
-@keyframes daily-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.018)}}
+    /* DIENSTEN */
+    .diensten { background:var(--cream); padding:7rem 4rem; }
+    .section-header { text-align:center; margin-bottom:4rem; }
+    .section-header h2 { font-family:'Cormorant Garamond',serif; font-size:clamp(2rem,4vw,3.2rem); font-weight:300; color:var(--dark); margin-top:.8rem; }
+    .diensten-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem; max-width:1200px; margin:0 auto; }
+    .dienst-card { background:#fff; padding:2.8rem 2.4rem; border-bottom:3px solid transparent; transition:border-color .3s,transform .3s,box-shadow .3s; }
+    .dienst-card:hover { border-bottom-color:var(--gold); transform:translateY(-6px); box-shadow:0 20px 50px rgba(42,37,25,.10); }
+    .dienst-icon { font-size:2rem; margin-bottom:1.4rem; display:block; }
+    .dienst-card h3 { font-family:'Cormorant Garamond',serif; font-size:1.5rem; font-weight:500; color:var(--dark); margin-bottom:1rem; }
+    .dienst-card p { font-size:.88rem; line-height:1.8; color:#6b6355; }
+    .card-link { display:inline-block; margin-top:1.4rem; font-size:.72rem; letter-spacing:.16em; text-transform:uppercase; color:var(--gold); text-decoration:none; border-bottom:1px solid var(--gold); padding-bottom:2px; transition:opacity .2s; }
+    .card-link:hover { opacity:.7; }
+    .dienst-card.featured { background:var(--dark); border-bottom-color:var(--gold); }
+    .dienst-card.featured h3 { color:var(--cream); }
+    .dienst-card.featured p { color:rgba(245,240,230,.6); }
+    .dienst-card.featured .card-link { color:var(--gold2); border-bottom-color:var(--gold2); }
 
-/* ── LANDSCAPE MAP ── */
-.map-title{font-family:'Fredoka One',cursive;font-size:.92rem;color:#888;margin-bottom:6px;}
-.map-canvas-wrap{position:relative;width:100%;border-radius:16px;overflow:hidden;border:3px solid #dde;margin-bottom:10px;background:#e8f4ff;cursor:pointer;}
+    /* GALLERY */
+    .gallery-band { display:grid; grid-template-columns:repeat(3,1fr); height:380px; }
+    .gallery-item { overflow:hidden; }
+    .gallery-item img { width:100%; height:100%; object-fit:cover; transition:transform .6s; filter:brightness(.88) saturate(.85); }
+    .gallery-item:hover img { transform:scale(1.06); filter:brightness(.95) saturate(1); }
 
-/* SVG map */
-#map-svg{width:100%;display:block;}
+    /* OVER MIJ */
+    .over-mij { background:var(--light); padding:7rem 4rem; }
+    .over-mij-inner { display:grid; grid-template-columns:1fr 1fr; gap:5rem; max-width:1100px; margin:0 auto; align-items:center; }
+    .over-mij-image { position:relative; }
+    .over-mij-image img { width:100%; aspect-ratio:4/5; object-fit:cover; object-position:center top; }
+    .over-mij-image::before { content:''; position:absolute; inset:-16px 16px 16px -16px; border:1px solid var(--gold); z-index:-1; }
+    .over-mij-text h2 { font-family:'Cormorant Garamond',serif; font-size:clamp(2rem,3.5vw,3rem); font-weight:300; color:var(--dark); line-height:1.2; margin-bottom:2rem; margin-top:.8rem; }
+    .over-mij-text p { font-size:.9rem; line-height:1.9; color:#5a5040; margin-bottom:1.4rem; }
+    .credentials { margin-top:2rem; display:flex; flex-direction:column; gap:.8rem; }
+    .credential { display:flex; align-items:center; gap:1rem; font-size:.82rem; color:#5a5040; }
+    .credential::before { content:''; display:inline-block; width:24px; height:1px; background:var(--gold); flex-shrink:0; }
 
-/* ── FORT PROGRESS ── */
-.fort-section{background:linear-gradient(135deg,#1a0030,#300060);border-radius:13px;padding:10px 13px;margin-bottom:9px;color:#fff;}
-.fort-title{font-family:'Fredoka One',cursive;font-size:.9rem;color:var(--y);margin-bottom:5px;}
-.fort-hp-wrap{background:rgba(255,255,255,.15);border-radius:50px;height:14px;overflow:hidden;}
-.fort-hp-bar{height:100%;background:linear-gradient(90deg,var(--r),var(--o));border-radius:50px;transition:width .8s ease;}
-.fort-label{font-size:.72rem;font-weight:700;color:rgba(255,255,255,.6);margin-top:3px;text-align:right;}
+    /* CITAAT */
+    .quote-band { background:var(--dark2); padding:6rem 4rem; text-align:center; position:relative; overflow:hidden; }
+    .quote-band::before { content:'"'; position:absolute; top:-2rem; left:50%; transform:translateX(-50%); font-family:'Cormorant Garamond',serif; font-size:18rem; color:rgba(201,165,90,.06); line-height:1; pointer-events:none; }
+    .quote-band blockquote { position:relative; max-width:700px; margin:0 auto; }
+    .quote-band blockquote p { font-family:'Cormorant Garamond',serif; font-size:clamp(1.4rem,2.5vw,2rem); font-weight:300; font-style:italic; color:var(--cream); line-height:1.6; margin-bottom:2rem; }
+    .quote-band blockquote cite { font-size:.72rem; letter-spacing:.22em; text-transform:uppercase; color:var(--gold); font-style:normal; }
 
-/* ── POKÉDEX STRIP ── */
-.sec-title{font-family:'Fredoka One',cursive;font-size:.84rem;color:#888;margin-bottom:4px;}
-.coll-strip{display:flex;gap:5px;overflow-x:auto;padding:3px 0 7px;scrollbar-width:thin;}
-.ci{flex-shrink:0;text-align:center;width:54px;}
-.ci img{width:50px;height:50px;image-rendering:pixelated;}
-.ci .cn{font-size:.52rem;font-weight:800;color:#888;}
-.ci.shiny img{filter:drop-shadow(0 0 5px gold);}
+    /* TARIEVEN */
+    .tarieven { background:var(--cream2); padding:7rem 4rem; }
+    .tarieven-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:1.2rem; max-width:1100px; margin:0 auto; }
+    .tarief-item { background:#fff; padding:2rem; display:flex; align-items:center; justify-content:space-between; border-left:2px solid transparent; transition:border-color .2s,box-shadow .2s; }
+    .tarief-item:hover { border-left-color:var(--gold); box-shadow:4px 0 20px rgba(42,37,25,.06); }
+    .tarief-naam { font-family:'Cormorant Garamond',serif; font-size:1.15rem; font-weight:500; color:var(--dark); }
+    .tarief-duur { font-size:.78rem; color:#9a8e7e; margin-top:.2rem; }
+    .tarief-prijs { font-family:'Cormorant Garamond',serif; font-size:1.5rem; color:var(--gold); font-weight:500; }
+    .tarieven-note { text-align:center; margin-top:2rem; font-size:.78rem; color:#9a8e7e; }
 
-/* ── SCOREBOARD ── */
-.scoreboard{background:#f0f4ff;border-radius:12px;padding:10px;margin-top:8px;}
-.sr{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #e0e6ff;}
-.sr:last-child{border-bottom:none;}
-.sn{font-weight:800;color:var(--txt);}
-.sp{font-family:'Fredoka One',cursive;color:var(--o);}
-.add-btn{display:block;width:100%;background:none;border:2px dashed #c0c8ff;border-radius:9px;padding:7px;font-weight:800;color:#9090cc;cursor:pointer;margin-top:6px;font-size:.82rem;}
-.add-btn:hover{border-color:var(--b);color:var(--b);}
+    /* CTA */
+    .cta-sectie { background:var(--dark); padding:8rem 4rem; text-align:center; position:relative; overflow:hidden; }
+    #ctaBg { position:absolute; inset:0; background-size:cover; background-position:center; opacity:.12; }
+    .cta-inner { position:relative; max-width:600px; margin:0 auto; }
+    .cta-sectie h2 { font-family:'Cormorant Garamond',serif; font-size:clamp(2rem,4vw,3.4rem); font-weight:300; color:var(--cream); line-height:1.2; margin-bottom:1.6rem; margin-top:.8rem; }
+    .cta-sectie p { font-size:.9rem; line-height:1.8; color:rgba(245,240,230,.6); margin-bottom:2.8rem; }
 
-/* ── ACHIEVEMENTS ── */
-.ach-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
-.ach{border-radius:10px;padding:5px 8px;font-size:.72rem;font-weight:800;display:flex;align-items:center;gap:4px;}
-.ach.locked{background:#f0f0f0;color:#bbb;}
-.ach.earned{background:linear-gradient(135deg,var(--y),var(--o));color:#1d1d2e;box-shadow:0 2px 8px rgba(255,180,0,.4);}
+    /* CONTACT */
+    .contact { background:var(--light); padding:7rem 4rem 10rem; }
+    .contact-inner { display:grid; grid-template-columns:1fr 1fr; gap:5rem; max-width:1100px; margin:0 auto; }
+    .contact-info h2 { font-family:'Cormorant Garamond',serif; font-size:2.8rem; font-weight:300; color:var(--dark); margin-bottom:2rem; line-height:1.2; margin-top:.8rem; }
+    .contact-detail { display:flex; align-items:flex-start; gap:1rem; margin-bottom:1.2rem; }
+    .contact-detail-icon { width:38px; height:38px; border:1px solid var(--gold); display:flex; align-items:center; justify-content:center; flex-shrink:0; color:var(--gold); }
+    .contact-detail-text { font-size:.88rem; line-height:1.6; color:#5a5040; padding-top:.5rem; }
+    .contact-form { display:flex; flex-direction:column; gap:1.2rem; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; }
+    .form-group { display:flex; flex-direction:column; gap:.4rem; }
+    .form-group label { font-size:.68rem; letter-spacing:.15em; text-transform:uppercase; color:#9a8e7e; }
+    .form-group input,.form-group select,.form-group textarea { background:transparent; border:none; border-bottom:1px solid #d4cab8; padding:.7rem 0; font-family:'Jost',sans-serif; font-size:.9rem; font-weight:300; color:var(--text); outline:none; transition:border-color .2s; width:100%; }
+    .form-group input:focus,.form-group select:focus,.form-group textarea:focus { border-bottom-color:var(--gold); }
+    .form-group textarea { resize:vertical; min-height:100px; }
+    .form-submit { align-self:flex-start; background:var(--dark); color:var(--cream); border:none; padding:.95rem 2.4rem; font-family:'Jost',sans-serif; font-size:.75rem; letter-spacing:.16em; text-transform:uppercase; cursor:pointer; transition:background .25s; }
+    .form-submit:hover { background:var(--gold); color:var(--dark); }
+    .form-feedback { display:none; padding:1rem; margin-top:1rem; font-size:.85rem; }
+    .form-feedback.success { background:#f0f7ed; color:#3a6e2a; border:1px solid #b8dba8; display:block; }
+    .form-feedback.error   { background:#fdf0f0; color:#8b2020; border:1px solid #f0b8b8; display:block; }
 
-/* ══════════════════════════════
-   GAME SCREEN
-══════════════════════════════ */
-#game-screen{display:none;}
+    /* FOOTER */
+    footer { background:var(--dark); padding:3rem 4rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1.5rem; border-top:1px solid rgba(201,165,90,.2); }
+    .footer-logo { font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:500; color:#fff; }
+    .footer-logo span { color:var(--gold); }
+    .footer-links { display:flex; gap:2rem; list-style:none; }
+    .footer-links a { font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:rgba(255,255,255,.45); text-decoration:none; transition:color .2s; }
+    .footer-links a:hover { color:var(--gold); }
+    .footer-copy { font-size:.75rem; color:rgba(255,255,255,.25); }
 
-.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:4px;flex-wrap:wrap;}
-.pill{border-radius:50px;padding:4px 10px;font-family:'Fredoka One',cursive;font-size:.85rem;display:flex;gap:4px;align-items:center;white-space:nowrap;}
-.p-sc{background:#1a1a2e;color:var(--y);}
-.p-lv{background:#ffe5e5;color:var(--r);}
-.p-st{background:#fff3cd;color:#d97700;}
-.p-tp{background:linear-gradient(135deg,#f0e0ff,#e0d0ff);color:#6a00b0;font-size:.75rem;padding:4px 8px;}
-.bk-btn{background:none;border:2px solid #dde;border-radius:50px;padding:3px 9px;font-family:'Fredoka One',cursive;font-size:.72rem;color:#888;cursor:pointer;}
-.bk-btn:hover{border-color:var(--b);color:var(--b);}
+    /* ANIMATIES */
+    @keyframes fadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes scrollPulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+    .reveal { opacity:0; transform:translateY(28px); transition:opacity .75s ease,transform .75s ease; }
+    .reveal.visible { opacity:1; transform:none; }
 
-/* ── BATTLE ARENA ── */
-.arena{
-  border-radius:18px;padding:8px;margin-bottom:9px;
-  position:relative;overflow:hidden;min-height:220px;
-  border:3px solid rgba(255,255,255,.6);
-  transition:background 1s;
-}
-
-/* HP Bars */
-.hp-row{display:flex;gap:6px;margin-bottom:6px;}
-.hp-box{flex:1;background:rgba(255,255,255,.8);border-radius:8px;padding:4px 7px;}
-.hp-nm{font-size:.58rem;font-weight:800;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.hp-bg{background:#ddd;border-radius:50px;height:7px;margin-top:2px;overflow:hidden;}
-.hp-bar{height:100%;border-radius:50px;transition:width .5s ease,background .5s;}
-
-/* Pokemon containers — BIGGER */
-.poke-row{display:flex;justify-content:space-between;align-items:flex-end;padding:0 4px 2px;}
-
-.enemy-wrap{text-align:center;}
-.enemy-tag{font-size:.6rem;font-weight:800;color:#cc2200;background:rgba(255,255,255,.75);border-radius:5px;padding:1px 5px;display:inline-block;margin-bottom:2px;}
-.enemy-img{width:120px;height:120px;image-rendering:pixelated;transform:scaleX(-1);display:block;margin:0 auto;transition:filter .3s;}
-
-.player-wrap{text-align:center;}
-.player-img{width:130px;height:130px;image-rendering:pixelated;display:block;margin:0 auto;transition:filter .3s;}
-.player-tag{font-size:.6rem;font-weight:800;color:#004499;background:rgba(255,255,255,.75);border-radius:5px;padding:1px 5px;display:inline-block;margin-top:2px;}
-
-/* Speech bubble */
-.speech-bub{position:absolute;top:8px;left:50%;transform:translateX(-50%);background:#fff;border:2px solid #dde;border-radius:10px;padding:3px 10px;font-size:.68rem;font-weight:800;color:var(--txt);white-space:nowrap;z-index:5;}
-.speech-bub::after{content:'▼';position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);font-size:.6rem;color:#dde;}
-
-/* Type badge */
-.type-badge{position:absolute;top:8px;right:8px;border-radius:8px;padding:3px 8px;font-family:'Fredoka One',cursive;font-size:.75rem;}
-.type-math{background:linear-gradient(135deg,#4895ef,#1d6fa5);color:#fff;}
-.type-spell{background:linear-gradient(135deg,#9b5de5,#6a0099);color:#fff;}
-
-/* Battle anims */
-@keyframes plyr-atk{0%{transform:translateX(0)}35%{transform:translateX(70px)}65%{transform:translateX(30px)}100%{transform:translateX(0)}}
-@keyframes emy-hit{0%,100%{transform:scaleX(-1)translateX(0)}20%{transform:scaleX(-1)translateX(-12px)}50%{transform:scaleX(-1)translateX(8px)}80%{transform:scaleX(-1)translateX(-5px)}}
-@keyframes emy-atk{0%{transform:scaleX(-1)translateX(0)}35%{transform:scaleX(-1)translateX(-70px)}65%{transform:scaleX(-1)translateX(-30px)}100%{transform:scaleX(-1)translateX(0)}}
-@keyframes plyr-hit{0%,100%{transform:translateX(0)}25%{transform:translateX(12px)}75%{transform:translateX(-8px)}}
-@keyframes faint{0%{opacity:1;transform:scaleX(-1)translateY(0)}100%{opacity:0;transform:scaleX(-1)translateY(40px)}}
-@keyframes reveal-poke{0%{transform:scale(0)rotate(-15deg);opacity:0}60%{transform:scale(1.2)rotate(4deg)}100%{transform:scale(1)rotate(0);opacity:1}}
-@keyframes shiny-fx{0%,100%{filter:none}33%{filter:brightness(2.5)saturate(0)}66%{filter:brightness(1.5)hue-rotate(120deg)saturate(2)}}
-@keyframes impact{0%,100%{filter:none}50%{filter:brightness(3)saturate(0)}}
-
-/* ── QUESTION BOX ── */
-.qbox{background:var(--dark);border-radius:13px;padding:12px;text-align:center;margin-bottom:10px;transition:background .8s;}
-.qtext{font-family:'Fredoka One',cursive;font-size:clamp(1.6rem,6.5vw,2.6rem);color:#fff;letter-spacing:1px;line-height:1.2;}
-.qtext .op{color:var(--y);margin:0 4px;}
-.qtext .eq{color:#a8dadc;margin:0 4px;}
-.qtext .unk{color:var(--o);}
-.timer-wrap{background:rgba(255,255,255,.2);border-radius:50px;height:6px;margin-top:7px;overflow:hidden;}
-.tbar{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--g),var(--y));transition:width .1s linear,background .5s;}
-.tbar.urg{background:linear-gradient(90deg,var(--r),var(--o));}
-
-/* ── SPELLING SPECIFIC ── */
-.spell-prompt{font-family:'Fredoka One',cursive;font-size:1.2rem;color:#fff;margin-bottom:8px;line-height:1.4;}
-.spell-word{color:var(--y);font-size:1.5rem;}
-.spell-blank{color:var(--o);font-size:1.5rem;letter-spacing:3px;}
-
-/* ── ANSWERS ── */
-.answers{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:9px;}
-.answers.four-col{grid-template-columns:1fr 1fr 1fr 1fr;}
-.ab{background:#fff;border:3px solid #e0e0f0;border-radius:13px;padding:11px 7px;font-family:'Fredoka One',cursive;font-size:1.35rem;color:var(--txt);cursor:pointer;transition:transform .12s,border-color .12s;box-shadow:0 4px 0 #ccc;}
-.ab.spell{font-size:1.05rem;padding:10px 8px;}
-.ab:hover{transform:translateY(-3px);border-color:var(--b);box-shadow:0 7px 0 #aac;}
-.ab:active{transform:translateY(2px);box-shadow:0 1px 0 #ccc;}
-.ab.ok{background:var(--g);border-color:#03a47a;color:#fff;animation:btn-pop .3s;box-shadow:0 4px 0 #028a66;}
-.ab.no{background:var(--r);border-color:#a01e25;color:#fff;animation:btn-shake .35s;box-shadow:0 4px 0 #6a0e14;}
-@keyframes btn-pop{0%{transform:scale(1)}50%{transform:scale(1.1)}100%{transform:scale(1)}}
-@keyframes btn-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
-
-.feedback{text-align:center;font-family:'Fredoka One',cursive;font-size:.92rem;min-height:22px;color:var(--txt);}
-.feedback.g{color:var(--g);}
-.feedback.f{color:var(--r);}
-
-.prog-wrap{background:#eee;border-radius:50px;height:10px;overflow:hidden;margin-top:8px;}
-.prog-bar{height:100%;border-radius:50px;transition:width .4s;}
-.prog-bar.math-bar{background:linear-gradient(90deg,var(--y),var(--r));}
-.prog-bar.spell-bar{background:linear-gradient(90deg,var(--p),var(--b));}
-.prog-lbl{text-align:center;font-size:.7rem;font-weight:700;color:#aaa;margin-top:2px;}
-
-/* ══════════════════════════════
-   SUPER QUESTION
-══════════════════════════════ */
-#super-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:400;background:rgba(0,0,0,.88);align-items:center;justify-content:center;}
-#super-ov.show{display:flex;}
-.super-card{background:linear-gradient(135deg,#1a0030,#300060,#000080);border:4px solid var(--y);border-radius:22px;padding:18px 20px;max-width:360px;width:92%;text-align:center;box-shadow:0 0 60px rgba(255,214,10,.6),0 0 120px rgba(100,0,200,.4);animation:sc-enter .6s cubic-bezier(.17,.67,.3,1.3);position:relative;overflow:hidden;}
-@keyframes sc-enter{from{transform:scale(0)rotate(-10deg);opacity:0}to{transform:scale(1)rotate(0);opacity:1}}
-.super-lightning{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;}
-.bolt{position:absolute;width:3px;background:linear-gradient(180deg,rgba(255,214,10,0),rgba(255,214,10,1),rgba(255,214,10,0));border-radius:2px;animation:bolt-fx .4s ease infinite;}
-@keyframes bolt-fx{0%,100%{opacity:0}50%{opacity:.8}}
-.super-badge{background:linear-gradient(135deg,var(--y),var(--o));color:#1d1d2e;font-family:'Fredoka One',cursive;font-size:1rem;border-radius:50px;padding:4px 16px;display:inline-block;margin-bottom:7px;box-shadow:0 0 20px rgba(255,214,10,.8);animation:badge-bb .5s ease infinite alternate;}
-@keyframes badge-bb{from{transform:translateY(0)}to{transform:translateY(-4px)}}
-.super-poke{width:110px;height:110px;image-rendering:pixelated;display:block;margin:0 auto 5px;animation:supe-float 2s ease infinite;filter:drop-shadow(0 0 20px rgba(255,214,10,.8));}
-@keyframes supe-float{0%,100%{transform:translateY(0)scale(1)}50%{transform:translateY(-8px)scale(1.05)}}
-.super-name{font-family:'Fredoka One',cursive;font-size:1.3rem;color:var(--y);text-shadow:0 0 12px rgba(255,214,10,.8);margin-bottom:3px;}
-.super-desc{font-size:.8rem;font-weight:700;color:rgba(255,255,255,.75);margin-bottom:4px;}
-.super-bonus-txt{font-family:'Fredoka One',cursive;font-size:.9rem;color:var(--g);margin-bottom:10px;}
-.super-q{font-family:'Fredoka One',cursive;font-size:clamp(1.5rem,5vw,2.2rem);color:#fff;margin:6px 0;}
-.super-q .op{color:var(--y);}
-.super-q .unk{color:#a0ffff;}
-.super-answers{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:9px 0 0;}
-.sa{background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.3);border-radius:11px;padding:11px 5px;font-family:'Fredoka One',cursive;font-size:1.3rem;color:#fff;cursor:pointer;transition:all .15s;}
-.sa.spell-sa{font-size:.95rem;padding:10px 8px;}
-.sa:hover{background:rgba(255,214,10,.25);border-color:var(--y);transform:translateY(-2px);}
-.sa.sc{background:rgba(6,214,160,.35);border-color:var(--g);}
-.sa.sw{background:rgba(230,57,70,.35);border-color:var(--r);}
-.super-timer-wrap{background:rgba(255,255,255,.15);border-radius:50px;height:5px;margin-top:9px;overflow:hidden;}
-.super-tbar{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--g),var(--y));transition:width .1s linear;}
-.super-tbar.urg{background:linear-gradient(90deg,var(--r),var(--o));}
-.super-fb{font-family:'Fredoka One',cursive;font-size:.95rem;min-height:22px;color:#fff;margin-top:7px;}
-.super-fb.g{color:var(--g);}
-.super-fb.f{color:#ff7070;}
-
-/* ══════════════════════════════
-   COMPLETE SCREEN
-══════════════════════════════ */
-#complete-screen{display:none;text-align:center;}
-.trophy-big{font-size:3.5rem;display:block;animation:tb 1.5s ease infinite;}
-@keyframes tb{0%,100%{transform:translateY(0)rotate(-4deg)}50%{transform:translateY(-10px)rotate(4deg)}}
-.comp-title{font-family:'Fredoka One',cursive;font-size:1.55rem;color:var(--txt);margin:6px 0 3px;}
-.stars-row{display:flex;gap:6px;justify-content:center;font-size:1.8rem;margin:5px 0 8px;}
-.fort-damage-msg{background:linear-gradient(135deg,#1a0030,#300060);color:var(--y);border-radius:12px;padding:9px 12px;margin:8px 0;font-family:'Fredoka One',cursive;font-size:.9rem;}
-.caught-card{background:linear-gradient(135deg,#f0fff8,#e0f8ff);border:3px solid var(--g);border-radius:14px;padding:11px;margin:8px 0;display:flex;align-items:center;gap:11px;animation:slide-in .5s ease;}
-@keyframes slide-in{from{transform:translateX(-18px);opacity:0}to{transform:translateX(0);opacity:1}}
-.caught-card img{width:72px;height:72px;image-rendering:pixelated;}
-.caught-nm{font-family:'Fredoka One',cursive;font-size:1rem;}
-.caught-sub{font-size:.7rem;color:#888;font-weight:700;}
-.shiny-tag{color:gold;text-shadow:0 0 7px gold;}
-.egg-box{background:linear-gradient(135deg,#fff9e6,#fff0d0);border-radius:12px;padding:10px;margin:7px 0;border:2px solid var(--y);}
-.egg-em{font-size:2.6rem;cursor:pointer;display:block;animation:ew 1.5s ease infinite;}
-@keyframes ew{0%,100%{transform:rotate(-10deg)}50%{transform:rotate(10deg)}}
-
-/* ── PARENT REPORT ── */
-.report-box{background:#f0f6ff;border-radius:12px;padding:10px 13px;margin-top:10px;}
-.report-title{font-family:'Fredoka One',cursive;font-size:.88rem;color:var(--b);margin-bottom:6px;}
-.report-row{display:flex;justify-content:space-between;font-size:.78rem;font-weight:700;color:var(--txt);padding:3px 0;border-bottom:1px solid #dde;}
-.report-row:last-child{border-bottom:none;}
-
-/* ── GIOVANNI FINAL BOSS ── */
-#gio-screen{display:none;text-align:center;}
-.gio-title{font-family:'Fredoka One',cursive;font-size:1.8rem;color:var(--y);text-shadow:0 0 20px rgba(255,214,10,.6);margin:8px 0;}
-.gio-poke{width:140px;height:140px;image-rendering:pixelated;display:block;margin:0 auto;animation:supe-float 2s ease infinite;filter:drop-shadow(0 0 25px rgba(255,50,50,.8));}
-.gio-hp-wrap{background:#222;border-radius:50px;height:16px;overflow:hidden;margin:10px 0;}
-.gio-hp-bar{height:100%;background:linear-gradient(90deg,var(--r),#ff6600);border-radius:50px;transition:width .8s ease;}
-
-/* ══════════════════════════════
-   BUTTONS
-══════════════════════════════ */
-.btn{display:block;width:100%;background:var(--r);color:#fff;font-family:'Fredoka One',cursive;font-size:1rem;border:none;border-radius:12px;padding:11px;cursor:pointer;box-shadow:0 5px 0 #9e1e25;transition:transform .12s,box-shadow .12s;margin-top:7px;}
-.btn:hover{transform:translateY(-2px);box-shadow:0 7px 0 #9e1e25;}
-.btn:active{transform:translateY(2px);box-shadow:0 2px 0 #9e1e25;}
-.btn.bl{background:var(--b);box-shadow:0 5px 0 #0d3d6b;}
-.btn.bl:hover{box-shadow:0 7px 0 #0d3d6b;}
-.btn.gn{background:var(--g);box-shadow:0 5px 0 #028a66;}
-.btn.gn:hover{box-shadow:0 7px 0 #028a66;}
-.btn.pu{background:var(--p);box-shadow:0 5px 0 #5a0090;}
-.btn.pu:hover{box-shadow:0 7px 0 #5a0090;}
-.btn.gh{background:none;border:2px solid #dde;color:#888;box-shadow:none;}
-.btn.gh:hover{border-color:var(--b);color:var(--b);box-shadow:none;}
-.btn.sm{font-size:.85rem;padding:8px;}
-
-/* ══════════════════════════════
-   MODALS
-══════════════════════════════ */
-.modal-ov{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);z-index:500;backdrop-filter:blur(4px);align-items:center;justify-content:center;}
-.modal-ov.open{display:flex;}
-.modal-box{background:#fff;border-radius:20px;padding:20px 18px;max-width:320px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.4);animation:mpop .3s ease;}
-@keyframes mpop{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
-.modal-title{font-family:'Fredoka One',cursive;font-size:1.35rem;color:var(--txt);margin-bottom:7px;}
-.minput{width:100%;border:2px solid #dde;border-radius:9px;padding:9px 12px;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;margin:7px 0;outline:none;}
-.minput:focus{border-color:var(--b);}
-
-/* ══════════════════════════════
-   FX
-══════════════════════════════ */
-.float-pts{position:fixed;font-family:'Fredoka One',cursive;font-size:1.3rem;color:var(--y);text-shadow:2px 2px 0 #7a5a00;pointer-events:none;z-index:1000;animation:flt-up 1.1s ease forwards;}
-@keyframes flt-up{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-65px)}}
-.conf-c{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:999;overflow:hidden;}
-.cp{position:absolute;top:-20px;animation:cffall linear forwards;}
-@keyframes cffall{to{top:110vh;transform:rotate(720deg) translateX(var(--d));opacity:0}}
-
-@media(max-width:380px){
-  .card{padding:10px 11px 14px;}
-  .qtext{font-size:1.45rem;}
-  .ab{font-size:1.1rem;padding:9px 5px;}
-  .enemy-img,.player-img{width:90px;height:90px;}
-}
-</style>
+    /* RESPONSIVE */
+    @media (max-width:900px) {
+      nav { padding:1.2rem 2rem; }
+      nav.scrolled { padding:.8rem 2rem; }
+      .nav-links { display:none; }
+      .over-mij-inner,.contact-inner { grid-template-columns:1fr; gap:3rem; }
+      .gallery-band { height:220px; }
+      .diensten,.over-mij,.tarieven,.cta-sectie { padding:4rem 2rem; }
+      .contact { padding:4rem 2rem 10rem; }
+      .intro-band { padding:3.5rem 2rem; }
+      .form-row { grid-template-columns:1fr; }
+      footer { flex-direction:column; align-items:flex-start; padding:2.5rem 2rem; }
+      .preview-banner { flex-direction:column; align-items:flex-start; }
+    }
+  </style>
 </head>
 <body>
-<canvas id="bg-cv"></canvas>
-<button id="muse-btn" onclick="toggleMusic()">🎵</button>
 
-<div class="hdr">
-  <h1>⚡ Tobin's Rekenavontuur!</h1>
-  <div class="sub">Pokémon Editie · 10 Levels · Red de Wereld!</div>
-</div>
-
-<div class="card" id="main-card">
-
-  <!-- ══ MAP ══ -->
-  <div id="map-screen">
-    <div class="rocket-banner">
-      <span style="font-size:1.6rem;flex-shrink:0">😈</span>
-      <div>
-        <div style="font-size:.88rem;">Giovanni's Fort beschermt Team Rocket!</div>
-        <div style="opacity:.7;font-size:.73rem;font-weight:400">Bevrijd alle 10 regio's → breek het fort af → versla Giovanni!</div>
-      </div>
-    </div>
-
-    <div id="daily-bar"></div>
-
-    <div class="player-row">
-      <div>👤 <span id="pname-d">Trainer</span></div>
-      <div class="pr-score">⭐ <span id="pts-d">0</span></div>
-      <button class="btn gh sm" style="width:auto;margin:0;padding:4px 10px;font-size:.75rem;" onclick="showReport()">📊 Rapport</button>
-    </div>
-
-    <!-- Fort -->
-    <div class="fort-section">
-      <div class="fort-title">🏰 Giovanni's Fort — HP: <span id="fort-hp-txt">100</span>%</div>
-      <div class="fort-hp-wrap"><div class="fort-hp-bar" id="fort-hp-bar" style="width:100%"></div></div>
-      <div class="fort-label" id="fort-label">Versla alle levels om het fort te vernietigen!</div>
-    </div>
-
-    <!-- Map -->
-    <div class="map-title">🗺️ Kies een regio (tik op een vlag):</div>
-    <div class="map-canvas-wrap">
-      <svg id="map-svg" viewBox="0 0 480 200" xmlns="http://www.w3.org/2000/svg">
-        <!-- Sky gradient -->
-        <defs>
-          <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#87CEEB"/>
-            <stop offset="100%" stop-color="#E0F4FF"/>
-          </linearGradient>
-          <linearGradient id="grassGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#6DBE47"/>
-            <stop offset="100%" stop-color="#4A8C2A"/>
-          </linearGradient>
-          <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#5BA8E0"/>
-            <stop offset="100%" stop-color="#2E6EA6"/>
-          </linearGradient>
-          <linearGradient id="volcGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#8B2500"/>
-            <stop offset="100%" stop-color="#5a1500"/>
-          </linearGradient>
-          <linearGradient id="darkGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#2d0060"/>
-            <stop offset="100%" stop-color="#1a0040"/>
-          </linearGradient>
-        </defs>
-        <!-- Background sky -->
-        <rect width="480" height="200" fill="url(#skyGrad)"/>
-        <!-- Clouds -->
-        <ellipse cx="60" cy="30" rx="30" ry="12" fill="white" opacity=".8"/>
-        <ellipse cx="80" cy="28" rx="22" ry="10" fill="white" opacity=".9"/>
-        <ellipse cx="300" cy="25" rx="25" ry="10" fill="white" opacity=".7"/>
-        <ellipse cx="320" cy="23" rx="18" ry="8" fill="white" opacity=".8"/>
-        <!-- Ground base -->
-        <rect x="0" y="150" width="480" height="50" fill="url(#grassGrad)"/>
-        <!-- Mountains (Aarde level 1) -->
-        <polygon points="30,150 70,80 110,150" fill="#a08060"/>
-        <polygon points="60,150 95,95 130,150" fill="#c0a070"/>
-        <polygon points="50,150 88,100 126,150" fill="#8a6840" opacity=".5"/>
-        <!-- Volcano (Vuur level 2) -->
-        <polygon points="155,150 185,70 215,150" fill="#cc4400"/>
-        <polygon points="185,70 190,65 192,75" fill="#ff6600"/>
-        <ellipse cx="187" cy="64" rx="8" ry="5" fill="#ff2200" opacity=".9"/>
-        <!-- Forest (Gras level 3) -->
-        <circle cx="245" cy="130" r="22" fill="#3a9a30"/>
-        <circle cx="265" cy="125" r="20" fill="#4db840"/>
-        <circle cx="255" cy="118" r="18" fill="#5acf45"/>
-        <rect x="250" y="145" width="8" height="10" fill="#8B4513"/>
-        <!-- Ocean (Water level 4) -->
-        <rect x="300" y="130" width="80" height="22" fill="url(#waterGrad)" rx="4"/>
-        <path d="M300 138 Q310 134 320 138 Q330 142 340 138 Q350 134 360 138 Q370 142 380 138" stroke="white" stroke-width="1.5" fill="none" opacity=".6"/>
-        <!-- Lightning clouds (Electric level 5) -->
-        <ellipse cx="415" cy="95" rx="28" ry="14" fill="#555"/>
-        <ellipse cx="435" cy="92" rx="22" ry="12" fill="#444"/>
-        <text x="418" y="105" font-size="14" fill="#ffd60a">⚡</text>
-        <!-- Fort (Giovanni) top right -->
-        <rect x="440" y="60" width="36" height="45" fill="#333" rx="3"/>
-        <rect x="436" y="56" width="8" height="12" fill="#444" rx="1"/>
-        <rect x="448" y="56" width="8" height="12" fill="#444" rx="1"/>
-        <rect x="460" y="56" width="8" height="12" fill="#444" rx="1"/>
-        <rect x="448" y="80" width="10" height="14" fill="#222"/>
-        <text x="441" y="78" font-size="12">😈</text>
-
-        <!-- PATH connecting levels -->
-        <path d="M80 148 Q130 145 160 148 Q200 152 245 148 Q275 145 310 148 Q355 152 410 148 Q435 145 458 120" stroke="#FFD700" stroke-width="3" fill="none" stroke-dasharray="6,4" opacity=".9"/>
-
-        <!-- Level flags (will be rendered by JS as text/circles) -->
-        <g id="map-flags"></g>
-      </svg>
-    </div>
-
-    <!-- Achievements -->
-    <div class="sec-title">🏅 Jouw badges:</div>
-    <div class="ach-grid" id="ach-grid"></div>
-
-    <!-- Collection -->
-    <div class="sec-title">📦 Pokédex (<span id="coll-cnt">0</span>):</div>
-    <div class="coll-strip" id="coll-strip"></div>
-
-    <!-- Scoreboard -->
-    <div class="sec-title" style="margin-top:6px;">🏆 Topscore thuis:</div>
-    <div class="scoreboard" id="scoreboard"></div>
+  <!-- PREVIEW BANNER -->
+  <div class="preview-banner" id="previewBanner">
+    <p>🎨 <strong>Preview — Relax met Klank nieuw ontwerp</strong> &nbsp;·&nbsp; Dit is een voorbeeld, nog niet live.</p>
+    <button onclick="document.getElementById('previewBanner').style.display='none'">Verberg balk</button>
   </div>
 
-  <!-- ══ GAME ══ -->
-  <div id="game-screen">
-    <div class="topbar">
-      <button class="bk-btn" onclick="goMap()">← Kaart</button>
-      <div class="pill p-sc">⭐ <span id="sc-d">0</span></div>
-      <div class="pill p-lv" id="lives-pill">❤️❤️❤️</div>
-      <div class="pill p-st">🔥 <span id="str-d">0</span></div>
-      <div class="pill p-tp" id="type-pill">🔢 Rekenen</div>
-    </div>
+  <!-- NAV -->
+  <nav id="navbar">
+    <a href="#" class="nav-logo">Relax <span>met Klank</span></a>
+    <ul class="nav-links">
+      <li><a href="#diensten">Diensten</a></li>
+      <li><a href="#over-mij">Over mij</a></li>
+      <li><a href="#tarieven">Tarieven</a></li>
+      <li><a href="#contact" class="nav-cta">Afspraak maken</a></li>
+    </ul>
+  </nav>
 
-    <!-- Arena -->
-    <div class="arena" id="arena">
-      <div class="speech-bub" id="speech">Klaar?</div>
-      <div class="hp-row">
-        <div class="hp-box">
-          <div class="hp-nm" id="ply-hp-nm">Jouw Pokémon</div>
-          <div class="hp-bg"><div class="hp-bar" id="ply-hp" style="width:100%;background:var(--g)"></div></div>
-        </div>
-        <div class="hp-box">
-          <div class="hp-nm" id="emy-hp-nm">Team Rocket</div>
-          <div class="hp-bg"><div class="hp-bar" id="emy-hp" style="width:100%;background:var(--r)"></div></div>
-        </div>
+  <!-- HERO -->
+  <section class="hero">
+    <div id="heroBg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Klankschaal &amp; Ontspanning · Dordrecht</p>
+      <h1 class="hero-title">Vind rust door<br>de <em>kracht van klank</em></h1>
+      <p class="hero-sub">Ontspan lichaam en geest met klankschaalmassage, ontspanningsmassage en bijzondere klankbehandelingen in Dubbeldam, Dordrecht.</p>
+      <div class="hero-btns">
+        <a href="mailto:info@relaxmetklank.nl?subject=Afspraak" class="btn-primary">Maak een afspraak</a>
+        <a href="#diensten" class="btn-outline">Ontdek de behandelingen</a>
       </div>
-      <div class="poke-row">
-        <div class="player-wrap">
-          <img class="player-img" id="ply-img" src="" alt="">
-          <div class="player-tag" id="ply-tag">?????</div>
-        </div>
-        <div class="enemy-wrap">
-          <div class="enemy-tag" id="emy-tag">Team Rocket 😈</div>
-          <img class="enemy-img" id="emy-img" src="" alt="">
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- INTRO -->
+  <section class="intro-band">
+    <div class="intro-inner reveal">
+      <p class="label">Welkom</p>
+      <h2>Een plek om <em>volledig tot rust te komen</em></h2>
+      <div class="gold-divider"></div>
+      <p>In onze drukke wereld is ontspanning geen luxe meer — het is een noodzaak. Bij Relax met Klank bied ik jou een veilige, stille plek waar geluid en aanraking samen de weg naar diepe rust vinden.</p>
+    </div>
+  </section>
+
+  <!-- DIENSTEN -->
+  <section class="diensten" id="diensten">
+    <div class="section-header reveal">
+      <p class="label">Behandelingen</p>
+      <h2>Wat ik voor jou kan betekenen</h2>
+    </div>
+    <div class="diensten-grid" id="dienstenGrid"></div>
+  </section>
+
+  <!-- GALLERY -->
+  <div class="gallery-band" id="galleryBand"></div>
+
+  <!-- OVER MIJ -->
+  <section class="over-mij" id="over-mij">
+    <div class="over-mij-inner">
+      <div class="over-mij-image reveal">
+        <img id="peterImg" src="" alt="Peter Kemper — Relax met Klank" />
+      </div>
+      <div class="over-mij-text reveal">
+        <p class="label">Over mij</p>
+        <h2>Peter Kemper — gediplomeerd klankmasseur</h2>
+        <p>Mijn naam is Peter Kemper en ik woon in Dubbeldam te Dordrecht. Al jarenlang ben ik gefascineerd door de helende werking van massage en geluid. Na mijn opleiding als sportmasseur behandelde ik jaren sporters — en organiseerde ik massagemarathons voor het ALS-fonds.</p>
+        <p>Een bijzonder bezoek aan een klankreis inspireerde me om de opleiding Sound &amp; Resonance te volgen bij Happynings Soundhealing in Breda. Sindsdien ontvang ik mensen in mijn praktijk voor een unieke combinatie van rust, klank en aanraking.</p>
+        <div class="credentials">
+          <div class="credential">Gediplomeerd klankmasseur — Sound &amp; Resonance</div>
+          <div class="credential">Sportmasseur — IVS Opleidingen Dordrecht</div>
+          <div class="credential">Praktijk in Dubbeldam, Dordrecht</div>
         </div>
       </div>
     </div>
+  </section>
 
-    <div class="qbox" id="qbox">
-      <div class="qtext" id="qtext"></div>
-      <div class="timer-wrap"><div class="tbar" id="tbar" style="width:100%"></div></div>
+  <!-- CITAAT -->
+  <section class="quote-band">
+    <blockquote class="reveal">
+      <p>"Klank heeft de kracht om te genezen wat woorden niet kunnen bereiken — het raakt het diepste van wie je bent."</p>
+      <cite>— Peter Kemper, Relax met Klank</cite>
+    </blockquote>
+  </section>
+
+  <!-- TARIEVEN -->
+  <section class="tarieven" id="tarieven">
+    <div class="section-header reveal">
+      <p class="label">Tarieven</p>
+      <h2>Transparante prijzen</h2>
     </div>
-    <div class="answers" id="answers"></div>
-    <div class="feedback" id="feedback">&nbsp;</div>
-    <div class="prog-wrap"><div class="prog-bar math-bar" id="prog-bar" style="width:0%"></div></div>
-    <div class="prog-lbl" id="prog-lbl">Vraag 1 van 5</div>
-  </div>
+    <div class="tarieven-grid" id="tarievenGrid"></div>
+    <p class="tarieven-note">* Exacte tarieven worden bevestigd bij het maken van een afspraak.</p>
+  </section>
 
-  <!-- ══ COMPLETE ══ -->
-  <div id="complete-screen">
-    <span class="trophy-big" id="comp-trophy">🏆</span>
-    <div class="comp-title" id="comp-title">Geweldig!</div>
-    <div class="stars-row" id="stars-row"></div>
-    <div style="font-family:'Fredoka One',cursive;color:#888;font-size:.85rem;margin-bottom:8px;" id="comp-sc"></div>
-    <div class="fort-damage-msg" id="fort-dmg-msg"></div>
-    <div id="egg-area"></div>
-    <div id="caught-area"></div>
-    <div id="ach-earned"></div>
-    <button class="btn gn" id="next-btn" style="display:none;" onclick="goMap()">🗺️ Terug naar de kaart!</button>
-    <button class="btn" onclick="replayW()">🔄 Nog een keer!</button>
-    <button class="btn gh sm" onclick="goMap()">← Kaart</button>
-  </div>
+  <!-- CTA -->
+  <section class="cta-sectie">
+    <div id="ctaBg"></div>
+    <div class="cta-inner reveal">
+      <p class="label">Klaar voor rust?</p>
+      <h2>Plan je moment van ontspanning</h2>
+      <p>Of je nu voor het eerst komt of een vaste gast bent — elke behandeling begint met een luisterend oor en eindigt met een voldaan gevoel van diepe rust.</p>
+      <a href="mailto:info@relaxmetklank.nl?subject=Afspraak" class="btn-primary">Maak een afspraak</a>
+    </div>
+  </section>
 
-  <!-- ══ GIOVANNI FINAL ══ -->
-  <div id="gio-screen">
-    <div style="font-size:2.2rem;margin-bottom:4px;">🏰⚡🏰</div>
-    <div class="gio-title">GIOVANNI'S FORT!</div>
-    <img class="gio-poke" id="gio-poke-img" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/150.png" alt="Mewtwo">
-    <div style="font-family:'Fredoka One',cursive;font-size:1rem;color:#fff;margin:6px 0;">Giovanni gooit zijn sterkste Pokémon in de strijd!</div>
-    <div class="gio-hp-wrap"><div class="gio-hp-bar" id="gio-hp-bar" style="width:100%"></div></div>
-    <div style="font-family:'Fredoka One',cursive;font-size:.8rem;color:rgba(255,255,255,.5);margin-bottom:14px;">Giovanni's HP</div>
-    <button class="btn pu" onclick="startGiovanni()">⚔️ Begin het eindgevecht!</button>
-    <button class="btn gh sm" onclick="goMap()">← Kaart</button>
-  </div>
-</div>
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="contact-inner">
+      <div class="contact-info reveal">
+        <p class="label">Contact</p>
+        <h2>Neem contact op</h2>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">📍</div>
+          <div class="contact-detail-text">Dubbeldam, Dordrecht<br>Praktijk aan huis</div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">✉</div>
+          <div class="contact-detail-text">info@relaxmetklank.nl</div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">⏰</div>
+          <div class="contact-detail-text">Ma – Za: 9:00 – 20:00 · Op afspraak</div>
+        </div>
+      </div>
+      <form class="contact-form" id="contactForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Voornaam</label>
+            <input type="text" name="naam" placeholder="Jouw naam" required />
+          </div>
+          <div class="form-group">
+            <label>E-mail</label>
+            <input type="email" name="email" placeholder="jouw@email.nl" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Gewenste behandeling</label>
+          <select name="behandeling" id="behandelingSelect">
+            <option value="">Kies een behandeling...</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Bericht</label>
+          <textarea name="bericht" placeholder="Stel een vraag of geef je voorkeursmomenten aan..."></textarea>
+        </div>
+        <button type="submit" class="form-submit">Stuur bericht</button>
+        <div class="form-feedback" id="formFeedback"></div>
+      </form>
+    </div>
+  </section>
 
-<!-- ══ SUPER QUESTION ══ -->
-<div id="super-ov">
-  <div class="super-card">
-    <div class="super-lightning" id="super-lightning"></div>
-    <div class="super-badge" id="super-badge">⚡ SUPERVRAAG! ⚡</div>
-    <img class="super-poke" id="super-poke-img" src="" alt="">
-    <div class="super-name" id="super-poke-nm"></div>
-    <div class="super-desc" id="super-desc"></div>
-    <div class="super-bonus-txt">🏆 Versla hem voor <span id="super-bonus-txt">+10</span> bonuspunten!</div>
-    <div class="super-q" id="super-q"></div>
-    <div class="super-answers" id="super-answers"></div>
-    <div class="super-timer-wrap"><div class="super-tbar" id="super-tbar" style="width:100%"></div></div>
-    <div class="super-fb" id="super-fb">&nbsp;</div>
-  </div>
-</div>
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Relax <span>met Klank</span></div>
+    <ul class="footer-links">
+      <li><a href="#diensten">Diensten</a></li>
+      <li><a href="#over-mij">Over mij</a></li>
+      <li><a href="#tarieven">Tarieven</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <p class="footer-copy">© 2025 Relax met Klank · Dordrecht</p>
+  </footer>
 
-<!-- ══ MODALS ══ -->
-<div class="modal-ov" id="name-modal">
-  <div class="modal-box">
-    <div style="font-size:2rem;">👋</div>
-    <div class="modal-title">Wie ben jij?</div>
-    <div style="font-size:.82rem;color:#888;font-weight:700;margin-bottom:5px;">Vul je naam in om te beginnen!</div>
-    <input class="minput" id="name-inp" placeholder="bijv. Tobin" maxlength="16">
-    <button class="btn bl" onclick="saveName()">Laten we gaan! ⚡</button>
-  </div>
-</div>
-<div class="modal-ov" id="aplayer-modal">
-  <div class="modal-box">
-    <div class="modal-title">👥 Speler toevoegen</div>
-    <input class="minput" id="aplayer-inp" placeholder="Naam" maxlength="16">
-    <button class="btn bl" onclick="addPlayer()">Toevoegen ✓</button>
-    <button class="btn gh sm" onclick="closeModal('aplayer-modal')">Annuleren</button>
-  </div>
-</div>
-<div class="modal-ov" id="report-modal">
-  <div class="modal-box" style="max-width:360px;">
-    <div class="modal-title">📊 Voortgangsrapport</div>
-    <div class="report-box" id="report-content"></div>
-    <button class="btn gh sm" style="margin-top:10px;" onclick="closeModal('report-modal')">Sluiten</button>
-  </div>
-</div>
+  <script>
+    // Afbeeldingen injecteren
+    document.getElementById('heroBg').style.backgroundImage  = `url('${SITE.images.hero}')`;
+    document.getElementById('ctaBg').style.backgroundImage   = `url('${SITE.images.ctaBg}')`;
+    document.getElementById('peterImg').src                  = SITE.images.peter;
 
-<div class="conf-c" id="confetti"></div>
-
-<script>
-/* ═══════════ STARS BG ═══════════ */
-(()=>{
-  const cv=document.getElementById('bg-cv'),ctx=cv.getContext('2d');
-  let W,H,stars=[];
-  const resize=()=>{W=cv.width=window.innerWidth;H=cv.height=window.innerHeight;stars=[];for(let i=0;i<130;i++)stars.push({x:Math.random()*W,y:Math.random()*H,r:.4+Math.random()*1.4,o:Math.random()});}
-  window.addEventListener('resize',resize);resize();
-  const draw=()=>{ctx.clearRect(0,0,W,H);stars.forEach(s=>{s.o+=.008;ctx.globalAlpha=Math.sin(s.o*Math.PI)*.75;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();s.y+=.15;if(s.y>H)s.y=0;});ctx.globalAlpha=1;requestAnimationFrame(draw);}
-  draw();
-})();
-
-/* ═══════════ AUDIO ═══════════ */
-let aC=null,mOn=false,mIdx=0,mTO=null;
-const MEL=[[392,.18],[0,.04],[440,.14],[523,.2],[0,.04],[659,.28],[0,.08],[587,.14],[523,.14],[440,.18],[392,.38],[0,.18],[330,.18],[0,.04],[349,.14],[392,.2],[0,.04],[523,.28],[0,.08],[494,.14],[440,.14],[392,.18],[349,.38],[0,.28],[659,.18],[587,.18],[523,.14],[494,.18],[523,.38],[0,.12],[784,.18],[740,.14],[698,.14],[659,.28],[0,.18]];
-function initAC(){if(aC)return;aC=new(window.AudioContext||window.webkitAudioContext)();}
-function note(f,d,v=.09){if(!aC||!mOn)return;const o=aC.createOscillator(),g=aC.createGain();o.type='square';o.frequency.value=f;g.gain.setValueAtTime(v,aC.currentTime);g.gain.exponentialRampToValueAtTime(.001,aC.currentTime+d);o.connect(g);g.connect(aC.destination);o.start();o.stop(aC.currentTime+d);}
-function sched(){if(!mOn)return;const[f,d]=MEL[mIdx];if(f>0)note(f,d*.9);mIdx=(mIdx+1)%MEL.length;mTO=setTimeout(sched,d*1000);}
-function startMusic(){initAC();mOn=true;mIdx=0;sched();document.getElementById('muse-btn').textContent='🔊';}
-function stopMusic(){mOn=false;clearTimeout(mTO);document.getElementById('muse-btn').textContent='🎵';}
-function toggleMusic(){mOn?stopMusic():startMusic();}
-function sfx(t){
-  if(!aC)return;
-  if(t==='ok')[523,659,784,1047].forEach((f,i)=>setTimeout(()=>note(f,.12,.14),i*80));
-  else if(t==='no'){note(220,.3,.14);setTimeout(()=>note(196,.28,.1),160);}
-  else if(t==='super')[392,494,659,784,1047,1319].forEach((f,i)=>setTimeout(()=>note(f,.17,.18),i*90));
-  else if(t==='catch')[523,587,659,784,1047].forEach((f,i)=>setTimeout(()=>note(f,.14,.17),i*100));
-  else if(t==='lvl')[523,659,784,1047,1318].forEach((f,i)=>setTimeout(()=>note(f,.2,.2),i*130));
-  else if(t==='spell')[659,523,659,784].forEach((f,i)=>setTimeout(()=>note(f,.12,.14),i*90));
-}
-
-/* ═══════════ LEVELS DATA ═══════════ */
-// 10 levels alternating math(even idx) / spelling(odd idx)
-// Each has a world theme, pokemon pool, and type
-const LEVELS=[
-  // 1 - AARDE (math)
-  {id:'aarde',n:'Aarde Regio',emoji:'⛰️',type:'math',
-   bg:'#2d1a0e',arenaGrad:'linear-gradient(180deg,#d4b896 0%,#e8d5b0 45%,#b8d4a0 100%)',acc:'#c7a17a',
-   ops:['+','-'],max:20,opLbl:'+ en −',story:'Team Rocket bezet de bergen!',
-   mapX:80,mapY:148,
-   pokemon:[{id:51,n:'Dugtrio'},{id:76,n:'Golem'},{id:112,n:'Rhydon'},{id:105,n:'Marowak'},{id:232,n:'Donphan'},{id:208,n:'Steelix'},{id:464,n:'Rhyperior'},{id:472,n:'Gliscor'},{id:530,n:'Excadrill'},{id:248,n:'Tyranitar'}],
-   rPoke:{id:34,n:'Nidoking'},speeches:['Rots en steen!','Graaf je vrij!','Knal!'],
-   sPokes:[{id:248,n:'Tyranitar'},{id:464,n:'Rhyperior'}]},
-  // 2 - SPELLING 1 (eenvoudige woordjes)
-  {id:'spell1',n:'Taal Tempel',emoji:'📚',type:'spell',
-   bg:'#0d0060',arenaGrad:'linear-gradient(180deg,#9060cc 0%,#c090ff 45%,#e8d0ff 100%)',acc:'#c77dff',
-   story:'De bibliotheek is bezet door Rocket!',
-   mapX:135,mapY:148,
-   pokemon:[{id:196,n:'Espeon'},{id:282,n:'Gardevoir'},{id:475,n:'Gallade'},{id:380,n:'Latias'},{id:350,n:'Milotic'},{id:488,n:'Cresselia'},{id:151,n:'Mew'},{id:199,n:'Slowking'},{id:282,n:'Gardevoir'},{id:065,n:'Alakazam'}],
-   rPoke:{id:97,n:'Hypno'},speeches:['Lees je spreuken!','Schrijf het goed!','Letters zijn kracht!'],
-   sPokes:[{id:196,n:'Espeon'},{id:282,n:'Gardevoir'}]},
-  // 3 - VUUR (math)
-  {id:'vuur',n:'Vuur Regio',emoji:'🌋',type:'math',
-   bg:'#2d0a0a',arenaGrad:'linear-gradient(180deg,#ff9966 0%,#ffccaa 45%,#ffe8a0 100%)',acc:'#ff6b35',
-   ops:['+','-','*'],max:50,opLbl:'+ − ×',story:'Vuurpokémon gevangen in lava!',
-   mapX:185,mapY:148,
-   pokemon:[{id:6,n:'Charizard'},{id:59,n:'Arcanine'},{id:78,n:'Rapidash'},{id:136,n:'Flareon'},{id:157,n:'Typhlosion'},{id:257,n:'Blaziken'},{id:392,n:'Infernape'},{id:445,n:'Garchomp'},{id:373,n:'Salamence'},{id:448,n:'Lucario'}],
-   rPoke:{id:229,n:'Houndoom'},speeches:['VUUR!','Char char!','Braaaand!'],
-   sPokes:[{id:6,n:'Charizard'},{id:229,n:'Houndoom'}]},
-  // 4 - SPELLING 2 (dt-regel / klanken)
-  {id:'spell2',n:'Schrijf Slot',emoji:'✏️',type:'spell',
-   bg:'#003060',arenaGrad:'linear-gradient(180deg,#6090cc 0%,#90c0ff 45%,#d0e8ff 100%)',acc:'#4895ef',
-   story:'Het schrijfkasteel is in handen van Rocket!',
-   mapX:240,mapY:148,
-   pokemon:[{id:9,n:'Blastoise'},{id:55,n:'Golduck'},{id:62,n:'Poliwrath'},{id:134,n:'Vaporeon'},{id:160,n:'Feraligatr'},{id:186,n:'Politoed'},{id:350,n:'Milotic'},{id:395,n:'Empoleon'},{id:230,n:'Kingdra'},{id:131,n:'Lapras'}],
-   rPoke:{id:130,n:'Gyarados'},speeches:['Schrijf het goed!','Letters opgelet!','Goed nadenken!'],
-   sPokes:[{id:395,n:'Empoleon'},{id:131,n:'Lapras'}]},
-  // 5 - GRAS (math)
-  {id:'gras',n:'Gras Regio',emoji:'🌿',type:'math',
-   bg:'#0a1e0d',arenaGrad:'linear-gradient(180deg,#78d880 0%,#c0f0a0 45%,#e0f8d0 100%)',acc:'#56cfb2',
-   ops:['+','-','*'],max:60,opLbl:'+ − ×',story:'De bossen zijn overgenomen!',
-   mapX:300,mapY:148,
-   pokemon:[{id:3,n:'Venusaur'},{id:45,n:'Vileplume'},{id:71,n:'Victreebel'},{id:103,n:'Exeggutor'},{id:154,n:'Meganium'},{id:182,n:'Bellossom'},{id:254,n:'Sceptile'},{id:357,n:'Tropius'},{id:470,n:'Leafeon'},{id:497,n:'Serperior'}],
-   rPoke:{id:3,n:'Venusaur'},speeches:['Bulba!','Natuur power!','Bladerstorm!'],
-   sPokes:[{id:254,n:'Sceptile'},{id:497,n:'Serperior'}]},
-  // 6 - SPELLING 3 (zinnen/fouten)
-  {id:'spell3',n:'Zinnen Toren',emoji:'🗼',type:'spell',
-   bg:'#1a1000',arenaGrad:'linear-gradient(180deg,#ffe060 0%,#fff8a0 45%,#f0ffe0 100%)',acc:'#ffd60a',
-   story:'De zinnenmaker is gevangen!',
-   mapX:350,mapY:148,
-   pokemon:[{id:26,n:'Raichu'},{id:82,n:'Magneton'},{id:101,n:'Electrode'},{id:135,n:'Jolteon'},{id:181,n:'Ampharos'},{id:243,n:'Raikou'},{id:405,n:'Luxray'},{id:466,n:'Electivire'},{id:587,n:'Emolga'},{id:523,n:'Zebstrika'}],
-   rPoke:{id:243,n:'Raikou'},speeches:['Pika!','ZAAP!','Bliksem!'],
-   sPokes:[{id:243,n:'Raikou'},{id:466,n:'Electivire'}]},
-  // 7 - WATER (math)
-  {id:'water',n:'Water Regio',emoji:'🌊',type:'math',
-   bg:'#0a0d2e',arenaGrad:'linear-gradient(180deg,#4488cc 0%,#88bbee 45%,#c0e8ff 100%)',acc:'#4895ef',
-   ops:['+','-','*','/'],max:80,opLbl:'+ − × ÷',story:'De zeeën zijn bevroren!',
-   mapX:400,mapY:135,
-   pokemon:[{id:9,n:'Blastoise'},{id:55,n:'Golduck'},{id:91,n:'Cloyster'},{id:134,n:'Vaporeon'},{id:160,n:'Feraligatr'},{id:186,n:'Politoed'},{id:230,n:'Kingdra'},{id:350,n:'Milotic'},{id:395,n:'Empoleon'},{id:130,n:'Gyarados'}],
-   rPoke:{id:130,n:'Gyarados'},speeches:['Splash!','Waterkanon!','Golven!'],
-   sPokes:[{id:130,n:'Gyarados'},{id:350,n:'Milotic'}]},
-  // 8 - SPELLING 4 (meervoud/verkleinwoord)
-  {id:'spell4',n:'Woord Woud',emoji:'🌲',type:'spell',
-   bg:'#0a1e0d',arenaGrad:'linear-gradient(180deg,#78d880 0%,#c0f0a0 45%,#e0f8d0 100%)',acc:'#2dc653',
-   story:'De woordenboomen zijn bezet!',
-   mapX:430,mapY:115,
-   pokemon:[{id:3,n:'Venusaur'},{id:154,n:'Meganium'},{id:254,n:'Sceptile'},{id:470,n:'Leafeon'},{id:497,n:'Serperior'},{id:357,n:'Tropius'},{id:45,n:'Vileplume'},{id:182,n:'Bellossom'},{id:407,n:'Roserade'},{id:549,n:'Lilligant'}],
-   rPoke:{id:407,n:'Roserade'},speeches:['Schrijf het!','Goed nadenken!','Woordenkracht!'],
-   sPokes:[{id:497,n:'Serperior'},{id:407,n:'Roserade'}]},
-  // 9 - ELECTRIC (math)
-  {id:'electric',n:'Bliksem Regio',emoji:'⚡',type:'math',
-   bg:'#1a1500',arenaGrad:'linear-gradient(180deg,#ffe060 0%,#fff8a0 45%,#e8ffe0 100%)',acc:'#ffd60a',
-   ops:['+','-','*','/'],max:99,opLbl:'Alles t/m 99',story:'Elektrische chaos!',
-   mapX:452,mapY:95,
-   pokemon:[{id:26,n:'Raichu'},{id:82,n:'Magneton'},{id:101,n:'Electrode'},{id:135,n:'Jolteon'},{id:181,n:'Ampharos'},{id:243,n:'Raikou'},{id:405,n:'Luxray'},{id:466,n:'Electivire'},{id:587,n:'Emolga'},{id:603,n:'Eelektrik'}],
-   rPoke:{id:243,n:'Raikou'},speeches:['VOLT!','Bliksem!','PIKA!'],
-   sPokes:[{id:243,n:'Raikou'},{id:466,n:'Electivire'}]},
-  // 10 - PSYCHIC / GIOVANNI FINAL (math)
-  {id:'psychic',n:'Psycho Vesting',emoji:'🔮',type:'math',
-   bg:'#0d0018',arenaGrad:'linear-gradient(180deg,#aa66cc 0%,#cc99ee 45%,#eeddff 100%)',acc:'#c77dff',
-   ops:['+','-','*','/'],max:99,opLbl:'Alles! Super uitdaging!',story:"Giovanni's vesting — het eindgevecht!",
-   mapX:458,mapY:80,
-   pokemon:[{id:65,n:'Alakazam'},{id:80,n:'Slowbro'},{id:150,n:'Mewtwo'},{id:151,n:'Mew'},{id:196,n:'Espeon'},{id:199,n:'Slowking'},{id:282,n:'Gardevoir'},{id:475,n:'Gallade'},{id:380,n:'Latias'},{id:488,n:'Cresselia'}],
-   rPoke:{id:150,n:'Mewtwo'},speeches:['Psychisch!','POWER!','Mindkracht!'],
-   sPokes:[{id:150,n:'Mewtwo'},{id:151,n:'Mew'}]},
-];
-
-/* ═══════════ SPELLING DATA ═══════════ */
-// Different exercise types for 7-year-olds (groep 4)
-const SPELL_EXERCISES={
-  // Fill the missing letter (lange/korte klanken)
-  klanken:[
-    {prompt:'Welk woord klopt?',q:'De _ aan schijnt.',blank:true,ans:'m',choices:['m','n','r','b'],word:'maan',sentence:'De maan schijnt.'},
-    {prompt:'Welk woord klopt?',q:'Ik heb een r_de bal.',blank:true,ans:'o',choices:['o','oo','u','a'],word:'rode',sentence:'Ik heb een rode bal.'},
-    {prompt:'Welk woord klopt?',q:'De b_om is groot.',blank:true,ans:'o',choices:['o','oo','u','a'],word:'boom',sentence:'De boom is groot.'},
-    {prompt:'Welk woord klopt?',q:'Hij rent n_ar huis.',blank:true,ans:'aa',choices:['aa','a','e','oo'],word:'naar',sentence:'Hij rent naar huis.'},
-    {prompt:'Welk woord klopt?',q:'Ik eet een br_od.',blank:true,ans:'oo',choices:['oo','o','u','ee'],word:'brood',sentence:'Ik eet een brood.'},
-    {prompt:'Welk woord klopt?',q:'De k_t slaapt.',blank:true,ans:'a',choices:['a','aa','e','o'],word:'kat',sentence:'De kat slaapt.'},
-  ],
-  // Pick the right word
-  woordkeuze:[
-    {prompt:'Welk woord hoort hier?',q:'De hond _ hard.',ans:'loopt',choices:['loopt','lopen','loop','loopd']},
-    {prompt:'Welk woord is goed gespeld?',q:'',ans:'fiets',choices:['fiets','fiests','fiexts','fietsd']},
-    {prompt:'Welk woord is goed gespeld?',q:'',ans:'school',choices:['school','scool','skool','schol']},
-    {prompt:'Welk woord is goed gespeld?',q:'',ans:'vliegtuig',choices:['vliegtuig','vlietuig','vliechtuig','vliegtuik']},
-    {prompt:'Welk woord is goed gespeld?',q:'',ans:'schrijven',choices:['schrijven','srijven','schijven','schijrven']},
-    {prompt:'Welk woord is goed gespeld?',q:'',ans:'meisje',choices:['meisje','meisj','meijse','meisje']},
-  ],
-  // Sentence with error
-  zinsfout:[
-    {prompt:'Welke zin is fout gespeld?',q:'',ans:'De appel is lekkir.',choices:['De kat slaapt.','De appel is lekkir.','Hij rent snel.','Zij eet brood.']},
-    {prompt:'Welke zin is correct?',q:'',ans:'Ik ga naar school.',choices:['Ik ga naa school.','Ik ga naar scool.','Ik ga naar school.','Ik ga naars cool.']},
-    {prompt:'Welke zin is correct?',q:'',ans:'De hond rent snel.',choices:['De hont rent snel.','De hond rennt snel.','De hond rent snehl.','De hond rent snel.']},
-    {prompt:'Welke zin is correct?',q:'',ans:'Hij fietst naar huis.',choices:['Hij fiets naar huis.','Hij fietst naar huiss.','Hij fietst naar huis.','Hiej fietst naar huis.']},
-  ],
-  // Meervoud (plural)
-  meervoud:[
-    {prompt:'Wat is het meervoud van "boom"?',q:'boom → ?',ans:'bomen',choices:['bomen','boomen','booms','boome']},
-    {prompt:'Wat is het meervoud van "huis"?',q:'huis → ?',ans:'huizen',choices:['huizen','huises','huiss','huizen']},
-    {prompt:'Wat is het meervoud van "bal"?',q:'bal → ?',ans:'ballen',choices:['ballen','bals','bals','balen']},
-    {prompt:'Wat is het meervoud van "kat"?',q:'kat → ?',ans:'katten',choices:['katten','katen','kats','katsen']},
-    {prompt:'Wat is het meervoud van "bloem"?',q:'bloem → ?',ans:'bloemen',choices:['bloemen','bloemmen','bloems','bloeme']},
-    {prompt:'Wat is het meervoud van "fiets"?',q:'fiets → ?',ans:'fietsen',choices:['fietsen','fietss','fietses','fietsen']},
-  ],
-  // Verkleinwoord (diminutive)
-  verkleinwoord:[
-    {prompt:'Wat is het verkleinwoord van "boom"?',q:'boom → ?',ans:'boompje',choices:['boompje','boomtje','boomje','boome']},
-    {prompt:'Wat is het verkleinwoord van "huis"?',q:'huis → ?',ans:'huisje',choices:['huisje','huistje','huisjie','huisj']},
-    {prompt:'Wat is het verkleinwoord van "bal"?',q:'bal → ?',ans:'balletje',choices:['balletje','baltje','balje','balletje']},
-    {prompt:'Wat is het verkleinwoord van "kat"?',q:'kat → ?',ans:'katje',choices:['katje','katteje','katje','katsje']},
-    {prompt:'Wat is het verkleinwoord van "bloem"?',q:'bloem → ?',ans:'bloempje',choices:['bloempje','bloemje','bloomtje','bloeme']},
-  ],
-};
-
-function getSpellQuestions(n=5){
-  // Mix exercise types
-  const types=Object.keys(SPELL_EXERCISES);
-  const qs=[];
-  let used=[];
-  for(let i=0;i<n;i++){
-    const type=types[i%types.length];
-    const pool=SPELL_EXERCISES[type];
-    const avail=pool.filter((_,idx)=>!used.includes(type+idx));
-    const item=avail.length?avail[~~(Math.random()*avail.length)]:pool[~~(Math.random()*pool.length)];
-    const idx=pool.indexOf(item);
-    used.push(type+idx);
-    // Shuffle choices
-    const shuffled=[...item.choices].sort(()=>Math.random()-.5);
-    qs.push({...item,choices:shuffled,type});
-  }
-  return qs;
-}
-
-/* ═══════════ ACHIEVEMENTS ═══════════ */
-const ACHIEVEMENTS=[
-  {id:'first_win',label:'Eerste overwinning!',icon:'🏅',desc:'Win je eerste level'},
-  {id:'streak5',label:'5 op rij!',icon:'🔥',desc:'5 goede antwoorden achter elkaar'},
-  {id:'perfect',label:'Perfecte ronde!',icon:'💎',desc:'Alle 5 vragen goed'},
-  {id:'shiny',label:'Shiny gevonden!',icon:'✨',desc:'Een shiny Pokémon gevangen'},
-  {id:'spell_ace',label:'Spellingkampioen!',icon:'📝',desc:'Een spellingslevel voltooid'},
-  {id:'math_ace',label:'Rekenwonder!',icon:'🔢',desc:'Een rekenlevel voltooid'},
-  {id:'collector5',label:'5 Pokémon gevangen!',icon:'📦',desc:'5 Pokémon in je Pokédex'},
-  {id:'collector10',label:'10 Pokémon gevangen!',icon:'🎯',desc:'10 Pokémon in je Pokédex'},
-  {id:'fort50',label:'Fort half afgebroken!',icon:'🏰',desc:'Giovanni fort op 50%'},
-  {id:'champion',label:'Pokémon Kampioen!',icon:'🏆',desc:'Alle 10 levels gewonnen'},
-];
-
-/* ═══════════ STATE ═══════════ */
-let G={
-  name:'Trainer',world:null,qs:[],qIdx:0,
-  score:0,streak:0,lives:3,answered:false,
-  timerInt:null,timeLeft:0,
-  collection:[],worldStars:{},totalScore:0,
-  scoreboard:[],usedIds:[],
-  eggPoke:null,eggHatched:false,eggShiny:false,
-  plyHp:100,emyHp:100,fortHp:100,
-  dailyClaimed:'',achievements:[],
-  stats:{mathCorrect:0,mathWrong:0,spellCorrect:0,spellWrong:0,totalSessions:0,lastPlayed:''},
-  superActive:false,superTimerInt:null,superTimeLeft:0,superQ:null,superBonus:10,
-};
-
-function load(){
-  try{
-    const d=JSON.parse(localStorage.getItem('tobin_v5')||'{}');
-    Object.assign(G,{name:d.name||'Trainer',collection:d.collection||[],worldStars:d.worldStars||{},totalScore:d.totalScore||0,scoreboard:d.scoreboard||[],dailyClaimed:d.dailyClaimed||'',achievements:d.achievements||[],stats:d.stats||{mathCorrect:0,mathWrong:0,spellCorrect:0,spellWrong:0,totalSessions:0,lastPlayed:''},fortHp:d.fortHp!==undefined?d.fortHp:100});
-  }catch(e){}
-}
-function save(){
-  try{localStorage.setItem('tobin_v5',JSON.stringify({name:G.name,collection:G.collection,worldStars:G.worldStars,totalScore:G.totalScore,scoreboard:G.scoreboard,dailyClaimed:G.dailyClaimed,achievements:G.achievements,stats:G.stats,fortHp:G.fortHp}));}catch(e){}
-}
-
-function checkAch(id){
-  if(!G.achievements.includes(id)){G.achievements.push(id);return true;}
-  return false;
-}
-function tryAch(id){return checkAch(id);}
-
-/* ═══════════ MAP ═══════════ */
-function buildMap(){
-  setText('pname-d',G.name);setText('pts-d',G.totalScore);setText('coll-cnt',G.collection.length);
-
-  // Daily
-  const today=new Date().toDateString();
-  const db=document.getElementById('daily-bar');
-  if(G.dailyClaimed!==today){db.innerHTML=`<div class="daily-glow" onclick="claimDaily()">🎁 Dagelijkse bonus! Tik voor een gratis Pokémon-ei!</div>`;}
-  else db.innerHTML='';
-
-  // Fort HP
-  const fhp=Math.max(0,G.fortHp);
-  document.getElementById('fort-hp-bar').style.width=fhp+'%';
-  document.getElementById('fort-hp-bar').style.background=fhp>60?'linear-gradient(90deg,var(--r),var(--o))':fhp>30?'linear-gradient(90deg,#ff4400,#ff8800)':'linear-gradient(90deg,#880000,#cc0000)';
-  setText('fort-hp-txt',fhp);
-  const levelsWon=Object.keys(G.worldStars).filter(k=>G.worldStars[k]>=1).length;
-  setText('fort-label',fhp<=0?'🏰 FORT VERNIETIGD! Versla Giovanni!':levelsWon===0?'Versla levels om het fort te beschadigen!':fhp<=20?'⚠️ Het fort staat op instorten! Nog één level!':levelsWon+'/10 regio\'s bevrijd — fort op '+fhp+'%');
-
-  // Map flags
-  const flagsG=document.getElementById('map-flags');
-  flagsG.innerHTML='';
-  LEVELS.forEach((lv,i)=>{
-    const won=(G.worldStars[lv.id]||0)>=1;
-    const unlocked=i===0||(G.worldStars[LEVELS[i-1].id]||0)>=1;
-    const x=lv.mapX,y=lv.mapY-18;
-    // Flag background
-    const isSpell=lv.type==='spell';
-    const circle=document.createElementNS('http://www.w3.org/2000/svg','circle');
-    circle.setAttribute('cx',x);circle.setAttribute('cy',y);circle.setAttribute('r',12);
-    circle.setAttribute('fill',won?'#ffd60a':unlocked?(isSpell?'#9b5de5':'#4895ef'):'#888');
-    circle.setAttribute('stroke','white');circle.setAttribute('stroke-width','2');
-    if(unlocked)circle.style.cursor='pointer';
-    if(unlocked)circle.onclick=()=>startLevel(lv);
-    flagsG.appendChild(circle);
-    // Emoji
-    const txt=document.createElementNS('http://www.w3.org/2000/svg','text');
-    txt.setAttribute('x',x);txt.setAttribute('y',y+4);
-    txt.setAttribute('text-anchor','middle');txt.setAttribute('font-size','10');
-    txt.textContent=won?'✓':unlocked?lv.emoji:'🔒';
-    if(unlocked)txt.style.cursor='pointer';
-    if(unlocked)txt.onclick=()=>startLevel(lv);
-    flagsG.appendChild(txt);
-    // Level number below
-    const num=document.createElementNS('http://www.w3.org/2000/svg','text');
-    num.setAttribute('x',x);num.setAttribute('y',y+20);
-    num.setAttribute('text-anchor','middle');num.setAttribute('font-size','7');
-    num.setAttribute('fill',won?'#ffd60a':unlocked?'#fff':'#aaa');
-    num.setAttribute('font-weight','800');
-    num.textContent=''+(i+1);
-    flagsG.appendChild(num);
-  });
-
-  // Achievements
-  const ag=document.getElementById('ach-grid');
-  ag.innerHTML='';
-  ACHIEVEMENTS.forEach(a=>{
-    const el=document.createElement('div');
-    el.className='ach '+(G.achievements.includes(a.id)?'earned':'locked');
-    el.innerHTML=`${a.icon} ${a.label}`;
-    el.title=a.desc;
-    ag.appendChild(el);
-  });
-
-  // Collection
-  const strip=document.getElementById('coll-strip');
-  if(!G.collection.length){strip.innerHTML='<div style="font-size:.75rem;color:#aaa;font-weight:700;padding:5px 0;">Nog leeg — vang ze allemaal!</div>';}
-  else{strip.innerHTML='';G.collection.forEach(c=>{const el=document.createElement('div');el.className='ci'+(c.shiny?' shiny':'');el.innerHTML=`<img src="${spr(c.id)}" alt=""><div class="cn">${c.name}${c.shiny?'✨':''}</div>`;strip.appendChild(el);});}
-
-  buildScoreboard();
-}
-
-function buildScoreboard(){
-  const sb=document.getElementById('scoreboard');sb.innerHTML='';
-  const sorted=[...G.scoreboard].sort((a,b)=>b.score-a.score).slice(0,5);
-  if(!sorted.length){sb.innerHTML='<div style="color:#aaa;font-weight:700;font-size:.78rem;text-align:center;padding:4px;">Nog geen scores!</div>';}
-  else sorted.forEach((s,i)=>{const medals=['🥇','🥈','🥉','4️⃣','5️⃣'];const r=document.createElement('div');r.className='sr';r.innerHTML=`<span class="sn">${medals[i]} ${s.name}</span><span class="sp">${s.score}⭐</span>`;sb.appendChild(r);});
-  const ab=document.createElement('button');ab.className='add-btn';ab.textContent='+ Voeg speler toe';ab.onclick=()=>openModal('aplayer-modal');sb.appendChild(ab);
-}
-
-function claimDaily(){
-  G.dailyClaimed=new Date().toDateString();
-  const lv=LEVELS[0];const unc=lv.pokemon.filter(p=>!G.collection.find(c=>c.id===p.id));
-  const poke=unc.length?unc[0]:lv.pokemon[0];
-  if(!G.collection.find(c=>c.id===poke.id))G.collection.push({id:poke.id,name:poke.n,shiny:false});
-  save();document.getElementById('daily-bar').innerHTML=`<div style="background:linear-gradient(135deg,var(--g),#039966);color:#fff;border-radius:11px;padding:6px 12px;text-align:center;font-weight:800;font-size:.78rem;margin-bottom:8px;">✅ Bonus geclaimed! ${poke.n} toegevoegd!</div>`;
-  sfx('catch');launchConfetti();buildMap();
-}
-
-function showReport(){
-  const s=G.stats;
-  const total=s.mathCorrect+s.mathWrong+s.spellCorrect+s.spellWrong;
-  const mathPct=s.mathCorrect+s.mathWrong>0?Math.round(s.mathCorrect/(s.mathCorrect+s.mathWrong)*100):0;
-  const spellPct=s.spellCorrect+s.spellWrong>0?Math.round(s.spellCorrect/(s.spellCorrect+s.spellWrong)*100):0;
-  const won=Object.keys(G.worldStars).filter(k=>G.worldStars[k]>=1).length;
-  document.getElementById('report-content').innerHTML=`
-    <div class="report-title">📊 Voortgang van ${G.name}</div>
-    <div class="report-box">
-      <div class="report-row"><span>📅 Totaal gespeeld</span><span>${s.totalSessions} keer</span></div>
-      <div class="report-row"><span>🔢 Rekenen goed</span><span>${s.mathCorrect}/${s.mathCorrect+s.mathWrong} (${mathPct}%)</span></div>
-      <div class="report-row"><span>📝 Spelling goed</span><span>${s.spellCorrect}/${s.spellCorrect+s.spellWrong} (${spellPct}%)</span></div>
-      <div class="report-row"><span>🗺️ Levels gewonnen</span><span>${won}/10</span></div>
-      <div class="report-row"><span>📦 Pokémon gevangen</span><span>${G.collection.length}</span></div>
-      <div class="report-row"><span>⭐ Totaal punten</span><span>${G.totalScore}</span></div>
-      <div class="report-row"><span>🏰 Fort HP</span><span>${G.fortHp}%</span></div>
-      <div class="report-row"><span>🏅 Badges behaald</span><span>${G.achievements.length}/${ACHIEVEMENTS.length}</span></div>
-    </div>`;
-  openModal('report-modal');
-}
-
-/* ═══════════ START LEVEL ═══════════ */
-function startLevel(lv){
-  // Check if all levels done — show Giovanni
-  const won=Object.keys(G.worldStars).filter(k=>G.worldStars[k]>=1).length;
-  if(lv.id==='psychic'&&won>=9&&G.fortHp<=10){showGiovanni();return;}
-
-  G.world=lv;G.qIdx=0;G.score=0;G.streak=0;G.lives=3;G.answered=false;G.plyHp=100;G.emyHp=100;G.usedIds=[];G.superActive=false;
-  G.stats.totalSessions++;save();
-
-  document.body.style.background=lv.bg;
-  document.getElementById('main-card').style.boxShadow=`0 16px 60px rgba(0,0,0,.6),0 0 0 4px ${lv.acc}`;
-  document.getElementById('arena').style.background=lv.arenaGrad;
-
-  document.getElementById('emy-img').src=spr(lv.rPoke.id);
-  document.getElementById('emy-hp-nm').textContent=lv.rPoke.n;
-  setHpBar('emy',100);setHpBar('ply',100);
-
-  // Type indicator
-  const tp=lv.type==='spell';
-  document.getElementById('type-pill').textContent=tp?'📝 Spelling':'🔢 Rekenen';
-  document.getElementById('type-pill').style.background=tp?'linear-gradient(135deg,#f0e0ff,#e0d0ff)':'linear-gradient(135deg,#e0f0ff,#d0e0ff)';
-  document.getElementById('prog-bar').className='prog-bar '+(tp?'spell-bar':'math-bar');
-
-  // Generate questions
-  if(tp){G.qs=getSpellQuestions(5);}
-  else{G.qs=makeMathQs(lv,5);}
-
-  show('game-screen');showQ();
-}
-
-/* ═══════════ MATH QUESTIONS ═══════════ */
-function makeMathQs(lv,n){
-  const qs=[];
-  for(let i=0;i<n;i++){
-    let a,b,op,ans;
-    op=lv.ops[~~(Math.random()*lv.ops.length)];
-    if(op==='+'){a=rnd(2,Math.min(lv.max,85));b=rnd(1,Math.min(30,99-a));ans=a+b;}
-    else if(op==='-'){b=rnd(1,Math.min(40,lv.max));a=rnd(b,Math.min(b+50,lv.max));ans=a-b;}
-    else if(op==='*'){a=rnd(2,10);b=rnd(2,Math.min(10,~~(99/a)));ans=a*b;}
-    else{b=rnd(2,10);ans=rnd(2,~~(99/b));a=b*ans;}
-    qs.push({a,b,op:sym(op),raw:op,ans,type:'math'});
-  }
-  return qs;
-}
-function rnd(a,b){return ~~(Math.random()*(b-a+1))+a;}
-function sym(o){return o==='*'?'×':o==='/'?'÷':o;}
-function spr(id){return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;}
-
-/* ═══════════ SHOW QUESTION ═══════════ */
-function showQ(){
-  if(G.qIdx>=5){endLevel();return;}
-  if(G.qIdx>=1&&G.qIdx<=3&&Math.random()<0.28&&!G.superActive){doSuper();return;}
-
-  G.answered=false;
-  const q=G.qs[G.qIdx];
-  const lv=G.world;
-
-  // Pick non-repeated pokemon
-  const avail=lv.pokemon.filter(p=>!G.usedIds.includes(p.id));
-  const pool=avail.length?avail:lv.pokemon;
-  const poke=pool[~~(Math.random()*pool.length)];
-  G.curPoke=poke;G.curShiny=Math.random()<0.05;
-  G.usedIds.push(poke.id);
-
-  // Show as silhouette
-  const img=document.getElementById('ply-img');
-  img.src=spr(poke.id);img.style.filter='brightness(0)';img.style.animation='none';
-  document.getElementById('ply-tag').textContent='?????';
-  document.getElementById('ply-hp-nm').textContent='Jouw Pokémon';
-
-  const sp=lv.speeches[~~(Math.random()*lv.speeches.length)];
-  setText('speech',sp);
-
-  const cont=document.getElementById('answers');cont.innerHTML='';
-
-  if(q.type==='math'||q.type==='math'){
-    // Math question
-    setText('qtext',`${q.a} <span class="op">${q.op}</span> ${q.b} <span class="eq">=</span> <span class="unk">?</span>`);
-    const choices=makeMathChoices(q.ans,q.raw);
-    choices.forEach(c=>{
-      const btn=document.createElement('button');btn.className='ab';btn.textContent=c;
-      btn.onclick=()=>{if(!G.answered)checkQ(c,q.ans,btn,q);};cont.appendChild(btn);
+    // Gallerij
+    const gallery = document.getElementById('galleryBand');
+    [SITE.images.gallery1, SITE.images.gallery2, SITE.images.gallery3].forEach(src => {
+      gallery.innerHTML += `<div class="gallery-item"><img src="${src}" alt="Relax met Klank" loading="lazy" /></div>`;
     });
-  } else {
-    // Spell question
-    showSpellQ(q,cont);
-  }
 
-  setText('feedback','&nbsp;');setClass('feedback','feedback');
-  updateHUD();clearT();G.timeLeft=lv.type==='spell'?200:150;updT();
-  G.timerInt=setInterval(()=>{G.timeLeft--;updT();if(G.timeLeft<=0){clearT();if(!G.answered)timeOut();}},100);
-}
+    // Diensten
+    const dGrid = document.getElementById('dienstenGrid');
+    SITE.diensten.forEach(d => {
+      dGrid.innerHTML += `
+        <div class="dienst-card ${d.featured?'featured':''} reveal">
+          <span class="dienst-icon">${d.icon}</span>
+          <h3>${d.naam}</h3>
+          <p>${d.tekst}</p>
+          <a href="${SITE.afspraakLink}" class="card-link">Afspraak maken &rarr;</a>
+        </div>`;
+    });
 
-function showSpellQ(q,cont){
-  // Show spell question
-  let displayText='';
-  if(q.sentence){displayText=`<div class="spell-prompt">${q.prompt}</div><div class="spell-word">"${q.sentence.replace(q.word,'_'.repeat(q.word.length))}"</div>`;}
-  else if(q.q){displayText=`<div class="spell-prompt">${q.prompt}</div><div class="spell-word">${q.q}</div>`;}
-  else{displayText=`<div class="spell-prompt">${q.prompt}</div>`;}
-  document.getElementById('qtext').innerHTML=displayText;
+    // Tarieven
+    const tGrid = document.getElementById('tarievenGrid');
+    SITE.diensten.forEach(d => {
+      tGrid.innerHTML += `
+        <div class="tarief-item reveal">
+          <div><div class="tarief-naam">${d.naam}</div><div class="tarief-duur">${d.duur}</div></div>
+          <div class="tarief-prijs">${d.prijs}</div>
+        </div>`;
+    });
 
-  cont.className='answers';
-  q.choices.forEach(c=>{
-    const btn=document.createElement('button');btn.className='ab spell';btn.textContent=c;
-    btn.onclick=()=>{if(!G.answered)checkQ(c,q.ans,btn,q);};cont.appendChild(btn);
-  });
-}
+    // Behandeling dropdown
+    const sel = document.getElementById('behandelingSelect');
+    SITE.diensten.forEach(d => {
+      const o = document.createElement('option');
+      o.value = o.textContent = d.naam;
+      sel.appendChild(o);
+    });
 
-function makeMathChoices(ans,raw){
-  const s=new Set([ans]);let t=0;
-  while(s.size<4&&t<200){t++;const d=(raw==='*'||raw==='/')?rnd(1,7):rnd(1,14);const w=ans+(Math.random()<.5?d:-d);if(w>0&&w<200)s.add(w);}
-  return [...s].sort(()=>Math.random()-.5);
-}
+    // Sticky nav
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+    });
 
-/* ═══════════ CHECK ANSWER ═══════════ */
-function checkQ(chosen,correct,btn,q){
-  clearT();G.answered=true;
-  document.querySelectorAll('.ab').forEach(b=>b.onclick=null);
-  const isSpell=G.world.type==='spell';
+    // Hero image load → ken-burns effect
+    const bg = document.getElementById('heroBg');
+    const img = new Image();
+    img.onload = () => bg.classList.add('loaded');
+    img.src = SITE.images.hero;
 
-  if(chosen===correct||(typeof correct==='number'&&parseInt(chosen)===correct)){
-    btn.classList.add('ok');sfx(isSpell?'spell':'ok');
-    // Reveal pokemon
-    const img=document.getElementById('ply-img');
-    img.style.filter='none';img.style.animation=G.curShiny?'shiny-fx .6s ease':'reveal-poke .5s ease';
-    document.getElementById('ply-tag').textContent=G.curPoke.n+(G.curShiny?' ✨':'');
-    document.getElementById('ply-hp-nm').textContent=G.curPoke.n;
-    // Attack anim
-    setTimeout(()=>{img.style.animation='plyr-atk .5s ease';setTimeout(()=>{const ei=document.getElementById('emy-img');ei.style.animation='none';setTimeout(()=>ei.style.animation='emy-hit .4s ease',10);},250);},200);
-    // Score
-    const tb=G.timeLeft>120?3:G.timeLeft>70?2:1;const sb=G.streak>=4?2:G.streak>=2?1:0;const pts=tb+sb;
-    G.score+=pts;G.streak++;
-    G.emyHp=Math.max(0,G.emyHp-20);setHpBar('emy',G.emyHp);
-    if(isSpell)G.stats.spellCorrect++;else G.stats.mathCorrect++;
-    const msg=G.streak>=5?`🔥🔥 ${G.streak} op rij! ONSTOPBAAR! +${pts}⭐`:G.streak>=3?`🔥 ${G.streak} op rij! +${pts}⭐`:tb===3?`⚡ Razendsnel! +${pts}⭐`:`✅ Goed zo! +${pts}⭐`;
-    setText('feedback',msg);setClass('feedback','feedback g');spawnFloat(`+${pts}⭐`,btn);
-    // Achievements
-    if(G.streak>=5&&tryAch('streak5'))showAchToast('streak5');
-    G.qIdx++;setTimeout(showQ,1600);
-  } else {
-    btn.classList.add('no');sfx('no');
-    document.querySelectorAll('.ab').forEach(b=>{if(b.textContent===correct||parseInt(b.textContent)===correct)b.classList.add('ok');});
-    if(isSpell)G.stats.spellWrong++;else G.stats.mathWrong++;
-    hitPlayer();
-    const dispCorrect=typeof correct==='number'?correct:correct;
-    setText('feedback',`❌ Het antwoord was: ${dispCorrect}`);setClass('feedback','feedback f');
-    G.qIdx++;if(G.lives>0)setTimeout(showQ,1700);
-  }
-  updateHUD();
-}
+    // Scroll reveal
+    setTimeout(() => {
+      const obs = new IntersectionObserver(
+        entries => entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); } }),
+        { threshold:0.12, rootMargin:'0px 0px -40px 0px' }
+      );
+      document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+    }, 80);
 
-function hitPlayer(){
-  G.streak=0;G.lives=Math.max(0,G.lives-1);
-  G.plyHp=Math.max(0,G.plyHp-25);setHpBar('ply',G.plyHp);
-  const ei=document.getElementById('emy-img');ei.style.animation='none';setTimeout(()=>ei.style.animation='emy-atk .5s ease',10);
-  const pi=document.getElementById('ply-img');pi.style.animation='none';setTimeout(()=>pi.style.animation='plyr-hit .4s ease',250);
-  updateHUD();if(G.lives<=0)setTimeout(gameOver,1200);
-}
-function timeOut(){G.answered=true;sfx('no');setText('feedback','⏰ Te laat!');setClass('feedback','feedback f');hitPlayer();showCorrectAns();G.qIdx++;if(G.lives>0)setTimeout(showQ,1700);}
-function showCorrectAns(){const q=G.qs[G.qIdx];if(!q)return;document.querySelectorAll('.ab').forEach(b=>{if(b.textContent===q.ans||parseInt(b.textContent)===q.ans)b.classList.add('ok');b.onclick=null;});}
-function gameOver(){clearT();show('complete-screen');buildComplete(false,0);}
-
-function setHpBar(who,pct){const b=document.getElementById(who==='ply'?'ply-hp':'emy-hp');b.style.width=pct+'%';b.style.background=pct>50?'var(--g)':pct>25?'var(--y)':'var(--r)';}
-
-function updT(){const p=(G.timeLeft/(G.world&&G.world.type==='spell'?200:150))*100;const b=document.getElementById('tbar');b.style.width=p+'%';b.className='tbar'+(p<25?' urg':'');}
-function clearT(){if(G.timerInt){clearInterval(G.timerInt);G.timerInt=null;}}
-
-function updateHUD(){
-  setText('sc-d',G.score);setText('str-d',G.streak);
-  document.getElementById('lives-pill').textContent='❤️'.repeat(G.lives)+'🖤'.repeat(3-G.lives);
-  const pct=(G.qIdx/5)*100;document.getElementById('prog-bar').style.width=pct+'%';
-  setText('prog-lbl',`Vraag ${Math.min(G.qIdx+1,5)} van 5`);
-}
-
-/* ═══════════ SUPER QUESTION ═══════════ */
-function doSuper(){
-  clearT();G.superActive=true;const lv=G.world;
-  const sp=lv.sPokes[~~(Math.random()*lv.sPokes.length)];
-  G.superPoke=sp;
-  const isSpell=lv.type==='spell';
-  G.superBonus=rnd(8,14);
-
-  const badge=document.getElementById('super-badge');
-  badge.textContent=isSpell?'📝 SUPERSPELLING! 📝':'⚡ SUPERVRAAG! ⚡';
-  badge.style.background=isSpell?'linear-gradient(135deg,var(--p),#6a00cc)':'linear-gradient(135deg,var(--y),var(--o))';
-  badge.style.color=isSpell?'#fff':'#1d1d2e';
-
-  document.getElementById('super-poke-img').src=spr(sp.id);
-  setText('super-poke-nm',sp.n);
-  setText('super-desc',isSpell?`${sp.n} test jouw spelling!`:`${sp.n} blokkeert jouw pad!`);
-  setText('super-bonus-txt','+'+G.superBonus);
-
-  // Generate super question
-  let q;
-  if(isSpell){
-    const types=Object.keys(SPELL_EXERCISES);
-    const type=types[~~(Math.random()*types.length)];
-    const pool=SPELL_EXERCISES[type];
-    q={...pool[~~(Math.random()*pool.length)]};
-    q.choices=[...q.choices].sort(()=>Math.random()-.5);
-    q.type='spell';
-    // Show spelling super question
-    let displayText=q.q?`${q.prompt} — <span style="color:var(--y)">${q.q}</span>`:q.prompt;
-    document.getElementById('super-q').innerHTML=displayText;
-    const sa=document.getElementById('super-answers');sa.innerHTML='';
-    q.choices.forEach(c=>{const btn=document.createElement('button');btn.className='sa spell-sa';btn.textContent=c;btn.onclick=()=>{if(!G.answered)checkSuperAns(c,q.ans,btn,true);};sa.appendChild(btn);});
-  } else {
-    const mq=makeMathQs(lv,1)[0];q=mq;
-    document.getElementById('super-q').innerHTML=`${q.a} <span class="op">${q.op}</span> ${q.b} <span class="eq">=</span> <span class="unk">?</span>`;
-    const choices=makeMathChoices(q.ans,q.raw);
-    const sa=document.getElementById('super-answers');sa.innerHTML='';
-    choices.forEach(c=>{const btn=document.createElement('button');btn.className='sa';btn.textContent=c;btn.onclick=()=>{if(!G.answered)checkSuperAns(c,q.ans,btn,false);};sa.appendChild(btn);});
-  }
-  G.superQ=q;
-  buildLightning();sfx('super');
-  document.getElementById('super-ov').style.display='flex';
-  G.answered=false;
-  G.superTimeLeft=120;updSuperT();
-  G.superTimerInt=setInterval(()=>{G.superTimeLeft--;updSuperT();if(G.superTimeLeft<=0){clearSuperT();if(!G.answered)superTO();}},100);
-}
-
-function buildLightning(){const c=document.getElementById('super-lightning');c.innerHTML='';for(let i=0;i<6;i++){const b=document.createElement('div');b.className='bolt';b.style.cssText=`left:${rnd(5,90)}%;top:0;height:${rnd(30,90)}%;animation-delay:${Math.random()*.4}s;animation-duration:${.3+Math.random()*.4}s;`;c.appendChild(b);}}
-function updSuperT(){const p=(G.superTimeLeft/120)*100;const b=document.getElementById('super-tbar');b.style.width=p+'%';b.className='super-tbar'+(p<25?' urg':'');}
-function clearSuperT(){if(G.superTimerInt){clearInterval(G.superTimerInt);G.superTimerInt=null;}}
-
-function checkSuperAns(chosen,correct,btn,isSpell){
-  clearSuperT();G.answered=true;
-  document.querySelectorAll('.sa').forEach(b=>b.onclick=null);
-  if(chosen===correct||(typeof correct==='number'&&parseInt(chosen)===correct)){
-    btn.classList.add('sc');sfx(isSpell?'spell':'ok');
-    G.score+=G.superBonus;G.streak++;
-    if(isSpell)G.stats.spellCorrect++;else G.stats.mathCorrect++;
-    setText('super-fb',`🏆 GEWELDIG! +${G.superBonus} bonuspunten!`);setClass('super-fb','super-fb g');
-    spawnFloat(`+${G.superBonus}⭐ SUPER!`,btn);
-    G.emyHp=Math.max(0,G.emyHp-35);setHpBar('emy',G.emyHp);updateHUD();launchConfetti();
-    setTimeout(closeSuperOv,2000);
-  } else {
-    btn.classList.add('sw');sfx('no');
-    document.querySelectorAll('.sa').forEach(b=>{if(b.textContent===correct||parseInt(b.textContent)===correct)b.classList.add('sc');});
-    if(isSpell)G.stats.spellWrong++;else G.stats.mathWrong++;
-    setText('super-fb',`❌ Het was "${correct}"! Hartje kwijt!`);setClass('super-fb','super-fb f');
-    hitPlayer();setTimeout(closeSuperOv,1800);
-  }
-}
-function superTO(){G.answered=true;sfx('no');setText('super-fb','⏰ Te laat! Hartje kwijt!');setClass('super-fb','super-fb f');document.querySelectorAll('.sa').forEach(b=>b.onclick=null);hitPlayer();setTimeout(closeSuperOv,1800);}
-function closeSuperOv(){document.getElementById('super-ov').style.display='none';G.superActive=false;G.answered=false;if(G.lives>0)showQ();}
-
-/* ═══════════ END LEVEL ═══════════ */
-function endLevel(){
-  clearT();sfx('lvl');
-  const maxPts=5*5+15;
-  const pct=G.score/maxPts;
-  const stars=pct>=.7?3:pct>=.4?2:pct>=.15?1:0;
-  const prevStars=G.worldStars[G.world.id]||0;
-  G.worldStars[G.world.id]=Math.max(prevStars,stars);
-  G.totalScore+=G.score;
-
-  // Fort damage
-  if(stars>=1){
-    const dmg=stars===3?15:stars===2?10:5;
-    G.fortHp=Math.max(0,G.fortHp-dmg);
-  }
-
-  // Achievements
-  const newAchs=[];
-  if(stars>=1&&tryAch('first_win'))newAchs.push('first_win');
-  if(G.qs.filter((_,i)=>i<5).length===5&&G.score>=20&&tryAch('perfect'))newAchs.push('perfect');
-  if(G.world.type==='spell'&&stars>=1&&tryAch('spell_ace'))newAchs.push('spell_ace');
-  if(G.world.type==='math'&&stars>=1&&tryAch('math_ace'))newAchs.push('math_ace');
-  if(G.collection.length>=5&&tryAch('collector5'))newAchs.push('collector5');
-  if(G.collection.length>=10&&tryAch('collector10'))newAchs.push('collector10');
-  if(G.fortHp<=50&&tryAch('fort50'))newAchs.push('fort50');
-  const won=Object.keys(G.worldStars).filter(k=>G.worldStars[k]>=1).length;
-  if(won>=10&&tryAch('champion'))newAchs.push('champion');
-
-  // Scoreboard
-  const ex=G.scoreboard.find(s=>s.name===G.name);
-  if(ex)ex.score=Math.max(ex.score,G.totalScore);else G.scoreboard.push({name:G.name,score:G.totalScore});
-  save();
-  if(G.emyHp===0){const ei=document.getElementById('emy-img');ei.style.animation='none';setTimeout(()=>ei.style.animation='faint .6s ease forwards',10);}
-
-  show('complete-screen');buildComplete(true,stars,newAchs);
-  if(stars>=2)launchConfetti();
-
-  // Check Giovanni
-  const wonAfter=Object.keys(G.worldStars).filter(k=>G.worldStars[k]>=1).length;
-  if(wonAfter>=10&&G.fortHp<=0){setTimeout(()=>{show('gio-screen');document.body.style.background='#0d0018';},3000);}
-}
-
-function buildComplete(success,stars,newAchs=[]){
-  G.eggHatched=false;
-  const tr=['😰','🥉','🥈','🥇'];
-  setText('comp-trophy',success?tr[stars]:'💔');
-  const ti={0:'Nog even oefenen!',1:'Goed gedaan! 👍',2:'🔥 Super goed!',3:'🏆 KAMPIOEN!'};
-  setText('comp-title',success?ti[stars]:'Helaas — Team Rocket wint dit keer!');
-  setText('comp-sc',`${G.score} punten! Totaal: ${G.totalScore}⭐`);
-  const row=document.getElementById('stars-row');row.innerHTML='';
-  for(let i=1;i<=3;i++){const s=document.createElement('span');s.textContent=(success&&i<=stars)?'⭐':'☆';row.appendChild(s);}
-
-  // Fort damage message
-  const fd=document.getElementById('fort-dmg-msg');
-  if(success&&stars>=1){const dmg=stars===3?15:stars===2?10:5;fd.innerHTML=`💥 Giovanni's fort verloor <strong>${dmg}%</strong> HP! Fort staat nu op ${G.fortHp}%!`;}
-  else fd.innerHTML=stars===0?`😈 Giovanni's fort staat nog sterk op ${G.fortHp}%...`:'';
-
-  // Achievements earned
-  const ae=document.getElementById('ach-earned');ae.innerHTML='';
-  newAchs.forEach(id=>{const a=ACHIEVEMENTS.find(x=>x.id===id);if(a){const el=document.createElement('div');el.style.cssText='background:linear-gradient(135deg,var(--y),var(--o));border-radius:10px;padding:6px 10px;margin-top:5px;font-family:Fredoka One,cursive;font-size:.85rem;color:#1d1d2e;';el.textContent=`${a.icon} Nieuw badge! ${a.label}`;ae.appendChild(el);}});
-
-  // Egg
-  const ea=document.getElementById('egg-area');const ca=document.getElementById('caught-area');ca.innerHTML='';
-  if(success&&stars>=1){
-    const unc=G.world.pokemon.filter(p=>!G.collection.find(c=>c.id===p.id));
-    G.eggPoke=unc.length?unc[~~(Math.random()*unc.length)]:G.world.pokemon[~~(Math.random()*G.world.pokemon.length)];
-    G.eggShiny=Math.random()<0.08;
-    ea.innerHTML=`<div class="egg-box"><div style="font-family:'Fredoka One',cursive;font-size:.82rem;color:#d97700;margin-bottom:4px;">🥚 Je hebt een Pokémon-ei verdiend!</div><span class="egg-em" id="egg-em" onclick="hatchEgg()">🥚</span><div style="font-size:.7rem;font-weight:700;color:#aaa;margin-top:3px;" id="egg-hint">Tik op het ei!</div></div>`;
-  } else ea.innerHTML='';
-  document.getElementById('next-btn').style.display=success&&stars>=1?'block':'none';
-}
-
-function hatchEgg(){
-  if(G.eggHatched)return;G.eggHatched=true;
-  document.getElementById('egg-em').textContent='💥';
-  setTimeout(()=>{
-    const p=G.eggPoke,sh=G.eggShiny;
-    if(p&&!G.collection.find(c=>c.id===p.id))G.collection.push({id:p.id,name:p.n,shiny:sh});
-    if(sh&&tryAch('shiny')){} save();
-    document.getElementById('egg-em').textContent=sh?'✨':'🎊';
-    setText('egg-hint','');
-    document.getElementById('caught-area').innerHTML=`
-      <div class="caught-card"><img src="${spr(p.id)}" alt="" ${sh?'style="filter:drop-shadow(0 0 8px gold)"':''}/>
-      <div><div class="caught-nm">${sh?'<span class="shiny-tag">✨ SHINY!</span> ':''} ${p.n} gevangen!</div>
-      <div class="caught-sub">Toegevoegd aan Pokédex ✓</div>${sh?'<div class="caught-sub" style="color:gold;font-weight:800;">Super zeldzaam!</div>':''}</div></div>`;
-    sfx('catch');if(sh)launchConfetti();buildMap();
-  },500);
-}
-
-/* ═══════════ GIOVANNI ═══════════ */
-function showGiovanni(){show('gio-screen');}
-function startGiovanni(){
-  // Start level 10 as the final fight
-  const finalLv=LEVELS[9];startLevel(finalLv);
-}
-
-/* ═══════════ ACHIEVEMENT TOAST ═══════════ */
-function showAchToast(id){
-  const a=ACHIEVEMENTS.find(x=>x.id===id);if(!a)return;
-  const t=document.createElement('div');
-  t.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--y),var(--o));color:#1d1d2e;font-family:Fredoka One,cursive;font-size:.9rem;border-radius:50px;padding:8px 20px;z-index:600;box-shadow:0 4px 20px rgba(255,180,0,.5);animation:mpop .3s ease;white-space:nowrap;';
-  t.textContent=`${a.icon} Badge verdiend! ${a.label}`;
-  document.body.appendChild(t);setTimeout(()=>t.remove(),3000);
-}
-
-/* ═══════════ NAVIGATION ═══════════ */
-function goMap(){clearT();clearSuperT();document.getElementById('super-ov').style.display='none';document.body.style.background='#12112e';document.getElementById('main-card').style.boxShadow='0 16px 60px rgba(0,0,0,.6),0 0 0 4px var(--y)';buildMap();show('map-screen');}
-function replayW(){if(G.world)startLevel(G.world);}
-function show(id){['map-screen','game-screen','complete-screen','gio-screen'].forEach(s=>document.getElementById(s).style.display=s===id?'block':'none');}
-
-/* ═══════════ MODALS ═══════════ */
-function openModal(id){document.getElementById(id).classList.add('open');}
-function closeModal(id){document.getElementById(id).classList.remove('open');}
-function saveName(){const v=document.getElementById('name-inp').value.trim();if(!v)return;G.name=v;save();closeModal('name-modal');buildMap();}
-function addPlayer(){const v=document.getElementById('aplayer-inp').value.trim();if(!v){closeModal('aplayer-modal');return;}if(!G.scoreboard.find(s=>s.name===v))G.scoreboard.push({name:v,score:0});document.getElementById('aplayer-inp').value='';save();closeModal('aplayer-modal');buildMap();}
-
-/* ═══════════ FX ═══════════ */
-function spawnFloat(txt,el){const d=document.createElement('div');d.className='float-pts';d.textContent=txt;const r=el.getBoundingClientRect();d.style.left=(r.left+r.width/2-30)+'px';d.style.top=(r.top+window.scrollY-18)+'px';document.body.appendChild(d);setTimeout(()=>d.remove(),1100);}
-function launchConfetti(){const cols=['#e63946','#ffd60a','#4895ef','#06d6a0','#ff6b9d','#c77dff','#fb8500'];const c=document.getElementById('confetti');c.innerHTML='';for(let i=0;i<110;i++){const el=document.createElement('div');el.className='cp';const sz=6+Math.random()*10;el.style.cssText=`left:${Math.random()*100}vw;background:${cols[~~(Math.random()*cols.length)]};width:${sz}px;height:${sz}px;border-radius:${Math.random()<.5?'50%':'2px'};--d:${(Math.random()-.5)*230}px;animation-duration:${2+Math.random()*2.5}s;animation-delay:${Math.random()*.7}s;`;c.appendChild(el);}setTimeout(()=>c.innerHTML='',5000);}
-
-function setText(id,t){const el=document.getElementById(id);if(el)el.innerHTML=t;}
-function setClass(id,c){const el=document.getElementById(id);if(el)el.className=c;}
-
-/* ═══════════ INIT ═══════════ */
-load();
-if(G.name==='Trainer')setTimeout(()=>openModal('name-modal'),400);
-buildMap();show('map-screen');
-document.addEventListener('click',()=>{if(!aC&&!mOn){initAC();startMusic();}},{once:true});
-</script>
+    // Contactformulier (preview — toont melding als Formspree niet ingesteld)
+    document.getElementById('contactForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const btn = this.querySelector('.form-submit');
+      const fb  = document.getElementById('formFeedback');
+      btn.textContent = 'Versturen...'; btn.disabled = true;
+      if (SITE.formspreeEndpoint.includes('JOUW_FORM_ID')) {
+        fb.className = 'form-feedback error';
+        fb.textContent = '⚠ Preview-modus: Formspree is nog niet ingesteld. In de live versie ontvangt u hier e-mails.';
+        btn.textContent = 'Stuur bericht'; btn.disabled = false;
+        return;
+      }
+      try {
+        const res = await fetch(SITE.formspreeEndpoint, { method:'POST', body:new FormData(this), headers:{'Accept':'application/json'} });
+        if (res.ok) {
+          fb.className = 'form-feedback success';
+          fb.textContent = '✓ Bedankt! Je bericht is verzonden.';
+          this.reset();
+        } else { throw new Error(); }
+      } catch {
+        fb.className = 'form-feedback error';
+        fb.textContent = '✗ Er ging iets mis. Stuur een e-mail naar ' + SITE.email;
+      }
+      btn.textContent = 'Stuur bericht'; btn.disabled = false;
+    });
+  </script>
 </body>
 </html>
